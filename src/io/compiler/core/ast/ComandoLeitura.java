@@ -3,15 +3,15 @@ package io.compiler.core.ast;
 import io.compiler.types.Types;
 import io.compiler.types.Var;
 
-public class ReadCommand extends Command {
+public class ComandoLeitura extends Command {
 
 	private Var var;
 
-	public ReadCommand() {
+	public ComandoLeitura() {
 		super();
 	}
 
-	public ReadCommand(Var var) {
+	public ComandoLeitura(Var var) {
 		super();
 		this.var = var;
 	}

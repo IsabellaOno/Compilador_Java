@@ -536,7 +536,7 @@ public class IsiLanguageParser extends Parser {
 			                       throw new UFABCSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
 			                    }
 			                    symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
-			                    Command cmdRead = new ReadCommand(symbolTable.get(_input.LT(-1).getText()));
+			                    Command cmdRead = new ComandoLeitura(symbolTable.get(_input.LT(-1).getText()));
 			                    stack.peek().add(cmdRead);
 			                  
 			setState(86);
