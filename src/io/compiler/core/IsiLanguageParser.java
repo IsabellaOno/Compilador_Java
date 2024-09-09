@@ -112,7 +112,7 @@ public class IsiLanguageParser extends Parser {
 	    private Types leftType=null, rightType=null;
 	    private Program program = new Program();
 	    private String strExpr = "";
-	    private IfCommand currentIfCommand;
+	    private ComandoSe currentIfCommand;
 	    
 	    private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
 	    
@@ -655,7 +655,7 @@ public class IsiLanguageParser extends Parser {
 			match(T__9);
 			 stack.push(new ArrayList<Command>());
 			                      strExpr = "";
-			                      currentIfCommand = new IfCommand();
+			                      currentIfCommand = new ComandoSe();
 			                    
 			setState(100);
 			match(AP);

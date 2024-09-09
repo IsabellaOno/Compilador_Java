@@ -2,17 +2,17 @@ package io.compiler.core.ast;
 
 import java.util.List;
 
-public class IfCommand extends Command{
+public class ComandoSe extends Command{
 
 	private String expression;
 	private List<Command> trueList;
 	private List<Command> falseList;
 	
-	public IfCommand() {
+	public ComandoSe() {
 		super();
 	}
 
-	public IfCommand(String expression, List<Command> trueList, List<Command> falseList) {
+	public ComandoSe(String expression, List<Command> trueList, List<Command> falseList) {
 		super();
 		this.expression = expression;
 		this.trueList = trueList;
