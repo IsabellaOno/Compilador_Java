@@ -16,7 +16,7 @@ grammar IsiLanguage;
     private Types leftType=null, rightType=null;
     private Program program = new Program();
     private String strExpr = "";
-    private IfCommand currentIfCommand;
+    private ComandoSe currentComandoSe;
     
     private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
     
@@ -53,7 +53,7 @@ programa	: 'programa' ID  { program.setName(_input.LT(-1).getText());
                'fimprog'
                
                {
-                  program.setSymbolTable(symbolTable);
+                  program.setsymbolTable(symbolTable);
                   program.setCommandList(stack.pop());
                }
 			;
@@ -86,8 +86,8 @@ comando     :  cmdAttrib
 cmdAttrib   : ID { if (!isDeclared(_input.LT(-1).getText())) {
                        throw new IsiLanguageSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
                    }
-                   SymbolTable.get(_input.LT(-1).getText()).setInitialized(true);
-                   leftType = SymbolTable.get(_input.LT(-1).getText()).getType();
+                   symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
+                   leftType = symbolTable.get(_input.LT(-1).getText()).getType();
                  }
               OP_AT 
               expr 
@@ -108,16 +108,16 @@ cmdLeitura  : 'leia' AP
                      }
                      symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
                      markAsUsed(_input.LT(-1).getText());  // Marcar como usada aqui
-                     Command cmdRead = new ReadCommand(symbolTable.get(_input.LT(-1).getText()));
-                     stack.peek().add(cmdRead);
+                     Command cmdLeitura = new ComandoLeitura(symbolTable.get(_input.LT(-1).getText()));
+                     stack.peek().add(cmdLeitura);
                    } 
                 FP 
                 PV 
              ;
 			
 cmdEscrita  : 'escreva' AP 
-              ( termo  { Command cmdWrite = new WriteCommand(_input.LT(-1).getText());
-                         stack.peek().add(cmdWrite);
+              ( termo  { Command cmdEscrita = new ComandoEscrita(_input.LT(-1).getText());
+                         stack.peek().add(cmdEscrita);
                        } 
               ) 
               FP PV { rightType = null;}
@@ -125,28 +125,28 @@ cmdEscrita  : 'escreva' AP
 
 cmdSe	    : 'se'  { stack.push(new ArrayList<Command>());
                       strExpr = "";
-                      currentIfCommand = new IfCommand();
+                      currentComandoSe = new ComandoSe();
                     } 
                AP 
                expr
                OPREL  { strExpr += _input.LT(-1).getText(); }
                expr 
-               FP  { currentIfCommand.setExpression(strExpr); }
+               FP  { currentComandoSe.setExpression(strExpr); }
                'entao'  
                comando+                
                { 
-                  currentIfCommand.setTrueList(stack.pop());                            
+                  currentComandoSe.setTrueList(stack.pop());                            
                }  
                ( 'senao'  
                   { stack.push(new ArrayList<Command>()); }
                  comando+
                  {
-                   currentIfCommand.setFalseList(stack.pop());
+                   currentComandoSe.setFalseList(stack.pop());
                  }  
                )? 
                'fimse' 
                {
-               	   stack.peek().add(currentIfCommand);
+               	   stack.peek().add(currentComandoSe);
                }  			   
 	      ;
 
@@ -182,12 +182,12 @@ cmdFacaEnquanto: 'faca'
                  FP 
                  PV
                  { 
-                   DoWhileCommand doWhileCommand = new DoWhileCommand(strExpr, stack.pop()); 
-                   stack.peek().add(doWhileCommand); 
+                   ComandoFacaEnquanto ComandoFacaEnquanto = new ComandoFacaEnquanto(strExpr, stack.pop()); 
+                   stack.peek().add(ComandoFacaEnquanto); 
                  }
                ;
 		
-cmdPara      : 'para' AP 
+cmdPara     : 'para' AP 
               ID OP_AT expr  { String initialization = _input.LT(-3).getText() + ":=" + _input.LT(-1).getText(); }
               PV            
               expr OPREL expr  { String condition = _input.LT(-3).getText() + _input.LT(-2).getText() + _input.LT(-1).getText(); }
@@ -195,18 +195,18 @@ cmdPara      : 'para' AP
               ID ('++' | '--') { String increment = _input.LT(-2).getText() + _input.LT(-1).getText(); }
               FP 
               'faca' 
-         	  { 
-            	stack.push(new ArrayList<Command>());
-         	  } 
-         	  comando+   
-         	  'fimpara'  
-         	  {
-            	ForCommand forCommand = new ForCommand(initialization, condition, increment, stack.pop()); 
-            	stack.peek().add(forCommand);
+              { 
+                  stack.push(new ArrayList<Command>());
+              } 
+              comando+   
+              'fimpara'  
+              {
+                  ComandoPara ComandoPara = new ComandoPara(initialization, condition, increment, stack.pop()); 
+                  stack.peek().add(ComandoPara);
               }
-         	;
-					
-expr		:  termo  { strExpr += _input.LT(-1).getText(); } exprl 			
+            ;
+            	
+expr		: termo  { strExpr += _input.LT(-1).getText(); } exprl 			
 			;
 			
 termo		: ID  { if (!isDeclared(_input.LT(-1).getText())) {
@@ -227,29 +227,29 @@ termo		: ID  { if (!isDeclared(_input.LT(-1).getText())) {
                        }
                     }
                   }   
-			| NUM    {  if (rightType == null) {
+			   | NUM    {  if (rightType == null) {
 			 				rightType = Types.NUMBER;
 			 				//System.out.println("Encontrei um numero pela 1a vez "+rightType);
 			            }
-			            else{
-			                if (rightType.getValue() < Types.NUMBER.getValue()){			                    			                   
-			                	rightType = Types.NUMBER;
-			                	//System.out.println("Mudei o tipo para Number = "+rightType);
-			                }
+			               else{
+			                   if (rightType.getValue() < Types.NUMBER.getValue()){			                    			                   
+			                	   rightType = Types.NUMBER;
+			                	   //System.out.println("Mudei o tipo para Number = "+rightType);
+			                   }
+			               }
 			            }
-			         }
-			| TEXTO  {  if (rightType == null) {
-			 				rightType = Types.TEXT;
-			 				//System.out.println("Encontrei pela 1a vez um texto ="+ rightType);
-			            }
-			            else{
-			                if (rightType.getValue() < Types.TEXT.getValue()){			                    
-			                	rightType = Types.TEXT;
-			                	//System.out.println("Mudei o tipo para TEXT = "+rightType);
+			   | TEXTO  {  if (rightType == null) {
+			 				   rightType = Types.TEXT;
+			 				   //System.out.println("Encontrei pela 1a vez um texto ="+ rightType);
+			               }
+			               else{
+			                   if (rightType.getValue() < Types.TEXT.getValue()){			                    
+			                	   rightType = Types.TEXT;
+			                	   //System.out.println("Mudei o tipo para TEXT = "+rightType);
 			                	
-			                }
+			                   }
+			               }
 			            }
-			         }
 		;
 			
 exprl		: ( OP { strExpr += _input.LT(-1).getText(); } 

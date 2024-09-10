@@ -68,7 +68,7 @@ public class IsiLanguageParser extends Parser {
 	    private Types leftType=null, rightType=null;
 	    private Program program = new Program();
 	    private String strExpr = "";
-	    private IfCommand currentIfCommand;
+	    private ComandoSe currentComandoSe;
 	    
 	    private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
 	    
@@ -168,7 +168,7 @@ public class IsiLanguageParser extends Parser {
 			setState(40); match(T__11);
 			setState(41); match(T__17);
 
-			                  program.setSymbolTable(symbolTable);
+			                  program.setsymbolTable(symbolTable);
 			                  program.setCommandList(stack.pop());
 			               
 			}
@@ -398,8 +398,8 @@ public class IsiLanguageParser extends Parser {
 			 if (!isDeclared(_input.LT(-1).getText())) {
 			                       throw new IsiLanguageSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
 			                   }
-			                   SymbolTable.get(_input.LT(-1).getText()).setInitialized(true);
-			                   leftType = SymbolTable.get(_input.LT(-1).getText()).getType();
+			                   symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
+			                   leftType = symbolTable.get(_input.LT(-1).getText()).getType();
 			                 
 			setState(77); match(OP_AT);
 			setState(78); expr();
@@ -457,8 +457,8 @@ public class IsiLanguageParser extends Parser {
 			                     }
 			                     symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
 			                     markAsUsed(_input.LT(-1).getText());  // Marcar como usada aqui
-			                     Command cmdRead = new ReadCommand(symbolTable.get(_input.LT(-1).getText()));
-			                     stack.peek().add(cmdRead);
+			                     Command cmdLeitura = new ComandoLeitura(symbolTable.get(_input.LT(-1).getText()));
+			                     stack.peek().add(cmdLeitura);
 			                   
 			setState(86); match(FP);
 			setState(87); match(PV);
@@ -506,8 +506,8 @@ public class IsiLanguageParser extends Parser {
 			setState(90); match(AP);
 			{
 			setState(91); termo();
-			 Command cmdWrite = new WriteCommand(_input.LT(-1).getText());
-			                         stack.peek().add(cmdWrite);
+			 Command cmdEscrita = new ComandoEscrita(_input.LT(-1).getText());
+			                         stack.peek().add(cmdEscrita);
 			                       
 			}
 			setState(94); match(FP);
@@ -566,7 +566,7 @@ public class IsiLanguageParser extends Parser {
 			setState(98); match(T__19);
 			 stack.push(new ArrayList<Command>());
 			                      strExpr = "";
-			                      currentIfCommand = new IfCommand();
+			                      currentComandoSe = new ComandoSe();
 			                    
 			setState(100); match(AP);
 			setState(101); expr();
@@ -574,7 +574,7 @@ public class IsiLanguageParser extends Parser {
 			 strExpr += _input.LT(-1).getText(); 
 			setState(104); expr();
 			setState(105); match(FP);
-			 currentIfCommand.setExpression(strExpr); 
+			 currentComandoSe.setExpression(strExpr); 
 			setState(107); match(T__3);
 			setState(109); 
 			_errHandler.sync(this);
@@ -590,7 +590,7 @@ public class IsiLanguageParser extends Parser {
 				_la = _input.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__19) | (1L << T__10) | (1L << T__7) | (1L << T__5) | (1L << T__4) | (1L << T__1) | (1L << ID))) != 0) );
 			 
-			                  currentIfCommand.setTrueList(stack.pop());                            
+			                  currentComandoSe.setTrueList(stack.pop());                            
 			               
 			setState(123);
 			_la = _input.LA(1);
@@ -612,14 +612,14 @@ public class IsiLanguageParser extends Parser {
 					_la = _input.LA(1);
 				} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__19) | (1L << T__10) | (1L << T__7) | (1L << T__5) | (1L << T__4) | (1L << T__1) | (1L << ID))) != 0) );
 
-				                   currentIfCommand.setFalseList(stack.pop());
+				                   currentComandoSe.setFalseList(stack.pop());
 				                 
 				}
 			}
 
 			setState(125); match(T__8);
 
-			               	   stack.peek().add(currentIfCommand);
+			               	   stack.peek().add(currentComandoSe);
 			               
 			}
 		}
@@ -784,8 +784,8 @@ public class IsiLanguageParser extends Parser {
 			setState(158); match(FP);
 			setState(159); match(PV);
 			 
-			                   DoWhileCommand doWhileCommand = new DoWhileCommand(strExpr, stack.pop()); 
-			                   stack.peek().add(doWhileCommand); 
+			                   ComandoFacaEnquanto ComandoFacaEnquanto = new ComandoFacaEnquanto(strExpr, stack.pop()); 
+			                   stack.peek().add(ComandoFacaEnquanto); 
 			                 
 			}
 		}
@@ -869,8 +869,8 @@ public class IsiLanguageParser extends Parser {
 			setState(177); match(FP);
 			setState(178); match(T__10);
 			 
-			            	stack.push(new ArrayList<Command>());
-			         	  
+			                  stack.push(new ArrayList<Command>());
+			              
 			setState(181); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -886,8 +886,8 @@ public class IsiLanguageParser extends Parser {
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__19) | (1L << T__10) | (1L << T__7) | (1L << T__5) | (1L << T__4) | (1L << T__1) | (1L << ID))) != 0) );
 			setState(185); match(T__9);
 
-			            	ForCommand forCommand = new ForCommand(initialization, condition, increment, stack.pop()); 
-			            	stack.peek().add(forCommand);
+			                  ComandoPara ComandoPara = new ComandoPara(initialization, condition, increment, stack.pop()); 
+			                  stack.peek().add(ComandoPara);
 			              
 			}
 		}
@@ -1001,13 +1001,13 @@ public class IsiLanguageParser extends Parser {
 							 				rightType = Types.NUMBER;
 							 				//System.out.println("Encontrei um numero pela 1a vez "+rightType);
 							            }
-							            else{
-							                if (rightType.getValue() < Types.NUMBER.getValue()){			                    			                   
-							                	rightType = Types.NUMBER;
-							                	//System.out.println("Mudei o tipo para Number = "+rightType);
-							                }
-							            }
-							         
+							               else{
+							                   if (rightType.getValue() < Types.NUMBER.getValue()){			                    			                   
+							                	   rightType = Types.NUMBER;
+							                	   //System.out.println("Mudei o tipo para Number = "+rightType);
+							                   }
+							               }
+							            
 				}
 				break;
 			case TEXTO:
@@ -1015,17 +1015,17 @@ public class IsiLanguageParser extends Parser {
 				{
 				setState(196); match(TEXTO);
 				  if (rightType == null) {
-							 				rightType = Types.TEXT;
-							 				//System.out.println("Encontrei pela 1a vez um texto ="+ rightType);
-							            }
-							            else{
-							                if (rightType.getValue() < Types.TEXT.getValue()){			                    
-							                	rightType = Types.TEXT;
-							                	//System.out.println("Mudei o tipo para TEXT = "+rightType);
+							 				   rightType = Types.TEXT;
+							 				   //System.out.println("Encontrei pela 1a vez um texto ="+ rightType);
+							               }
+							               else{
+							                   if (rightType.getValue() < Types.TEXT.getValue()){			                    
+							                	   rightType = Types.TEXT;
+							                	   //System.out.println("Mudei o tipo para TEXT = "+rightType);
 							                	
-							                }
-							            }
-							         
+							                   }
+							               }
+							            
 				}
 				break;
 			default:

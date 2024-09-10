@@ -54,7 +54,7 @@ public class IsiLanguageLexer extends Lexer {
 	    private Types leftType=null, rightType=null;
 	    private Program program = new Program();
 	    private String strExpr = "";
-	    private IfCommand currentIfCommand;
+	    private ComandoSe currentComandoSe;
 	    
 	    private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
 	    
