@@ -20,7 +20,7 @@ public class WhileCommand extends Command {
 	}
 
   //Obter a lista de comandos
-	public List<Command> getCommands() {
+	public List<Command> getList() {
 		return whileCommands;
 	}
 
