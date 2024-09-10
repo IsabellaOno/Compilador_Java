@@ -71,12 +71,17 @@ public class ForCommand extends Command {
 	@Override
 	public String generateTarget() {
 		StringBuilder str = new StringBuilder();
-		str.append("for(" + initialization + "; " + condition + "; " + increment + "){");
+		str.append("for(" + initialization + "; " + condition + "; " + increment + ") {\n");
 		for (Command cmd : forCommands) {
-			str.append(cmd.generateTarget());
+			str.append("\t").append(cmd.generateTarget());
 		}
 		
-		str.append("};\n");
+		str.append("}\n");
 		return str.toString();
+	  }
+	  
+	  @Override
+	  public String toString() {
+		  return "ForCommand {initialization='" + initialization + "', condition='" + condition + "', increment='" + increment + "', forCommands=" + forCommands + "}";
 	  }
 }

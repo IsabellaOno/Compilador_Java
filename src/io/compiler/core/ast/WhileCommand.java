@@ -44,10 +44,16 @@ public class WhileCommand extends Command {
 		StringBuilder str = new StringBuilder();
 		str.append("while (" + expression + "){");
 		for (Command cmd: whileCommands) {
-			str.append(cmd.generateTarget());
+			str.append("\t").append(cmd.generateTarget());
 		}
     
-		str.append("};\n");
+		str.append("}\n");
 		return str.toString();
-	}	
+	}
+	
+	@Override
+    public String toString() {
+        return "WhileCommand {expression='" + expression + "', whileCommands=" + whileCommands + "}";
+    }
 }
+	
