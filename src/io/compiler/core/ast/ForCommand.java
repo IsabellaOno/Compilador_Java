@@ -4,7 +4,7 @@ import java.util.List;
 
 public class ForCommand extends Command {
 
-  //int i = 0
+  	//int i = 0
 	private String initialization;
 	
 	//Condição de continuação do laço
