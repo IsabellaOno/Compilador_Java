@@ -104,17 +104,18 @@ public class IsiLanguageLexer extends Lexer {
 	    private Types leftType=null, rightType=null;
 	    private Program program = new Program();
 	    private String strExpr = "";
-	    private ComandoSe currentIfCommand;
+	    private ComandoSe currentComandoSe;
 	    
 	    private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
 	    
 	    
-	    public void updateType(){
-	    	for(Var v: currentDecl){
-	    	   v.setType(currentType);
-	    	   symbolTable.put(v.getId(), v);
-	    	}
+	    public void updateType() {
+	        for (Var v : currentDecl) {
+	            v.setType(currentType);
+	            symbolTable.put(v.getId(), v);
+	        }
 	    }
+	    
 	    public void exibirVar(){
 	        for (String id: symbolTable.keySet()){
 	        	System.out.println(symbolTable.get(id));
