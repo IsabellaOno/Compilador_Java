@@ -16,7 +16,7 @@ grammar IsiLanguage;
     private Types leftType=null, rightType=null;
     private Program program = new Program();
     private String strExpr = "";
-    private ComandoSe currentComandoSe;
+    private IfCommand currentIfCommand;
     
     private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
     
@@ -108,7 +108,7 @@ cmdLeitura  : 'leia' AP
                      }
                      symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
                      markAsUsed(_input.LT(-1).getText());  // Marcar como usada aqui
-                     Command cmdLeitura = new ComandoLeitura(symbolTable.get(_input.LT(-1).getText()));
+                     Command cmdLeitura = new ReadCommand(symbolTable.get(_input.LT(-1).getText()));
                      stack.peek().add(cmdLeitura);
                    } 
                 FP 
@@ -116,7 +116,7 @@ cmdLeitura  : 'leia' AP
              ;
 			
 cmdEscrita  : 'escreva' AP 
-              ( termo  { Command cmdEscrita = new ComandoEscrita(_input.LT(-1).getText());
+              ( termo  { Command cmdEscrita = new WriteCommand(_input.LT(-1).getText());
                          stack.peek().add(cmdEscrita);
                        } 
               ) 
@@ -125,28 +125,28 @@ cmdEscrita  : 'escreva' AP
 
 cmdSe	    : 'se'  { stack.push(new ArrayList<Command>());
                       strExpr = "";
-                      currentComandoSe = new ComandoSe();
+                      currentIfCommand = new IfCommand();
                     } 
                AP 
                expr
                OPREL  { strExpr += _input.LT(-1).getText(); }
                expr 
-               FP  { currentComandoSe.setExpression(strExpr); }
+               FP  { currentIfCommand.setExpression(strExpr); }
                'entao'  
                comando+                
                { 
-                  currentComandoSe.setTrueList(stack.pop());                            
+                  currentIfCommand.setTrueList(stack.pop());                            
                }  
                ( 'senao'  
                   { stack.push(new ArrayList<Command>()); }
                  comando+
                  {
-                   currentComandoSe.setFalseList(stack.pop());
+                   currentIfCommand.setFalseList(stack.pop());
                  }  
                )? 
                'fimse' 
                {
-               	   stack.peek().add(currentComandoSe);
+               	   stack.peek().add(currentIfCommand);
                }  			   
 	      ;
 
@@ -182,8 +182,8 @@ cmdFacaEnquanto: 'faca'
                  FP 
                  PV
                  { 
-                   ComandoFacaEnquanto ComandoFacaEnquanto = new ComandoFacaEnquanto(strExpr, stack.pop()); 
-                   stack.peek().add(ComandoFacaEnquanto); 
+                   DoWhileCommand DoWhileCommand = new DoWhileCommand(strExpr, stack.pop()); 
+                   stack.peek().add(DoWhileCommand); 
                  }
                ;
 		
@@ -201,8 +201,8 @@ cmdPara     : 'para' AP
               comando+   
               'fimpara'  
               {
-                  ComandoPara ComandoPara = new ComandoPara(initialization, condition, increment, stack.pop()); 
-                  stack.peek().add(ComandoPara);
+                  ForCommand ForCommand = new ForCommand(initialization, condition, increment, stack.pop()); 
+                  stack.peek().add(ForCommand);
               }
             ;
             	
