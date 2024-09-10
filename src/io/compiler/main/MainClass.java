@@ -8,24 +8,24 @@ import java.io.PrintWriter;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
-import io.compiler.core.UFABCGrammarLexer;
-import io.compiler.core.UFABCGrammarParser;
+import io.compiler.core.IsiLanguageLexer;
+import io.compiler.core.IsiLanguageParser;
 import io.compiler.core.ast.Program;
 
 public class MainClass {
 	public static void main(String[] args) {
 		try {
-			UFABCGrammarLexer lexer;
-			UFABCGrammarParser parser;
+			IsiLanguageLexer lexer;
+			IsiLanguageParser parser;
 			
 			// crio o analisador léxico a partir da leitura de um arquivo
-			lexer = new UFABCGrammarLexer(CharStreams.fromFileName("program.in"));
+			lexer = new IsiLanguageLexer(CharStreams.fromFileName("program.in"));
 			
 			// agora a partir do analisador lexico, obtenho um fluxo de tokens
 			CommonTokenStream tokenStream = new CommonTokenStream(lexer);
 			
 			// crio o parser a partir do tokenStream
-			parser = new UFABCGrammarParser(tokenStream);
+			parser = new IsiLanguageParser(tokenStream);
 			
 			
 			// agora eu quero chamar do meu jeito
