@@ -18,23 +18,20 @@ public class MainClass {
 			IsiLanguageLexer lexer;
 			IsiLanguageParser parser;
 			
-			// crio o analisador léxico a partir da leitura de um arquivo
+			//Cria o analisador léxico a partir da leitura de um arquivo
 			lexer = new IsiLanguageLexer(CharStreams.fromFileName("program.in"));
 			
-			// agora a partir do analisador lexico, obtenho um fluxo de tokens
+			//A partir do analisador léxico, obtemos um fluxo de tokens
 			CommonTokenStream tokenStream = new CommonTokenStream(lexer);
 			
-			// crio o parser a partir do tokenStream
+			//Cria o parser a partir do tokenStream
 			parser = new IsiLanguageParser(tokenStream);
 			
-			
-			// agora eu quero chamar do meu jeito
-			System.out.println("UFABC Compiler");
+			System.out.println("Compilador");
 			parser.programa();
-			System.out.println("Compilation Successfully - Good Job");
+			System.out.println("Compilado com sucesso");
 
-
-			/* vou deixar aqui a geracao do codigo do programa*/
+			//geração do código do programa
 			Program program = parser.getProgram();
 			
 			System.out.println(program.generateTarget());
@@ -48,7 +45,8 @@ public class MainClass {
 			catch (IOException ex) {
 				ex.printStackTrace();
 			}
-			
+
+			//System.out.println(program.generateTarget());
 			
 		}
 		catch(Exception ex) {
