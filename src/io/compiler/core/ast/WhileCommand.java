@@ -42,7 +42,7 @@ public class WhileCommand extends Command {
 	public String generateTarget() {
 		// TODO Auto-generated method stub
 		StringBuilder str = new StringBuilder();
-		str.append("while (" + expression + "){");
+		str.append("while (").append(expression).append("){");
 		for (Command cmd: whileCommands) {
 			str.append("\t").append(cmd.generateTarget());
 		}

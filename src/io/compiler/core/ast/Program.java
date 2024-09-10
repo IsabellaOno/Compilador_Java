@@ -1,59 +1,75 @@
 package io.compiler.core.ast;
 
+import io.compiler.types.Var;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-import io.compiler.types.Types;
-import io.compiler.types.Var;
-
 public class Program {
-	private String name;
-	private HashMap<String, Var> symbolTable;
-	private List<Command> commandList;
-	
-	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public HashMap<String, Var> getSymbolTable() {
-		return symbolTable;
-	}
-	public void setSymbolTable(HashMap<String, Var> symbolTable) {
-		this.symbolTable = symbolTable;
-	}
-	public List<Command> getCommandList() {
-		return commandList;
-	}
-	public void setCommandList(List<Command> commandList) {
-		this.commandList = commandList;
-	}
-	
-	public String generateTarget() {
-		StringBuilder str = new StringBuilder();
-		str.append("import java.util.Scanner;\n");
-		str.append("public class "+name+"{ \n");
-		str.append("   public static void main(String args[]){ \n");
-		str.append("   Scanner _scTrx = new Scanner(System.in);\n");
-		for (String varId: symbolTable.keySet()) {
-			Var var = symbolTable.get(varId);
-			if (var.getType() == Types.NUMBER) {
-				str.append("    int ");
-			}
-			else {
-				str.append("    String ");				
-			}
-			str.append(var.getId()+";\n");
-		}
-		
-		for(Command cmd: commandList) {
-			str.append(cmd.generateTarget());
-		}
-		str.append("   }\n");
-		str.append("}");
-		return str.toString();
-	}
-	
+    private String name;
+    private HashMap<String, Var> symbolTable;
+    private List<Command> commandList;
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public HashMap<String, Var> getSymbolTable() {
+        return symbolTable;
+    }
+    
+    public void setSymbolTable(HashMap<String, Var> symbolTable) {
+        this.symbolTable = symbolTable;
+    }
+    
+    public List<Command> getCommandList() {
+        return commandList;
+    }
+    
+    public void setCommandList(List<Command> commandList) {
+        this.commandList = commandList;
+    }
+    
+    public String generateTarget() {
+        StringBuilder str = new StringBuilder();
+        str.append("import java.util.Scanner;\n");
+        str.append("public class ").append(name).append(" {\n");
+        str.append("    public static void main(String[] args) {\n");
+        str.append("        Scanner _scTrx = new Scanner(System.in);\n");
+        
+        for (Var var : symbolTable.values()) {
+            if (null == var.getType()) {
+                str.append("        String ");
+            } else switch (var.getType()) {
+                case NUMBER -> str.append("        int ");
+                case REALNUMBER -> str.append("        double ");
+                default -> str.append("        String ");
+            }
+            str.append(var.getId()).append(";\n");
+        }
+        
+        for (Command cmd : commandList) {
+            str.append(cmd.generateTarget()).append("\n");
+        }
+        
+        str.append("    }\n");
+        str.append("}\n");
+        
+        return str.toString();
+    }
+    
+    public void saveToFile() {
+        String fileName = name + ".java";
+        try (FileWriter fileWriter = new FileWriter(new File(fileName))) {
+            fileWriter.write(generateTarget());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

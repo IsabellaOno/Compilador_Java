@@ -46,7 +46,7 @@ public class DoWhileCommand extends Command {
 		for (Command cmd: whileCommands) {
 			str.append(cmd.generateTarget());
 		}
-		str.append("} while (" + expression + ");\n");
+		str.append("} while (").append(expression).append(");\n");
 		return str.toString();
 	}
 	

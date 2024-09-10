@@ -71,7 +71,7 @@ public class ForCommand extends Command {
 	@Override
 	public String generateTarget() {
 		StringBuilder str = new StringBuilder();
-		str.append("for(" + initialization + "; " + condition + "; " + increment + ") {\n");
+		str.append("for(").append(initialization).append("; ").append(condition).append("; ").append(increment).append(") {\n");
 		for (Command cmd : forCommands) {
 			str.append("\t").append(cmd.generateTarget());
 		}
