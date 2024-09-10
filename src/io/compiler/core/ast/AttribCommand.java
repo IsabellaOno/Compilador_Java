@@ -5,9 +5,9 @@ import io.compiler.types.SymbolTable;
 import io.compiler.core.exceptions.IsiLanguageSemanticException;
 
 public class AttribCommand extends Command {
-    private String id;     // Identificador da variável
-    private String expr;   // Expressão a ser atribuída
-    private SymbolTable symbolTable; // Referên'cia à tabela de símbolos
+    private String id;   
+    private String expr;   
+    private SymbolTable symbolTable; 
 
     public AttribCommand(String id, String expr, SymbolTable symbolTable) {
         this.id = id;
