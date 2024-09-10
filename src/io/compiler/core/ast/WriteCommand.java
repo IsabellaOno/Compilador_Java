@@ -1,23 +1,23 @@
 package io.compiler.core.ast;
 
-public class ComandoEscrita extends Command {
+public class WriteCommand extends Command {
     private String content; // Pode ser uma variável ou texto
     private boolean isLiteral; // Define se o conteúdo é texto literal ou identificador (variável)
 
     // Construtor para conteúdo literal (texto)
-    public ComandoEscrita(String content, boolean isLiteral) {
+    public WriteCommand(String content, boolean isLiteral) {
         super();
         this.content = content;
         this.isLiteral = isLiteral;
     }
 
     // Construtor para conteúdo que é uma variável
-    public ComandoEscrita(String content) {
+    public WriteCommand(String content) {
         this(content, false); // Por padrão, assume-se que é um identificador
     }
 
     // Construtor padrão
-    public ComandoEscrita() {
+    public WriteCommand() {
         super();
         this.content = null;
         this.isLiteral = false;
