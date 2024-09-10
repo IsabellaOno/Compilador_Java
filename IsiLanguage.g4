@@ -102,16 +102,17 @@ cmdAttrib   : ID { if (!isDeclared(_input.LT(-1).getText())) {
 			;			
 			
 cmdLeitura  : 'leia' AP 
-               ID { if (!isDeclared(_input.LT(-1).getText())) {
-                       throw new UFABCSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
-                    }
-                    symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
-                    Command cmdRead = new ReadCommand(symbolTable.get(_input.LT(-1).getText()));
-                    stack.peek().add(cmdRead);
-                  } 
-               FP 
-               PV 
-			;
+                ID { if (!isDeclared(_input.LT(-1).getText())) {
+                        throw new UFABCSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
+                     }
+                     symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
+                     markAsUsed(_input.LT(-1).getText());  // Marcar como usada aqui
+                     Command cmdRead = new ReadCommand(symbolTable.get(_input.LT(-1).getText()));
+                     stack.peek().add(cmdRead);
+                   } 
+                FP 
+                PV 
+             ;
 			
 cmdEscrita  : 'escreva' AP 
               ( termo  { Command cmdWrite = new WriteCommand(_input.LT(-1).getText());

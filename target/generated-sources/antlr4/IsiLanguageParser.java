@@ -452,12 +452,13 @@ public class IsiLanguageParser extends Parser {
 			setState(83); match(AP);
 			setState(84); match(ID);
 			 if (!isDeclared(_input.LT(-1).getText())) {
-			                       throw new UFABCSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
-			                    }
-			                    symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
-			                    Command cmdRead = new ReadCommand(symbolTable.get(_input.LT(-1).getText()));
-			                    stack.peek().add(cmdRead);
-			                  
+			                        throw new UFABCSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
+			                     }
+			                     symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
+			                     markAsUsed(_input.LT(-1).getText());  // Marcar como usada aqui
+			                     Command cmdRead = new ReadCommand(symbolTable.get(_input.LT(-1).getText()));
+			                     stack.peek().add(cmdRead);
+			                   
 			setState(86); match(FP);
 			setState(87); match(PV);
 			}
