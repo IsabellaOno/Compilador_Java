@@ -21,12 +21,13 @@ grammar IsiLanguage;
     private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
     
     
-    public void updateType(){
-    	for(Var v: currentDecl){
-    	   v.setType(currentType);
-    	   symbolTable.put(v.getId(), v);
-    	}
+    public void updateType() {
+        for (Var v : currentDecl) {
+            v.setType(currentType);
+            symbolTable.put(v.getId(), v);
+        }
     }
+    
     public void exibirVar(){
         for (String id: symbolTable.keySet()){
         	System.out.println(symbolTable.get(id));
@@ -83,10 +84,10 @@ comando     :  cmdAttrib
 			;
 			
 cmdAttrib   : ID { if (!isDeclared(_input.LT(-1).getText())) {
-                       throw new UFABCSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
+                       throw new IsiLanguageSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
                    }
-                   symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
-                   leftType = symbolTable.get(_input.LT(-1).getText()).getType();
+                   SymbolTable.get(_input.LT(-1).getText()).setInitialized(true);
+                   leftType = SymbolTable.get(_input.LT(-1).getText()).getType();
                  }
               OP_AT 
               expr 
@@ -95,15 +96,15 @@ cmdAttrib   : ID { if (!isDeclared(_input.LT(-1).getText())) {
               {
                  System.out.println("Left  Side Expression Type = "+leftType);
                  System.out.println("Right Side Expression Type = "+rightType);
-                 if (leftType.getValue() < rightType.getValue()){
-                    throw new UFABCSemanticException("Type Mismatchig on Assignment");
+                 if (leftType != null && rightType != null && leftType.getValue() < rightType.getValue()) {
+                    throw new IsiLanguageSemanticException("Type Mismatchig on Assignment");
                  }
               }
 			;			
 			
 cmdLeitura  : 'leia' AP 
                 ID { if (!isDeclared(_input.LT(-1).getText())) {
-                        throw new UFABCSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
+                        throw new IsiLanguageSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
                      }
                      symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
                      markAsUsed(_input.LT(-1).getText());  // Marcar como usada aqui
@@ -209,10 +210,10 @@ expr		:  termo  { strExpr += _input.LT(-1).getText(); } exprl
 			;
 			
 termo		: ID  { if (!isDeclared(_input.LT(-1).getText())) {
-                       throw new UFABCSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
+                       throw new IsiLanguageSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
                     }
                     if (!symbolTable.get(_input.LT(-1).getText()).isInitialized()){
-                       throw new UFABCSemanticException("Variable "+_input.LT(-1).getText()+" has no value assigned");
+                       throw new IsiLanguageSemanticException("Variable "+_input.LT(-1).getText()+" has no value assigned");
                     }
                     if (rightType == null){
                        rightType = symbolTable.get(_input.LT(-1).getText()).getType();

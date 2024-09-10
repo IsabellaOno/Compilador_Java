@@ -59,12 +59,13 @@ public class IsiLanguageLexer extends Lexer {
 	    private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
 	    
 	    
-	    public void updateType(){
-	    	for(Var v: currentDecl){
-	    	   v.setType(currentType);
-	    	   symbolTable.put(v.getId(), v);
-	    	}
+	    public void updateType() {
+	        for (Var v : currentDecl) {
+	            v.setType(currentType);
+	            symbolTable.put(v.getId(), v);
+	        }
 	    }
+	    
 	    public void exibirVar(){
 	        for (String id: symbolTable.keySet()){
 	        	System.out.println(symbolTable.get(id));

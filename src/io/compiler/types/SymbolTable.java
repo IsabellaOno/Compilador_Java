@@ -38,11 +38,11 @@ public class SymbolTable {
     }    
 
     public void assertStringType(String id) throws IsiLanguageSemanticException {
-        Var variable = this.get(id);
+        Var variable = (Var) this.get(id);
         if (variable.getType() == Types.TEXT) {
             return;
         }
-        throw new IsiLanguageSemanticException("Variável " + variable.getId() + " é do tipo " + variable.getTypeText() + " não pode receber um texto");
+        throw new IsiLanguageSemanticException("Variável " + variable.getId() + " é do tipo " + variable.getType().name() + " não pode receber um texto");
     }
 
     public void setHasValue(String id) {
@@ -53,9 +53,9 @@ public class SymbolTable {
     }
 
     public String getTypeById(String id) {
-        Var variable = this.get(id);
+        Var variable = (Var) this.get(id);
         if (variable != null) {
-            return variable.getTypeText();
+            return variable.getType().name();
         }
         return "Desconhecido";
     }

@@ -73,12 +73,13 @@ public class IsiLanguageParser extends Parser {
 	    private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
 	    
 	    
-	    public void updateType(){
-	    	for(Var v: currentDecl){
-	    	   v.setType(currentType);
-	    	   symbolTable.put(v.getId(), v);
-	    	}
+	    public void updateType() {
+	        for (Var v : currentDecl) {
+	            v.setType(currentType);
+	            symbolTable.put(v.getId(), v);
+	        }
 	    }
+	    
 	    public void exibirVar(){
 	        for (String id: symbolTable.keySet()){
 	        	System.out.println(symbolTable.get(id));
@@ -395,10 +396,10 @@ public class IsiLanguageParser extends Parser {
 			{
 			setState(75); match(ID);
 			 if (!isDeclared(_input.LT(-1).getText())) {
-			                       throw new UFABCSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
+			                       throw new IsiLanguageSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
 			                   }
-			                   symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
-			                   leftType = symbolTable.get(_input.LT(-1).getText()).getType();
+			                   SymbolTable.get(_input.LT(-1).getText()).setInitialized(true);
+			                   leftType = SymbolTable.get(_input.LT(-1).getText()).getType();
 			                 
 			setState(77); match(OP_AT);
 			setState(78); expr();
@@ -406,8 +407,8 @@ public class IsiLanguageParser extends Parser {
 
 			                 System.out.println("Left  Side Expression Type = "+leftType);
 			                 System.out.println("Right Side Expression Type = "+rightType);
-			                 if (leftType.getValue() < rightType.getValue()){
-			                    throw new UFABCSemanticException("Type Mismatchig on Assignment");
+			                 if (leftType != null && rightType != null && leftType.getValue() < rightType.getValue()) {
+			                    throw new IsiLanguageSemanticException("Type Mismatchig on Assignment");
 			                 }
 			              
 			}
@@ -452,7 +453,7 @@ public class IsiLanguageParser extends Parser {
 			setState(83); match(AP);
 			setState(84); match(ID);
 			 if (!isDeclared(_input.LT(-1).getText())) {
-			                        throw new UFABCSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
+			                        throw new IsiLanguageSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
 			                     }
 			                     symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
 			                     markAsUsed(_input.LT(-1).getText());  // Marcar como usada aqui
@@ -973,10 +974,10 @@ public class IsiLanguageParser extends Parser {
 				{
 				setState(192); match(ID);
 				 if (!isDeclared(_input.LT(-1).getText())) {
-				                       throw new UFABCSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
+				                       throw new IsiLanguageSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
 				                    }
 				                    if (!symbolTable.get(_input.LT(-1).getText()).isInitialized()){
-				                       throw new UFABCSemanticException("Variable "+_input.LT(-1).getText()+" has no value assigned");
+				                       throw new IsiLanguageSemanticException("Variable "+_input.LT(-1).getText()+" has no value assigned");
 				                    }
 				                    if (rightType == null){
 				                       rightType = symbolTable.get(_input.LT(-1).getText()).getType();
