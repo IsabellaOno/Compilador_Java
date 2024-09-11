@@ -54,8 +54,8 @@ programa:	'programa' ID { program.setName(_input.LT(-1).getText());
 declaravar	:	'declare' { currentDecl.clear(); } ID { currentDecl.add(new Var(_input.LT(-1).getText()));}
       			( VIRG ID { currentDecl.add(new Var(_input.LT(-1).getText()));} )*
       			DP (
-        		NUMERO {currentType = Types.NUMBER;}
-        		| TEXTO {currentType = Types.TEXT;}
+        		'numero' {currentType = Types.NUMBER;} //Alterei se der erro dps pode ser isso.
+        		| 'texto' {currentType = Types.TEXT;}
       			) { updateType(); } PV
     		;
 			
