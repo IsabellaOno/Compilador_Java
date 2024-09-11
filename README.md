@@ -1,14 +1,33 @@
-# Simple Parser
+# 🖥️ Compiladores UFABC 2024.2
 
-Pequeno exemplo de um parser usando ANTLR. Nossa gramática permite:
-- declarar variáveis de 2 tipos (NUMBER ou TEXT)
-- expressões aritméticas com 4 operadores + - * /
-- não tratamos precedência (ainda)
+## 👥 Integrantes do Grupo
+- **Isabella Bueno Ono** - RA: 11202020040
+- **Leticia** - (inserir RA)
+- **Ingrid Maciel** - RA: 11201932563
 
+## 📚 Tema do Projeto
+Este projeto tem como objetivo desenvolver um compilador que converta uma linguagem especificada em uma linguagem alvo (C, Java, ou outras). O projeto também visa garantir a compilação correta do programa-objeto gerado.
 
-## como usar
+## ✅ Itens Obrigatórios
+1. **Possui 2 tipos de variáveis** 📝
+2. **Possui a estrutura If..else** 🔄
+3. **Possui estrutura de controle while/do while** 🔁
+4. **Operações Aritméticas executadas corretamente** ➗
+5. **Atribuições realizadas corretamente** ✍️
+6. **Possui operações de Entrada e Saída** 📥📤
+7. **Aceita números decimais** 🔢
+8. **Verifica se a variável já foi previamente declarada** ⚠️
+9. **Verifica se a variável foi declarada e não foi usada** 🛠️
+10. **Verifica se uma variável está sendo usada sem valor inicial** 🚫
 
-- você precisa baixa o Antlr no site oficial (https://www.antlr.org/download/antlr-4.13.2-complete.jar)
-- você deve referenciar este JAR como biblioteca do seu projeto
-- para gerar os arquivos JAVA a partir do arquivo G4, o comando é este:
-``` java -cp antlr-4.13.2-complete.jar org.antlr.v4.Tool [sua gramatica] -o [pasta onde voce quer gerar os arquivos] -package [nome do pacote java que ira no cabecalho]```
+## Linguagem escolhida: Java 
+
+## 🛠️ Execução
+
+1. Você precisa baixar o **ANTLR** no [site oficial](https://www.antlr.org/download/antlr-4.13.2-complete.jar).
+   
+2. Referencie este JAR como biblioteca do seu projeto.
+
+3. Para gerar os arquivos Java a partir do arquivo G4, use o seguinte comando:
+   ```bash
+   java -cp antlr-4.13.2-complete.jar org.antlr.v4.Tool IsiLanguage.g4 -o src/io/compiler/core -package io.compiler.core
