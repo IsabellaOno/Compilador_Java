@@ -92,46 +92,50 @@ cmdAttrib:	ID {
               }
               ;
 
-cmdLeitura:	'leia' AP ID { if (!isDeclared(_input.LT(-1).getText())) {
-                        throw new IsiLanguageSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
-                     }
-                     symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
-                     markAsUsed(_input.LT(-1).getText());  // Marcar como usada aqui
-                     Command cmdLeitura = new ReadCommand(symbolTable.get(_input.LT(-1).getText()));
-                     stack.peek().add(cmdLeitura);
-            } FP PV;
+cmdLeitura: 'leia' AP ID { 
+    			String id = _input.LT(-1).getText();
+    			if (!isDeclared(id)) {
+        			throw new IsiLanguageSemanticException("Undeclared Variable: " + id);
+    			}
+    			symbolTable.setHasValue(id); // Marca a variável como inicializada
+    			symbolTable.markAsUsed(id); // Marca a variável como usada
+    
+    			Command cmdLeitura = new ReadCommand(symbolTable.get(id));
+   	 			stack.peek().add(cmdLeitura);
+				} FP PV
+		  ;
 
-cmdEscrita:
-	'escreva' AP (
-		termo { Command cmdEscrita = new WriteCommand(_input.LT(-1).getText());
-                         stack.peek().add(cmdEscrita);
-                       }
-	) FP PV { rightType = null;};
+cmdEscrita:	'escreva' AP (
+			termo { Command cmdEscrita = new WriteCommand(_input.LT(-1).getText());
+                    	stack.peek().add(cmdEscrita);
+            }
+			) FP PV { rightType = null;}
+		   ;
 
-cmdSe:
-	'se' { stack.push(new ArrayList<Command>());
+cmdSe	:	'se' { stack.push(new ArrayList<Command>());
                      strExpr = "";
                       currentIfCommand = new IfCommand();
                   } AP expr OPREL { strExpr += _input.LT(-1).getText(); } expr FP { currentIfCommand.setExpression(strExpr); 
-		      } 'entao' comando+ { 
+		      	} 'entao' comando+ { 
                   currentIfCommand.setTrueList(stack.pop());                            
-            } (
-		'senao' { stack.push(new ArrayList<Command>()); } comando+ {
+            	} (
+			'senao' { stack.push(new ArrayList<Command>()); } comando+ {
                      currentIfCommand.setFalseList(stack.pop());
                  }
-	)? 'fimse' {
+			)? 'fimse' {
                	tack.peek().add(currentIfCommand);
-               };
+               }
+        ;
 
-cmdEnquanto:
-	'enquanto' { 
+cmdEnquanto:	'enquanto' { 
                   stack.push(new ArrayList<Command>());
                   strExpr = ""; 
-               } AP expr OPREL { strExpr += _input.LT(-1).getText(); } expr FP 'faca' comando+
-		'fimenquanto' { 
+               	} AP expr OPREL { strExpr += _input.LT(-1).getText(); } expr FP 'faca' comando+
+				'fimenquanto' { 
                   WhileCommand WhileCommand = new WhileCommand(strExpr, stack.pop()); 
                   stack.peek().add(WhileCommand);
-               };
+               	}
+           ;
 
 cmdFacaEnquanto:	'faca' { 
                      	stack.push(new ArrayList<Command>());

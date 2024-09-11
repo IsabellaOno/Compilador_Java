@@ -545,14 +545,17 @@ public class IsiLanguageParser extends Parser {
 			match(AP);
 			setState(84);
 			match(ID);
-			 if (!isDeclared(_input.LT(-1).getText())) {
-			                        throw new IsiLanguageSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
-			                     }
-			                     symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
-			                     markAsUsed(_input.LT(-1).getText());  // Marcar como usada aqui
-			                     Command cmdLeitura = new ReadCommand(symbolTable.get(_input.LT(-1).getText()));
-			                     stack.peek().add(cmdLeitura);
-			            
+			 
+			    			String id = _input.LT(-1).getText();
+			    			if (!isDeclared(id)) {
+			        			throw new IsiLanguageSemanticException("Undeclared Variable: " + id);
+			    			}
+			    			symbolTable.setHasValue(id); // Marca a variável como inicializada
+			    			symbolTable.markAsUsed(id); // Marca a variável como usada
+			    
+			    			Command cmdLeitura = new ReadCommand(symbolTable.get(id));
+			   	 			stack.peek().add(cmdLeitura);
+							
 			setState(86);
 			match(FP);
 			setState(87);
@@ -606,8 +609,8 @@ public class IsiLanguageParser extends Parser {
 			setState(91);
 			termo();
 			 Command cmdEscrita = new WriteCommand(_input.LT(-1).getText());
-			                         stack.peek().add(cmdEscrita);
-			                       
+			                    	stack.peek().add(cmdEscrita);
+			            
 			}
 			setState(94);
 			match(FP);
@@ -683,7 +686,7 @@ public class IsiLanguageParser extends Parser {
 			setState(105);
 			match(FP);
 			 currentIfCommand.setExpression(strExpr); 
-					      
+					      	
 			setState(107);
 			match(T__8);
 			setState(109); 
@@ -702,7 +705,7 @@ public class IsiLanguageParser extends Parser {
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 4239808L) != 0) );
 			 
 			                  currentIfCommand.setTrueList(stack.pop());                            
-			            
+			            	
 			setState(123);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -792,7 +795,7 @@ public class IsiLanguageParser extends Parser {
 			 
 			                  stack.push(new ArrayList<Command>());
 			                  strExpr = ""; 
-			               
+			               	
 			setState(130);
 			match(AP);
 			setState(131);
@@ -825,7 +828,7 @@ public class IsiLanguageParser extends Parser {
 			 
 			                  WhileCommand WhileCommand = new WhileCommand(strExpr, stack.pop()); 
 			                  stack.peek().add(WhileCommand);
-			               
+			               	
 			}
 		}
 		catch (RecognitionException re) {

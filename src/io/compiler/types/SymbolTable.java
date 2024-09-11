@@ -30,6 +30,13 @@ public class SymbolTable {
         }
         return var;
     }
+    
+    public void markAsUsed(String id) {
+        Var var = this.get(id);
+        if (var != null) {
+            var.setUsed(true); 
+        }
+    }
 
     public List<Var> getNotUsedSymbols() {
         return map.values().stream()
