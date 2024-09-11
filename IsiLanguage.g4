@@ -92,8 +92,7 @@ cmdAttrib:	ID {
               }
               ;
 
-cmdLeitura:
-	'leia' AP ID { if (!isDeclared(_input.LT(-1).getText())) {
+cmdLeitura:	'leia' AP ID { if (!isDeclared(_input.LT(-1).getText())) {
                         throw new IsiLanguageSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
                      }
                      symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
