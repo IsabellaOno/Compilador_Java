@@ -43,13 +43,19 @@ grammar IsiLanguage;
     }
 }
 
-programa:	'programa' ID { program.setName(_input.LT(-1).getText());
+programa	:	'programa' ID { program.setName(_input.LT(-1).getText());
                                stack.push(new ArrayList<Command>()); 
-                             } declaravar+ 'inicio' comando+ 'fim' 'fimprog' {
+                } (declara | cmd)? 'fimprog'
+         	;
+
+declara 	:	declaravar+ 'inicio' comando+ 'fim'{
                   program.setsymbolTable(symbolTable);
                   program.setCommandList(stack.pop());
-            }
-         ;
+            	}
+            ; 
+
+cmd 		: (comando)	
+			;
 
 declaravar	:	'declare' { currentDecl.clear(); } ID { currentDecl.add(new Var(_input.LT(-1).getText()));}
       			( VIRG ID { currentDecl.add(new Var(_input.LT(-1).getText()));} )*
@@ -68,7 +74,7 @@ comando  :	cmdAttrib
 		 | cmdPara
 		 ;
 
-cmdAttrib:	ID { 
+cmdAttrib:		ID { 
                    String id = _input.LT(-1).getText();
                    if (!isDeclared(id)) {
                        throw new IsiLanguageSemanticException("Undeclared Variable: " + id);
