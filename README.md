@@ -20,7 +20,7 @@ Este projeto tem como objetivo desenvolver um compilador que converta uma lingua
 9. **Verifica se a variável foi declarada e não foi usada** 🛠️
 10. **Verifica se uma variável está sendo usada sem valor inicial** 🚫
 
-## Linguagem escolhida: Java 
+### Linguagem escolhida: Java 
 
 ## 🛠️ Execução
 
