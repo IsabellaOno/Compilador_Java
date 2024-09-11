@@ -2,7 +2,7 @@
 
 ## 👥 Integrantes do Grupo
 - **Isabella Bueno Ono** - RA: 11202020040
-- **Leticia** - (inserir RA)
+- **Leticia do Carmo Melo** - RA: 11201921202
 - **Ingrid Maciel** - RA: 11201932563
 
 ## 📚 Tema do Projeto
