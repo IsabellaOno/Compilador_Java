@@ -43,33 +43,32 @@ grammar IsiLanguage;
     }
 }
 
-programa:
-	'programa' ID { program.setName(_input.LT(-1).getText());
+programa:	'programa' ID { program.setName(_input.LT(-1).getText());
                                stack.push(new ArrayList<Command>()); 
                              } declaravar+ 'inicio' comando+ 'fim' 'fimprog' {
                   program.setsymbolTable(symbolTable);
                   program.setCommandList(stack.pop());
-            };
+            }
+         ;
 
-declaravar:
-	'declare' { currentDecl.clear(); } ID { currentDecl.add(new Var(_input.LT(-1).getText()));} (
-		VIRG ID { currentDecl.add(new Var(_input.LT(-1).getText()));}
-	)* DP (
-		'numero' {currentType = Types.NUMBER;}
-		| 'texto' {currentType = Types.TEXT;}
-	) { updateType(); } PV;
+declaravar	:	'declare' { currentDecl.clear(); } ID { currentDecl.add(new Var(_input.LT(-1).getText()));} (
+				VIRG ID { currentDecl.add(new Var(_input.LT(-1).getText()));}
+				)* DP (
+				'numero' {currentType = Types.NUMBER;}
+				| 'texto' {currentType = Types.TEXT;}
+				) { updateType(); } PV
+			;
 
-comando:
-	cmdAttrib
-	| cmdLeitura
-	| cmdEscrita
-	| cmdSe
-	| cmdEnquanto
-	| cmdFacaEnquanto
-	| cmdPara;
+comando  :	cmdAttrib
+		 | cmdLeitura
+	 	 | cmdEscrita
+		 | cmdSe
+		 | cmdEnquanto
+		 | cmdFacaEnquanto
+		 | cmdPara
+		 ;
 
-cmdAttrib:
-	ID { 
+cmdAttrib:	ID { 
                    String id = _input.LT(-1).getText();
                    if (!isDeclared(id)) {
                        throw new IsiLanguageSemanticException("Undeclared Variable: " + id);
@@ -90,7 +89,8 @@ cmdAttrib:
 
                  strExpr = "";
                  rightType = null;
-              };
+              }
+              ;
 
 cmdLeitura:
 	'leia' AP ID { if (!isDeclared(_input.LT(-1).getText())) {

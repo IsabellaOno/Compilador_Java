@@ -17,11 +17,11 @@ public class Program {
         this.name = name;
     }
     
-    public HashMap<String, Var> getSymbolTable() {
+    public HashMap<String, Var> getsymbolTable() {
         return symbolTable;
     }
     
-    public void setSymbolTable(HashMap<String, Var> symbolTable) {
+    public void setsymbolTable(HashMap<String, Var> symbolTable) {
         this.symbolTable = symbolTable;
     }
     
