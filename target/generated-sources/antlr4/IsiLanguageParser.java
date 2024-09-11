@@ -68,7 +68,7 @@ public class IsiLanguageParser extends Parser {
 	    private Types leftType=null, rightType=null;
 	    private Program program = new Program();
 	    private String strExpr = "";
-	    private ComandoSe currentComandoSe;
+	    private IfCommand currentIfCommand;
 	    
 	    private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
 	    
@@ -170,7 +170,7 @@ public class IsiLanguageParser extends Parser {
 
 			                  program.setsymbolTable(symbolTable);
 			                  program.setCommandList(stack.pop());
-			               
+			            
 			}
 		}
 		catch (RecognitionException re) {
@@ -395,21 +395,31 @@ public class IsiLanguageParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(75); match(ID);
-			 if (!isDeclared(_input.LT(-1).getText())) {
-			                       throw new IsiLanguageSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
+			 
+			                   String id = _input.LT(-1).getText();
+			                   if (!isDeclared(id)) {
+			                       throw new IsiLanguageSemanticException("Undeclared Variable: " + id);
 			                   }
-			                   symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
-			                   leftType = symbolTable.get(_input.LT(-1).getText()).getType();
+			                   symbolTable.get(id).setInitialized(true);
+			                   leftType = symbolTable.get(id).getType();
 			                 
 			setState(77); match(OP_AT);
 			setState(78); expr();
 			setState(79); match(PV);
 
-			                 System.out.println("Left  Side Expression Type = "+leftType);
-			                 System.out.println("Right Side Expression Type = "+rightType);
+			                 System.out.println("Left Side Expression Type = " + leftType);
+			                 System.out.println("Right Side Expression Type = " + rightType);
+			                 
 			                 if (leftType != null && rightType != null && leftType.getValue() < rightType.getValue()) {
-			                    throw new IsiLanguageSemanticException("Type Mismatchig on Assignment");
+			                    throw new IsiLanguageSemanticException("Type Mismatching on Assignment");
 			                 }
+
+			                 AttribCommand attribCommand = new AttribCommand(_input.LT(-5).getText(), strExpr);
+			                 
+			                 stack.peek().add(attribCommand);
+
+			                 strExpr = "";
+			                 rightType = null;
 			              
 			}
 		}
@@ -457,9 +467,9 @@ public class IsiLanguageParser extends Parser {
 			                     }
 			                     symbolTable.get(_input.LT(-1).getText()).setInitialized(true);
 			                     markAsUsed(_input.LT(-1).getText());  // Marcar como usada aqui
-			                     Command cmdLeitura = new ComandoLeitura(symbolTable.get(_input.LT(-1).getText()));
+			                     Command cmdLeitura = new ReadCommand(symbolTable.get(_input.LT(-1).getText()));
 			                     stack.peek().add(cmdLeitura);
-			                   
+			            
 			setState(86); match(FP);
 			setState(87); match(PV);
 			}
@@ -506,7 +516,7 @@ public class IsiLanguageParser extends Parser {
 			setState(90); match(AP);
 			{
 			setState(91); termo();
-			 Command cmdEscrita = new ComandoEscrita(_input.LT(-1).getText());
+			 Command cmdEscrita = new WriteCommand(_input.LT(-1).getText());
 			                         stack.peek().add(cmdEscrita);
 			                       
 			}
@@ -565,16 +575,17 @@ public class IsiLanguageParser extends Parser {
 			{
 			setState(98); match(T__19);
 			 stack.push(new ArrayList<Command>());
-			                      strExpr = "";
-			                      currentComandoSe = new ComandoSe();
-			                    
+			                     strExpr = "";
+			                      currentIfCommand = new IfCommand();
+			                  
 			setState(100); match(AP);
 			setState(101); expr();
 			setState(102); match(OPREL);
 			 strExpr += _input.LT(-1).getText(); 
 			setState(104); expr();
 			setState(105); match(FP);
-			 currentComandoSe.setExpression(strExpr); 
+			 currentIfCommand.setExpression(strExpr); 
+					      
 			setState(107); match(T__3);
 			setState(109); 
 			_errHandler.sync(this);
@@ -590,8 +601,8 @@ public class IsiLanguageParser extends Parser {
 				_la = _input.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__19) | (1L << T__10) | (1L << T__7) | (1L << T__5) | (1L << T__4) | (1L << T__1) | (1L << ID))) != 0) );
 			 
-			                  currentComandoSe.setTrueList(stack.pop());                            
-			               
+			                  currentIfCommand.setTrueList(stack.pop());                            
+			            
 			setState(123);
 			_la = _input.LA(1);
 			if (_la==T__16) {
@@ -612,14 +623,14 @@ public class IsiLanguageParser extends Parser {
 					_la = _input.LA(1);
 				} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__19) | (1L << T__10) | (1L << T__7) | (1L << T__5) | (1L << T__4) | (1L << T__1) | (1L << ID))) != 0) );
 
-				                   currentComandoSe.setFalseList(stack.pop());
+				                     currentIfCommand.setFalseList(stack.pop());
 				                 
 				}
 			}
 
 			setState(125); match(T__8);
 
-			               	   stack.peek().add(currentComandoSe);
+			               	tack.peek().add(currentIfCommand);
 			               
 			}
 		}
@@ -673,8 +684,8 @@ public class IsiLanguageParser extends Parser {
 			{
 			setState(128); match(T__5);
 			 
-			                 stack.push(new ArrayList<Command>());
-			                 strExpr = ""; 
+			                  stack.push(new ArrayList<Command>());
+			                  strExpr = ""; 
 			               
 			setState(130); match(AP);
 			setState(131); expr();
@@ -698,8 +709,8 @@ public class IsiLanguageParser extends Parser {
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__19) | (1L << T__10) | (1L << T__7) | (1L << T__5) | (1L << T__4) | (1L << T__1) | (1L << ID))) != 0) );
 			setState(142); match(T__6);
 			 
-			                 LoopCommand loopCommand = new LoopCommand(strExpr, stack.pop()); 
-			                 stack.peek().add(loopCommand);
+			                  LoopCommand loopCommand = new LoopCommand(strExpr, stack.pop()); 
+			                  stack.peek().add(loopCommand);
 			               
 			}
 		}
@@ -754,8 +765,8 @@ public class IsiLanguageParser extends Parser {
 			{
 			setState(145); match(T__10);
 			 
-			                   stack.push(new ArrayList<Command>());
-			                 
+			                     stack.push(new ArrayList<Command>());
+			                  
 			setState(148); 
 			_errHandler.sync(this);
 			_alt = 1;
@@ -784,9 +795,9 @@ public class IsiLanguageParser extends Parser {
 			setState(158); match(FP);
 			setState(159); match(PV);
 			 
-			                   ComandoFacaEnquanto ComandoFacaEnquanto = new ComandoFacaEnquanto(strExpr, stack.pop()); 
-			                   stack.peek().add(ComandoFacaEnquanto); 
-			                 
+			                     DoWhileCommand DoWhileCommand = new DoWhileCommand(strExpr, stack.pop()); 
+			                     stack.peek().add(DoWhileCommand); 
+			                  
 			}
 		}
 		catch (RecognitionException re) {
@@ -852,11 +863,13 @@ public class IsiLanguageParser extends Parser {
 			setState(165); match(OP_AT);
 			setState(166); expr();
 			 String initialization = _input.LT(-3).getText() + ":=" + _input.LT(-1).getText(); 
+					      
 			setState(168); match(PV);
 			setState(169); expr();
 			setState(170); match(OPREL);
 			setState(171); expr();
 			 String condition = _input.LT(-3).getText() + _input.LT(-2).getText() + _input.LT(-1).getText(); 
+					      
 			setState(173); match(PV);
 			setState(174); match(ID);
 			setState(175);
@@ -866,10 +879,11 @@ public class IsiLanguageParser extends Parser {
 			}
 			consume();
 			 String increment = _input.LT(-2).getText() + _input.LT(-1).getText(); 
+					      
 			setState(177); match(FP);
 			setState(178); match(T__10);
 			 
-			                  stack.push(new ArrayList<Command>());
+			               stack.push(new ArrayList<Command>());
 			              
 			setState(181); 
 			_errHandler.sync(this);
@@ -886,8 +900,8 @@ public class IsiLanguageParser extends Parser {
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__19) | (1L << T__10) | (1L << T__7) | (1L << T__5) | (1L << T__4) | (1L << T__1) | (1L << ID))) != 0) );
 			setState(185); match(T__9);
 
-			                  ComandoPara ComandoPara = new ComandoPara(initialization, condition, increment, stack.pop()); 
-			                  stack.peek().add(ComandoPara);
+			               ForCommand ForCommand = new ForCommand(initialization, condition, increment, stack.pop()); 
+			               stack.peek().add(ForCommand);
 			              
 			}
 		}
