@@ -1,12 +1,13 @@
 package io.compiler.core.ast;
 
+import io.compiler.types.SymbolTable;
 import io.compiler.types.Var;
 import java.util.HashMap;
 import java.util.List;
 
 public class Program {
     private String name;
-    private HashMap<String, Var> symbolTable;
+    private SymbolTable symbolTable;
     private List<Command> commandList;
     
     public String getName() {
@@ -17,12 +18,12 @@ public class Program {
         this.name = name;
     }
     
-    public HashMap<String, Var> getsymbolTable() {
+    public SymbolTable getsymbolTable() {
         return symbolTable;
     }
     
-    public void setsymbolTable(HashMap<String, Var> symbolTable) {
-        this.symbolTable = symbolTable;
+    public void setsymbolTable(SymbolTable symbolTable2) {
+        this.symbolTable = symbolTable2;
     }
     
     public List<Command> getCommandList() {
@@ -40,7 +41,7 @@ public class Program {
         str.append("    public static void main(String[] args) {\n");
         str.append("        Scanner _scTrx = new Scanner(System.in);\n");
         
-        for (Var var : symbolTable.values()) {
+        for (Var var : symbolTable.getAll()) {
             if (null == var.getType()) {
                 str.append("        String ");
             } else switch (var.getType()) {

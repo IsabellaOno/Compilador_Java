@@ -10,7 +10,7 @@ grammar IsiLanguage;
 }
 
 @members {
-    private HashMap<String,Var> symbolTable = new HashMap<String, Var>();
+	private SymbolTable symbolTable = new SymbolTable();
     private ArrayList<Var> currentDecl = new ArrayList<Var>();
     private Types currentType;
     private Types leftType=null, rightType=null;
@@ -24,15 +24,15 @@ grammar IsiLanguage;
     public void updateType() {
         for (Var v : currentDecl) {
             v.setType(currentType);
-            symbolTable.put(v.getId(), v);
+            symbolTable.add(v);
         }
     }
     
-    public void exibirVar(){
-        for (String id: symbolTable.keySet()){
-        	System.out.println(symbolTable.get(id));
-        }
-    }
+    public void exibirVar() {
+    for (Var var : symbolTable.getAll()) { 
+        System.out.println(var);
+    	}
+	}
     
     public Program getProgram(){
     	return this.program;
@@ -54,8 +54,8 @@ programa:	'programa' ID { program.setName(_input.LT(-1).getText());
 declaravar	:	'declare' { currentDecl.clear(); } ID { currentDecl.add(new Var(_input.LT(-1).getText()));}
       			( VIRG ID { currentDecl.add(new Var(_input.LT(-1).getText()));} )*
       			DP (
-        		'numero' {currentType = Types.NUMBER;}
-        		| 'texto' {currentType = Types.TEXT;}
+        		NUMERO {currentType = Types.NUMBER;}
+        		| TEXTO {currentType = Types.TEXT;}
       			) { updateType(); } PV
     		;
 			
@@ -83,7 +83,7 @@ cmdAttrib:	ID {
                     throw new IsiLanguageSemanticException("Type Mismatching on Assignment");
                  }
 
-                 AttribCommand attribCommand = new AttribCommand(_input.LT(-5).getText(), strExpr);
+                 AttribCommand attribCommand = new AttribCommand(_input.LT(-5).getText(), strExpr, symbolTable);
                  
                  stack.peek().add(attribCommand);
 
@@ -174,7 +174,7 @@ termo	:	ID { if (!isDeclared(_input.LT(-1).getText())) {
                        }
                     }
                   }
-			| NUM {  if (rightType == null) {
+			| NUMERO {  if (rightType == null) {
 			 				rightType = Types.NUMBER;
 			 				//System.out.println("Encontrei um numero pela 1a vez "+rightType);
 			            }
@@ -216,7 +216,7 @@ OPREL	: '>' | '<' | '>=' | '<=' | '<>' | '=='
 ID		: [a-z] ( [a-z] | [A-Z] | [0-9])*
 		;
 
-NUM		: [0-9]+ ('.' [0-9]+)?
+NUMERO	: [0-9]+ ('.' [0-9]+)?
 		;
 
 VIRG	: ','	
