@@ -7,6 +7,6 @@
 	</classpathentry>
 	<classpathentry excluding="src/" kind="src" path=""/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/isabo/Downloads/SimpleParser-main/antlr-4.13.2-complete.jar"/>
+	<classpathentry kind="lib" path="C:/Users/isabo/Área de Trabalho/Compilador/antlr-4.13.2-complete.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

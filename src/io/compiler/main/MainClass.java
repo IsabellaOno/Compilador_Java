@@ -19,7 +19,7 @@ public class MainClass {
 			IsiLanguageParser parser;
 			
 			//Cria o analisador léxico a partir da leitura de um arquivo
-			lexer = new IsiLanguageLexer(CharStreams.fromFileName("program.in"));
+			lexer = new IsiLanguageLexer(CharStreams.fromFileName("input.in"));
 			
 			//A partir do analisador léxico, obtemos um fluxo de tokens
 			CommonTokenStream tokenStream = new CommonTokenStream(lexer);
