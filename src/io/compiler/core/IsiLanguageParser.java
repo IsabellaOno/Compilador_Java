@@ -737,7 +737,7 @@ public class IsiLanguageParser extends Parser {
 			setState(125);
 			match(T__10);
 
-			               	tack.peek().add(currentIfCommand);
+			               	stack.peek().add(currentIfCommand);
 			               
 			}
 		}

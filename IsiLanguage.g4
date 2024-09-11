@@ -123,7 +123,7 @@ cmdSe	:	'se' { stack.push(new ArrayList<Command>());
                      currentIfCommand.setFalseList(stack.pop());
                  }
 			)? 'fimse' {
-               	tack.peek().add(currentIfCommand);
+               	stack.peek().add(currentIfCommand);
                }
         ;
 
