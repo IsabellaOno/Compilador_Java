@@ -51,14 +51,14 @@ programa:	'programa' ID { program.setName(_input.LT(-1).getText());
             }
          ;
 
-declaravar	:	'declare' { currentDecl.clear(); } ID { currentDecl.add(new Var(_input.LT(-1).getText()));} (
-				VIRG ID { currentDecl.add(new Var(_input.LT(-1).getText()));}
-				)* DP (
-				'numero' {currentType = Types.NUMBER;}
-				| 'texto' {currentType = Types.TEXT;}
-				) { updateType(); } PV
-			;
-
+declaravar	:	'declare' { currentDecl.clear(); } ID { currentDecl.add(new Var(_input.LT(-1).getText()));}
+      			( VIRG ID { currentDecl.add(new Var(_input.LT(-1).getText()));} )*
+      			DP (
+        		'numero' {currentType = Types.NUMBER;}
+        		| 'texto' {currentType = Types.TEXT;}
+      			) { updateType(); } PV
+    		;
+			
 comando  :	cmdAttrib
 		 | cmdLeitura
 	 	 | cmdEscrita
@@ -130,21 +130,20 @@ cmdEnquanto:
                   strExpr = ""; 
                } AP expr OPREL { strExpr += _input.LT(-1).getText(); } expr FP 'faca' comando+
 		'fimenquanto' { 
-                  LoopCommand loopCommand = new LoopCommand(strExpr, stack.pop()); 
-                  stack.peek().add(loopCommand);
+                  WhileCommand WhileCommand = new WhileCommand(strExpr, stack.pop()); 
+                  stack.peek().add(WhileCommand);
                };
 
-cmdFacaEnquanto:
-	'faca' { 
-                     stack.push(new ArrayList<Command>());
-                  } comando+ 'enquanto' AP expr OPREL { strExpr += _input.LT(-1).getText(); } expr
-		FP PV { 
-                     DoWhileCommand DoWhileCommand = new DoWhileCommand(strExpr, stack.pop()); 
-                     stack.peek().add(DoWhileCommand); 
-                  };
+cmdFacaEnquanto:	'faca' { 
+                     	stack.push(new ArrayList<Command>());
+                  	} comando+ 'enquanto' AP expr OPREL { strExpr += _input.LT(-1).getText(); } expr
+					FP PV { 
+                     	DoWhileCommand DoWhileCommand = new DoWhileCommand(strExpr, stack.pop()); 
+                     	stack.peek().add(DoWhileCommand); 
+                  	}
+                ;
 
-cmdPara:
-	'para' AP ID OP_AT expr { String initialization = _input.LT(-3).getText() + ":=" + _input.LT(-1).getText(); 
+cmdPara:	'para' AP ID OP_AT expr { String initialization = _input.LT(-3).getText() + ":=" + _input.LT(-1).getText(); 
 		      } PV expr OPREL expr { String condition = _input.LT(-3).getText() + _input.LT(-2).getText() + _input.LT(-1).getText(); 
 		      } PV ID ('++' | '--') { String increment = _input.LT(-2).getText() + _input.LT(-1).getText(); 
 		      } FP 'faca' { 
@@ -152,12 +151,13 @@ cmdPara:
               } comando+ 'fimpara' {
                ForCommand ForCommand = new ForCommand(initialization, condition, increment, stack.pop()); 
                stack.peek().add(ForCommand);
-              };
+              }
+        ;
 
-expr: termo { strExpr += _input.LT(-1).getText(); } exprl;
+expr	: termo { strExpr += _input.LT(-1).getText(); } exprl
+		;
 
-termo:
-	ID { if (!isDeclared(_input.LT(-1).getText())) {
+termo	:	ID { if (!isDeclared(_input.LT(-1).getText())) {
                        throw new IsiLanguageSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
                     }
                     if (!symbolTable.get(_input.LT(-1).getText()).isInitialized()){
@@ -175,7 +175,7 @@ termo:
                        }
                     }
                   }
-	| NUM {  if (rightType == null) {
+			| NUM {  if (rightType == null) {
 			 				rightType = Types.NUMBER;
 			 				//System.out.println("Encontrei um numero pela 1a vez "+rightType);
 			            }
@@ -186,7 +186,7 @@ termo:
 			                   }
 			               }
 			            }
-	| TEXTO {  if (rightType == null) {
+			| TEXTO {  if (rightType == null) {
 			 				   rightType = Types.TEXT;
 			 				   //System.out.println("Encontrei pela 1a vez um texto ="+ rightType);
 			               }
@@ -197,32 +197,45 @@ termo:
 			                	
 			                   }
 			               }
-			            };
+			            }
+		;
 
-exprl: (
-		OP { strExpr += _input.LT(-1).getText(); } termo { strExpr += _input.LT(-1).getText(); }
-	)*;
+exprl	: (
+			OP { strExpr += _input.LT(-1).getText(); } termo { strExpr += _input.LT(-1).getText(); }
+		  )*
+		;
 
-OP: '+' | '-' | '*' | '/';
+OP		: '+' | '-' | '*' | '/'
+		;
 
-OP_AT: ':=';
+OP_AT	: ':='
+		;
 
-OPREL: '>' | '<' | '>=' | '<=' | '<>' | '==';
+OPREL	: '>' | '<' | '>=' | '<=' | '<>' | '=='
+		;
 
-ID: [a-z] ( [a-z] | [A-Z] | [0-9])*;
+ID		: [a-z] ( [a-z] | [A-Z] | [0-9])*
+		;
 
-NUM: [0-9]+ ('.' [0-9]+)?;
+NUM		: [0-9]+ ('.' [0-9]+)?
+		;
 
-VIRG: ',';
+VIRG	: ','	
+		;
 
-PV: ';';
+PV		: ';'
+		;
 
-AP: '(';
+AP		: '('
+		;
 
-FP: ')';
+FP		: ')'
+		;
 
-DP: ':';
+DP		: ':'
+		;
 
-TEXTO: '"' ( [a-z] | [A-Z] | [0-9] | ',' | '.' | ' ' | '-')* '"';
+TEXTO	: '"' ( [a-z] | [A-Z] | [0-9] | ',' | '.' | ' ' | '-')* '"'
+		;
 
-WS: (' ' | '\n' | '\r' | '\t') -> skip;
+WS		: (' ' | '\n' | '\r' | '\t') -> skip;

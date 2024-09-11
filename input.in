@@ -1,6 +1,6 @@
 programa meuPrograma
-    declare a, b, c : numero;
-    declare x, y, z : texto;
+    declare a, b, c : number;
+    declare x, y, z : text;
     inicio
     	escreva("Hello World");
     	leia(x);

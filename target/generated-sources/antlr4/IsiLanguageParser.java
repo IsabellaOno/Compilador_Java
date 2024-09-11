@@ -709,8 +709,8 @@ public class IsiLanguageParser extends Parser {
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__19) | (1L << T__10) | (1L << T__7) | (1L << T__5) | (1L << T__4) | (1L << T__1) | (1L << ID))) != 0) );
 			setState(142); match(T__6);
 			 
-			                  LoopCommand loopCommand = new LoopCommand(strExpr, stack.pop()); 
-			                  stack.peek().add(loopCommand);
+			                  WhileCommand WhileCommand = new WhileCommand(strExpr, stack.pop()); 
+			                  stack.peek().add(WhileCommand);
 			               
 			}
 		}
@@ -765,8 +765,8 @@ public class IsiLanguageParser extends Parser {
 			{
 			setState(145); match(T__10);
 			 
-			                     stack.push(new ArrayList<Command>());
-			                  
+			                     	stack.push(new ArrayList<Command>());
+			                  	
 			setState(148); 
 			_errHandler.sync(this);
 			_alt = 1;
@@ -795,9 +795,9 @@ public class IsiLanguageParser extends Parser {
 			setState(158); match(FP);
 			setState(159); match(PV);
 			 
-			                     DoWhileCommand DoWhileCommand = new DoWhileCommand(strExpr, stack.pop()); 
-			                     stack.peek().add(DoWhileCommand); 
-			                  
+			                     	DoWhileCommand DoWhileCommand = new DoWhileCommand(strExpr, stack.pop()); 
+			                     	stack.peek().add(DoWhileCommand); 
+			                  	
 			}
 		}
 		catch (RecognitionException re) {
