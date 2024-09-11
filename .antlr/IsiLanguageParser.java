@@ -214,7 +214,7 @@ public class IsiLanguageParser extends Parser {
 
 			                  program.setsymbolTable(symbolTable);
 			                  program.setCommandList(stack.pop());
-			               
+			            
 			}
 		}
 		catch (RecognitionException re) {
@@ -454,18 +454,14 @@ public class IsiLanguageParser extends Parser {
 			                 System.out.println("Left Side Expression Type = " + leftType);
 			                 System.out.println("Right Side Expression Type = " + rightType);
 			                 
-			                 // Verifica compatibilidade de tipos
 			                 if (leftType != null && rightType != null && leftType.getValue() < rightType.getValue()) {
 			                    throw new IsiLanguageSemanticException("Type Mismatching on Assignment");
 			                 }
-			                 
-			                 // Criação do comando de atribuição
+
 			                 AttribCommand attribCommand = new AttribCommand(_input.LT(-5).getText(), strExpr);
 			                 
-			                 // Adiciona o comando à pilha
 			                 stack.peek().add(attribCommand);
-			                 
-			                 // Reseta a expressão para o próximo uso
+
 			                 strExpr = "";
 			                 rightType = null;
 			              
@@ -513,7 +509,7 @@ public class IsiLanguageParser extends Parser {
 			                     markAsUsed(_input.LT(-1).getText());  // Marcar como usada aqui
 			                     Command cmdLeitura = new ReadCommand(symbolTable.get(_input.LT(-1).getText()));
 			                     stack.peek().add(cmdLeitura);
-			                   
+			            
 			setState(86);
 			match(FP);
 			setState(87);
@@ -613,9 +609,9 @@ public class IsiLanguageParser extends Parser {
 			setState(98);
 			match(T__9);
 			 stack.push(new ArrayList<Command>());
-			                      strExpr = "";
+			                     strExpr = "";
 			                      currentIfCommand = new IfCommand();
-			                    
+			                  
 			setState(100);
 			match(AP);
 			setState(101);
@@ -628,7 +624,7 @@ public class IsiLanguageParser extends Parser {
 			setState(105);
 			match(FP);
 			 currentIfCommand.setExpression(strExpr); 
-					
+					      
 			setState(107);
 			match(T__10);
 			setState(109); 
@@ -647,7 +643,7 @@ public class IsiLanguageParser extends Parser {
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 16959232L) != 0) );
 			 
 			                  currentIfCommand.setTrueList(stack.pop());                            
-			               
+			            
 			setState(123);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -671,7 +667,7 @@ public class IsiLanguageParser extends Parser {
 					_la = _input.LA(1);
 				} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 16959232L) != 0) );
 
-				                   currentIfCommand.setFalseList(stack.pop());
+				                     currentIfCommand.setFalseList(stack.pop());
 				                 
 				}
 			}
@@ -679,7 +675,7 @@ public class IsiLanguageParser extends Parser {
 			setState(125);
 			match(T__12);
 
-			               	   stack.peek().add(currentIfCommand);
+			               	tack.peek().add(currentIfCommand);
 			               
 			}
 		}
@@ -727,8 +723,8 @@ public class IsiLanguageParser extends Parser {
 			setState(128);
 			match(T__13);
 			 
-			                 stack.push(new ArrayList<Command>());
-			                 strExpr = ""; 
+			                  stack.push(new ArrayList<Command>());
+			                  strExpr = ""; 
 			               
 			setState(130);
 			match(AP);
@@ -760,8 +756,8 @@ public class IsiLanguageParser extends Parser {
 			setState(142);
 			match(T__15);
 			 
-			                 LoopCommand loopCommand = new LoopCommand(strExpr, stack.pop()); 
-			                 stack.peek().add(loopCommand);
+			                  LoopCommand loopCommand = new LoopCommand(strExpr, stack.pop()); 
+			                  stack.peek().add(loopCommand);
 			               
 			}
 		}
@@ -810,8 +806,8 @@ public class IsiLanguageParser extends Parser {
 			setState(145);
 			match(T__14);
 			 
-			                   stack.push(new ArrayList<Command>());
-			                 
+			                     stack.push(new ArrayList<Command>());
+			                  
 			setState(148); 
 			_errHandler.sync(this);
 			_alt = 1;
@@ -848,9 +844,9 @@ public class IsiLanguageParser extends Parser {
 			setState(159);
 			match(PV);
 			 
-			                   DoWhileCommand DoWhileCommand = new DoWhileCommand(strExpr, stack.pop()); 
-			                   stack.peek().add(DoWhileCommand); 
-			                 
+			                     DoWhileCommand DoWhileCommand = new DoWhileCommand(strExpr, stack.pop()); 
+			                     stack.peek().add(DoWhileCommand); 
+			                  
 			}
 		}
 		catch (RecognitionException re) {
@@ -914,7 +910,7 @@ public class IsiLanguageParser extends Parser {
 			setState(166);
 			expr();
 			 String initialization = _input.LT(-3).getText() + ":=" + _input.LT(-1).getText(); 
-					
+					      
 			setState(168);
 			match(PV);
 			setState(169);
@@ -924,7 +920,7 @@ public class IsiLanguageParser extends Parser {
 			setState(171);
 			expr();
 			 String condition = _input.LT(-3).getText() + _input.LT(-2).getText() + _input.LT(-1).getText(); 
-					
+					      
 			setState(173);
 			match(PV);
 			setState(174);
@@ -940,13 +936,13 @@ public class IsiLanguageParser extends Parser {
 				consume();
 			}
 			 String increment = _input.LT(-2).getText() + _input.LT(-1).getText(); 
-					
+					      
 			setState(177);
 			match(FP);
 			setState(178);
 			match(T__14);
 			 
-			                  stack.push(new ArrayList<Command>());
+			               stack.push(new ArrayList<Command>());
 			              
 			setState(181); 
 			_errHandler.sync(this);
@@ -965,8 +961,8 @@ public class IsiLanguageParser extends Parser {
 			setState(185);
 			match(T__19);
 
-			                  ForCommand ForCommand = new ForCommand(initialization, condition, increment, stack.pop()); 
-			                  stack.peek().add(ForCommand);
+			               ForCommand ForCommand = new ForCommand(initialization, condition, increment, stack.pop()); 
+			               stack.peek().add(ForCommand);
 			              
 			}
 		}

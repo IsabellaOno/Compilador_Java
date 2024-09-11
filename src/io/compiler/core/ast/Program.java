@@ -1,9 +1,6 @@
 package io.compiler.core.ast;
 
 import io.compiler.types.Var;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -64,12 +61,4 @@ public class Program {
         return str.toString();
     }
     
-    public void saveToFile() {
-        String fileName = name + ".java";
-        try (FileWriter fileWriter = new FileWriter(new File(fileName))) {
-            fileWriter.write(generateTarget());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

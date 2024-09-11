@@ -49,7 +49,7 @@ programa:
                              } declaravar+ 'inicio' comando+ 'fim' 'fimprog' {
                   program.setsymbolTable(symbolTable);
                   program.setCommandList(stack.pop());
-               };
+            };
 
 declaravar:
 	'declare' { currentDecl.clear(); } ID { currentDecl.add(new Var(_input.LT(-1).getText()));} (
@@ -80,18 +80,14 @@ cmdAttrib:
                  System.out.println("Left Side Expression Type = " + leftType);
                  System.out.println("Right Side Expression Type = " + rightType);
                  
-                 // Verifica compatibilidade de tipos
                  if (leftType != null && rightType != null && leftType.getValue() < rightType.getValue()) {
                     throw new IsiLanguageSemanticException("Type Mismatching on Assignment");
                  }
-                 
-                 // Criação do comando de atribuição
+
                  AttribCommand attribCommand = new AttribCommand(_input.LT(-5).getText(), strExpr);
                  
-                 // Adiciona o comando à pilha
                  stack.peek().add(attribCommand);
-                 
-                 // Reseta a expressão para o próximo uso
+
                  strExpr = "";
                  rightType = null;
               };
@@ -104,7 +100,7 @@ cmdLeitura:
                      markAsUsed(_input.LT(-1).getText());  // Marcar como usada aqui
                      Command cmdLeitura = new ReadCommand(symbolTable.get(_input.LT(-1).getText()));
                      stack.peek().add(cmdLeitura);
-                   } FP PV;
+            } FP PV;
 
 cmdEscrita:
 	'escreva' AP (
@@ -115,47 +111,47 @@ cmdEscrita:
 
 cmdSe:
 	'se' { stack.push(new ArrayList<Command>());
-                      strExpr = "";
+                     strExpr = "";
                       currentIfCommand = new IfCommand();
-                    } AP expr OPREL { strExpr += _input.LT(-1).getText(); } expr FP { currentIfCommand.setExpression(strExpr); 
-		} 'entao' comando+ { 
+                  } AP expr OPREL { strExpr += _input.LT(-1).getText(); } expr FP { currentIfCommand.setExpression(strExpr); 
+		      } 'entao' comando+ { 
                   currentIfCommand.setTrueList(stack.pop());                            
-               } (
+            } (
 		'senao' { stack.push(new ArrayList<Command>()); } comando+ {
-                   currentIfCommand.setFalseList(stack.pop());
+                     currentIfCommand.setFalseList(stack.pop());
                  }
 	)? 'fimse' {
-               	   stack.peek().add(currentIfCommand);
+               	tack.peek().add(currentIfCommand);
                };
 
 cmdEnquanto:
 	'enquanto' { 
-                 stack.push(new ArrayList<Command>());
-                 strExpr = ""; 
+                  stack.push(new ArrayList<Command>());
+                  strExpr = ""; 
                } AP expr OPREL { strExpr += _input.LT(-1).getText(); } expr FP 'faca' comando+
 		'fimenquanto' { 
-                 LoopCommand loopCommand = new LoopCommand(strExpr, stack.pop()); 
-                 stack.peek().add(loopCommand);
+                  LoopCommand loopCommand = new LoopCommand(strExpr, stack.pop()); 
+                  stack.peek().add(loopCommand);
                };
 
 cmdFacaEnquanto:
 	'faca' { 
-                   stack.push(new ArrayList<Command>());
-                 } comando+ 'enquanto' AP expr OPREL { strExpr += _input.LT(-1).getText(); } expr FP
-		PV { 
-                   DoWhileCommand DoWhileCommand = new DoWhileCommand(strExpr, stack.pop()); 
-                   stack.peek().add(DoWhileCommand); 
-                 };
+                     stack.push(new ArrayList<Command>());
+                  } comando+ 'enquanto' AP expr OPREL { strExpr += _input.LT(-1).getText(); } expr
+		FP PV { 
+                     DoWhileCommand DoWhileCommand = new DoWhileCommand(strExpr, stack.pop()); 
+                     stack.peek().add(DoWhileCommand); 
+                  };
 
 cmdPara:
 	'para' AP ID OP_AT expr { String initialization = _input.LT(-3).getText() + ":=" + _input.LT(-1).getText(); 
-		} PV expr OPREL expr { String condition = _input.LT(-3).getText() + _input.LT(-2).getText() + _input.LT(-1).getText(); 
-		} PV ID ('++' | '--') { String increment = _input.LT(-2).getText() + _input.LT(-1).getText(); 
-		} FP 'faca' { 
-                  stack.push(new ArrayList<Command>());
+		      } PV expr OPREL expr { String condition = _input.LT(-3).getText() + _input.LT(-2).getText() + _input.LT(-1).getText(); 
+		      } PV ID ('++' | '--') { String increment = _input.LT(-2).getText() + _input.LT(-1).getText(); 
+		      } FP 'faca' { 
+               stack.push(new ArrayList<Command>());
               } comando+ 'fimpara' {
-                  ForCommand ForCommand = new ForCommand(initialization, condition, increment, stack.pop()); 
-                  stack.peek().add(ForCommand);
+               ForCommand ForCommand = new ForCommand(initialization, condition, increment, stack.pop()); 
+               stack.peek().add(ForCommand);
               };
 
 expr: termo { strExpr += _input.LT(-1).getText(); } exprl;
