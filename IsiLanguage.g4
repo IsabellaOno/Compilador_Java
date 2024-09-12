@@ -72,7 +72,7 @@ bloco 		: {
 			  (comando)+
 			;
 
-declaravar: 'declare' tipo { currentDecl.clear(); }
+declaravar: 'declare' tipo
       		ID {
       			String id_var = _input.LT(-1).getText();
           		Symbol sym = new Var(id_var, null, currentType);
@@ -113,8 +113,7 @@ comando  :	cmdAttrib
 cmdLeitura: 'leia' AP ID {
 					checkInitialized(_input.LT(-1).getText());
     				String ident = _input.LT(-1).getText();
-    			} 
-    				FP PO
+    			} FP PO
     			{
     				Var var = (Var)symbolTable.get(ident);
               		Command cmdLeitura = new ReadCommand(ident, var);

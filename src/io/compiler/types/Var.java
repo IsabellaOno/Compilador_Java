@@ -79,6 +79,6 @@ public class Var extends Symbol {
 	        else {
 	        	str = "Object ";
 	        }
-	        return (str + " "+super.id+";");
+	        return (str + " "+getId()+";");
 	 	}
 	}

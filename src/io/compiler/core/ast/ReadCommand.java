@@ -17,5 +17,10 @@ public class ReadCommand extends Command {
 		// TODO Auto-generated method stub
 		return var.getId() + " = " + ((var.getType()==Var.NUMBER)?"_scTrx.nextInt();":"_scTrx.nextLine();")+"\n";
 	}
+	
+	@Override
+	public String toString() {
+		return "CommandLeitura [id=" + ident + "]";
+	}
 
 }
