@@ -67,15 +67,19 @@ public class Var extends Symbol {
 	    
 	    public String generateTarget() {
 	        String str;
+	        System.out.println(type);	
 	        if (type == NUMBER) {
-	     	   str = "int ";
+	        	str = "int ";
 	        }
 	        if (type == REALNUMBER) {
-		     	   str = "float ";
+		     	str = "float ";
 		        }
-	        else {
-	     	   str = "String ";
+	        if (type == TEXT) {
+	        	str = "String ";
 	        }
-	        return (str + " "+super.id+";");
+	        else {
+	        	str = "Object ";
+	        }
+	        return (str + " "+this.getId()+";");
 	 	}
 	}
