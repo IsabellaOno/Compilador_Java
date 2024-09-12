@@ -100,8 +100,8 @@ public class IsiLanguageLexer extends Lexer {
 
 		private SymbolTable symbolTable = new SymbolTable();
 	    private ArrayList<Var> currentDecl = new ArrayList<Var>();
-	    private Types currentType;
-	    private Types leftType=null, rightType=null;
+	    private int currentType;
+	    private int leftType = -1, rightType = -1;
 	    private Program program = new Program();
 	    private String strExpr = "";
 	    private IfCommand currentIfCommand;

@@ -32,23 +32,35 @@ public class Program {
         str.append("	public static void main(String args[]){\n ");
         str.append("		Scanner _scTrx = new Scanner(System.in);\n");
         
+        for (Symbol symbol: symbolTable.getAll()) {
+			str.append(symbol.generateTarget()+"\n");
+		}
+		for (Command command: commandList) {
+			str.append(command.generateTarget()+"\n");
+		}
         if (symbolTable != null) {
-            for (Var var : symbolTable.getAll()) {
-                String varType;
-                switch (var.getType()) {
-                    case NUMBER:
-                        varType = "int";
-                        break;
-                    case REALNUMBER:
-                        varType = "double";
-                        break;
-                    case TEXT:
-                        varType = "String";
-                        break;
-                    default:
-                        varType = "Object"; // Tipo padrão se necessário
+            for (Symbol sym : symbolTable.getAll()) {
+                if (sym instanceof Var) { 
+                    Var var = (Var) sym; 
+                    String varType;
+                    switch (var.getType()) {
+                        case Var.NUMBER:
+                            varType = "int";
+                            break;
+                        case Var.REALNUMBER:
+                            varType = "double";
+                            break;
+                        case Var.TEXT:
+                            varType = "String";
+                            break;
+                        default:
+                            varType = "Object"; // Tipo padrão se necessário
+                    }
+                    str.append("        ").append(varType).append(" ").append(var.getId()).append(";\n");
+                } else {
+                    // Opcional: Tratar casos onde o símbolo não é do tipo Var
+                    throw new RuntimeException("Unexpected symbol type: " + sym.getClass().getName());
                 }
-                str.append("		").append(varType).append(" ").append(var.getId()).append(";\n");
             }
         }
 

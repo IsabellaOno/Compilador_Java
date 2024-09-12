@@ -1,38 +1,43 @@
 package io.compiler.types;
 
-public class Symbol {
-    private String name;
+public abstract class Symbol {
+    public String id;
     private boolean used;
-    private boolean hasValue;
+    private boolean initialized;
+    public abstract String generateTarget();
 
     public Symbol(String name) {
-        this.name = name;
+        this.id = id;
         this.used = false;
-        this.hasValue = false;
+        this.initialized = false;
     }
 
-    public String getName() {
-        return name;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String name) {
+        this.id = name;
     }
 
     public boolean isUsed() {
         return used;
     }
 
-    public void setUsed() {
-        this.used = true;
+    public void setUsed(boolean used) {
+        this.used = used;
     }
 
-    public boolean hasValue() {
-        return hasValue;
+    public boolean isInitialized() {
+        return initialized;
     }
 
-    public void setHasValue() {
-        this.hasValue = true;
+    public void setInitialized(boolean initialized) {
+        this.initialized = true;
     }
-    
+
     @Override
     public String toString() {
-        return "Symbol [name=" + name + ", used=" + used + ", hasValue=" + hasValue + "]";
+        return "Symbol [id=" + id + ", initialized=" + initialized + ", used=" + used + "]";
     }
 }

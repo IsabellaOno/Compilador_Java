@@ -1,67 +1,81 @@
 package io.compiler.types;
 
-public class Var {
-    private String id;
-    private Types type;
-    private boolean initialized;
-    private boolean used;
+public class Var extends Symbol {
+	
+	public static final int NUMBER = 0;
+	public static final int REALNUMBER = 1;
+	public static final int TEXT  = 2;
+	
+	 private String id;
+	 private int type;  
+	 private Object value;
 
-    public Var(String id, Types type) {
-        this.id = id;
-        this.type = type;
-        this.initialized = false; // Inicialmente, a variável não está inicializada.
-        this.used = false; // Inicialmente, a variável não está usada.
+	 public Var(String id, Object value, int type) {
+		super(id);
+        this.value = value;
+        this.type = type; 
     }
     
-    public Var(String id) {
-        this(id, null);
-    }
-    
-    public Var() {
-        this(null, null);
-    }
+	 public Var(String id, int type) {
+	        this(id, null, type);
+	    }
+	    
+	    public Var() {
+	        this(null, null, NUMBER); 
+	    }
 
-    public String getId() {
-        return id;
-    }
+	    public String getId() {
+	        return id;
+	    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	    public void setId(String id) {
+	        this.id = id;
+	    }
 
-    public Types getType() {
-        return type;
-    }
+	    public int getType() {
+	        return type;
+	    }
 
-    public void setType(Types type) {
-        this.type = type;
-    }
+	    public void setType(int type) {
+	        this.type = type;
+	    }
 
-    public boolean isInitialized() {
-        return initialized;
-    }
+	    public Object getValue() {
+	        return value;
+	    }
 
-    public void setInitialized(boolean initialized) {
-        this.initialized = initialized;
-    }
-    
-    public boolean isUsed() {
-        return used;
-    }
+	    public void setValue(Object value) {
+	        this.value = value;}
+	    
+	    public String getTypeText() {
+	        switch (type) {
+	            case NUMBER:
+	                return "int";
+	            case REALNUMBER:
+	                return "float";
+	            case TEXT:
+	                return "String";
+	            default:
+	                return "Desconhecido";
+	        }
+	    }
 
-    public void setUsed(boolean used) {
-        this.used = used;
-    }
-    
-    public String getTypeText() {
-        if (type != null) {
-            return type.name();
-        }
-        return "Desconhecido";
-    }
-
-    @Override
-    public String toString() {
-        return "Var [id=" + id + ", type=" + type + ", initialized=" + initialized + ", used=" + used + "]";
-    }
-}
+	    @Override
+	    public String toString() {
+	        return "Var [id=" + id + ", type=" + getTypeText() + ", value=" + value +  "]";
+	    }
+	    
+	    public String generateTarget() {
+	        String str;
+	        if (type == NUMBER) {
+	     	   str = "int ";
+	        }
+	        if (type == REALNUMBER) {
+		     	   str = "float ";
+		        }
+	        else {
+	     	   str = "String ";
+	        }
+	        return (str + " "+super.id+";");
+	 	}
+	}

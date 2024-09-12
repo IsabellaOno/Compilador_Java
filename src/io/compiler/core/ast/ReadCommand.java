@@ -1,6 +1,5 @@
 package io.compiler.core.ast;
 
-import io.compiler.types.Types;
 import io.compiler.types.Var;
 
 public class ReadCommand extends Command {
@@ -27,7 +26,7 @@ public class ReadCommand extends Command {
 	@Override
 	public String generateTarget() {
 		// TODO Auto-generated method stub
-		return var.getId() + " = " + ((var.getType()==Types.NUMBER)?"_scTrx.nextInt();":"_scTrx.nextLine();")+"\n";
+		return var.getId() + " = " + ((var.getType()==Var.NUMBER)?"_scTrx.nextInt();":"_scTrx.nextLine();")+"\n";
 	}
 
 }

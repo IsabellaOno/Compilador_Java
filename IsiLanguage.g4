@@ -12,8 +12,8 @@ grammar IsiLanguage;
 @members {
 	private SymbolTable symbolTable = new SymbolTable();
     private ArrayList<Var> currentDecl = new ArrayList<Var>();
-    private Types currentType;
-    private Types leftType=null, rightType=null;
+    private int currentType;
+    private int leftType = -1, rightType = -1;
     private Program program = new Program();
     private String strExpr = "";
     private IfCommand currentIfCommand;
@@ -79,13 +79,25 @@ bloco 		: {
 			;
 
 declaravar: 'declare' tipo { currentDecl.clear(); }
-      		ID { 
-          		Var var = new Var(_input.LT(-1).getText(), currentType);
-          		currentDecl.add(var);
+      		ID {
+      			String id_var = _input.LT(-1).getText();
+          		Var var = new Var(id_var, null, currentType);
+          		if (!symbolTable.exists(id_var)){
+	                     symbolTable.add(var);	
+	                  }
+	                  else{
+	                  	 throw new IsiLanguageSemanticException("Symbol "+id_var+" already declared");
+	                  } 
       		}
       		( VIRG ID { 
-          		Var var = new Var(_input.LT(-1).getText(), currentType);
-          		currentDecl.add(var);
+      			String id_var = _input.LT(-1).getText();
+          		Symbol var = new Var(id_var, null, currentType);
+          		if (!symbolTable.exists(id_var)){
+	                     symbolTable.add(var);	
+	                  }
+	                  else{
+	                  	 throw new IsiLanguageSemanticException("Symbol "+id_var+" already declared");
+	                  }
       		} )*
       		DP { 
           	updateType(); 
@@ -93,11 +105,10 @@ declaravar: 'declare' tipo { currentDecl.clear(); }
       		PO
     	  ;
 
-tipo
-    : 'inteiro' { currentType = Types.NUMBER; }
-    | 'real' { currentType = Types.REALNUMBER; }
-    | 'texto' { currentType = Types.TEXT; }
-    ;
+tipo	 : 'inteiro' { currentType = Var.NUMBER; }
+    	 | 'real' { currentType = Var.REALNUMBER; }
+    	 | 'texto' { currentType = Var.TEXT; }
+    	 ;
 			
 comando  :	cmdAttrib
 		 | cmdLeitura
@@ -136,7 +147,7 @@ cmdEscrita: 'escreva' AP (
         		stack.peek().add(cmdEscrita);
     		}
 			) FP PO { 
-    		rightType = null;
+    		rightType = -1;
 			}	
 			;
 				  
@@ -151,7 +162,7 @@ cmdAttrib:		ID {
                  System.out.println("Left Side Expression Type = " + leftType);
                  System.out.println("Right Side Expression Type = " + rightType);
                  
-                 if (leftType != null && rightType != null && leftType.getValue() < rightType.getValue()) {
+                 if (leftType != -1 && rightType != -1 && leftType < rightType) {
                     throw new IsiLanguageSemanticException("Type Mismatching on Assignment");
                  }
 
@@ -160,7 +171,7 @@ cmdAttrib:		ID {
                  stack.peek().add(attribCommand);
 
                  strExpr = "";
-                 rightType = null;
+                 rightType = -1;
               }
               ;
 
@@ -218,36 +229,38 @@ termo	:	ID { if (!isDeclared(_input.LT(-1).getText())) {
                     if (!symbolTable.get(_input.LT(-1).getText()).isInitialized()){
                        throw new IsiLanguageSemanticException("Variable "+_input.LT(-1).getText()+" has no value assigned");
                     }
-                    if (rightType == null){
+                    if (rightType == -1){
+                       rightType = 2;
                        rightType = symbolTable.get(_input.LT(-1).getText()).getType();
                        //System.out.println("Encontrei pela 1a vez uma variavel = "+rightType);
                     }   
                     else{
-                       if (symbolTable.get(_input.LT(-1).getText()).getType().getValue() > rightType.getValue()){
-                          rightType = symbolTable.get(_input.LT(-1).getText()).getType();
+                       if (rightType < 2) {
+                       	  rightType = 2;
+                       	  System.out.println("Mudei o tipo para TEXT = " + rightType);
                           //System.out.println("Ja havia tipo declarado e mudou para = "+rightType);
                           
                        }
                     }
                   }
-			| NUMERO {  if (rightType == null) {
-			 				rightType = Types.NUMBER;
+			| NUMERO {  if (rightType == -1) {
+			 				rightType = Var.NUMBER;
 			 				//System.out.println("Encontrei um numero pela 1a vez "+rightType);
 			            }
 			               else{
-			                   if (rightType.getValue() < Types.NUMBER.getValue()){			                    			                   
-			                	   rightType = Types.NUMBER;
+			                   if (rightType.getValue() < Var.NUMBER.getValue()){			                    			                   
+			                	   rightType = Var.NUMBER;
 			                	   //System.out.println("Mudei o tipo para Number = "+rightType);
 			                   }
 			               }
 			            }
-			| TEXTO {  if (rightType == null) {
-			 				   rightType = Types.TEXT;
+			| TEXTO {  if (rightType == -1) {
+			 				   rightType = Var.TEXT;
 			 				   System.out.println("Encontrei pela 1a vez um texto ="+ rightType);
 			               }
 			               else{
-			                   if (rightType.getValue() < Types.TEXT.getValue()){			                    
-			                	   rightType = Types.TEXT;
+			                   if (rightType.getValue() < Var.TEXT.getValue()){			                    
+			                	   rightType = Var.TEXT;
 			                	   System.out.println("Mudei o tipo para TEXT = "+rightType);
 			                	
 			                   }
