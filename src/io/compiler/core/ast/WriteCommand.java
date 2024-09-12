@@ -27,14 +27,9 @@ public class WriteCommand extends Command {
     // Método que gera o código Java para o comando de escrita
     @Override
     public String generateTarget() {
-    	
-    	System.out.println(content);
-    	System.out.println(isLiteral);
         if (content == null) {
-            System.out.println("Error: Content is null.");
             throw new IllegalStateException("Content cannot be null.");
         }
-        System.out.println("Generating code for content: " + content + " with isLiteral: " + isLiteral);
         if (isLiteral) {
             return "System.out.println(" + content + ");\n"; // Para texto literal
         } else {
@@ -42,7 +37,6 @@ public class WriteCommand extends Command {
         }
     }
 
-    // Método de depuração para ver o estado do comando
     @Override
     public String toString() {
         return "WriteCommand [content=" + content + ", isLiteral=" + isLiteral + "]";

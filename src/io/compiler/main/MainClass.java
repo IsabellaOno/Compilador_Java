@@ -39,8 +39,6 @@ public class MainClass {
                 throw new RuntimeException("O método parser.getProgram() retornou null.");
             }
 			
-			System.out.println("Program: " + program);////
-			
 			SymbolTable symbolTable = program.getsymbolTable();
             if (symbolTable == null) {
                 symbolTable = new SymbolTable(); // Inicializa a SymbolTable se estiver nula
