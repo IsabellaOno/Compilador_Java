@@ -395,6 +395,7 @@ public class IsiLanguageParser extends Parser {
 
 			      			String id_var = _input.LT(-1).getText();
 			          		Symbol sym = new Var(id_var, null, currentType);
+			          		System.out.println(currentType);
 			          		if (!symbolTable.exists(id_var)){
 				                     symbolTable.add(sym);	
 				                  }
@@ -412,7 +413,8 @@ public class IsiLanguageParser extends Parser {
 				match(VIRG);
 				setState(59);
 				match(ID);
-				 
+
+				      			System.out.println(currentType);
 				      			String id_vari = _input.LT(-1).getText();
 				          		Symbol symb = new Var(id_vari, null, currentType);
 				          		if (!symbolTable.exists(id_vari)){
@@ -471,7 +473,7 @@ public class IsiLanguageParser extends Parser {
 				{
 				setState(68);
 				match(T__3);
-				 currentType = Var.NUMBER; 
+				 currentType = Var.NUMBER;
 				}
 				break;
 			case T__4:
@@ -479,7 +481,7 @@ public class IsiLanguageParser extends Parser {
 				{
 				setState(70);
 				match(T__4);
-				 currentType = Var.REALNUMBER; 
+				 currentType = Var.REALNUMBER;
 				}
 				break;
 			case T__5:
@@ -487,7 +489,7 @@ public class IsiLanguageParser extends Parser {
 				{
 				setState(72);
 				match(T__5);
-				 currentType = Var.TEXT; 
+				 currentType = Var.TEXT;
 				}
 				break;
 			default:

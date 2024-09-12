@@ -405,21 +405,21 @@ public class IsiLanguageParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(68); match(T__16);
-				 currentType = Var.NUMBER; 
+				 currentType = Var.NUMBER;
 				}
 				break;
 			case T__0:
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(70); match(T__0);
-				 currentType = Var.REALNUMBER; 
+				 currentType = Var.REALNUMBER;
 				}
 				break;
 			case T__1:
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(72); match(T__1);
-				 currentType = Var.TEXT; 
+				 currentType = Var.TEXT;
 				}
 				break;
 			default:

@@ -6,11 +6,10 @@ public class Var extends Symbol {
 	public static final int REALNUMBER = 1;
 	public static final int TEXT  = 2;
 	
-	 private String id;
 	 private int type;  
-	 private Object value;
+	 private String value;
 
-	 public Var(String id, Object value, int type) {
+	 public Var(String id, String value, int type) {
 		super(id);
         this.value = value;
         this.type = type; 
@@ -44,7 +43,7 @@ public class Var extends Symbol {
 	        return value;
 	    }
 
-	    public void setValue(Object value) {
+	    public void setValue(String value) {
 	        this.value = value;}
 	    
 	    public String getTypeText() {
@@ -65,16 +64,17 @@ public class Var extends Symbol {
 	        return "Var [id=" + id + ", type=" + getTypeText() + ", value=" + value +  "]";
 	    }
 	    
+	    @Override
 	    public String generateTarget() {
 	        String str;
 	        System.out.println(type);	
 	        if (type == NUMBER) {
 	        	str = "int ";
 	        }
-	        if (type == REALNUMBER) {
+	        else if (type == REALNUMBER) {
 		     	str = "float ";
 		        }
-	        if (type == TEXT) {
+	        else if (type == TEXT) {
 	        	str = "String ";
 	        }
 	        else {

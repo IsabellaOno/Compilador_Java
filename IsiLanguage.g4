@@ -96,9 +96,9 @@ declaravar: 'declare' tipo { currentDecl.clear(); }
       		PO
     	  ;
 
-tipo	 : 'inteiro' { currentType = Var.NUMBER; }
-    	 | 'real' { currentType = Var.REALNUMBER; }
-    	 | 'texto' { currentType = Var.TEXT; }
+tipo	 : 'inteiro' { currentType = Var.NUMBER;}
+    	 | 'real' { currentType = Var.REALNUMBER;}
+    	 | 'texto' { currentType = Var.TEXT;}
     	 ;
 			
 comando  :	cmdAttrib
