@@ -6,17 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Program {
-    private String name;
     private SymbolTable symbolTable;
     private List<Command> commandList;
-    
-    public String getName() {
-        return name;
-    }
-    
-    public void setName(String name) {
-        this.name = name;
-    }
     
     public SymbolTable getsymbolTable() {
         return symbolTable;
@@ -38,7 +29,7 @@ public class Program {
         StringBuilder str = new StringBuilder();
         str.append("import java.util.Scanner;\n");
         str.append("public class MainClass{ \n");
-        str.append("    public static void main(String[] args) {\n");
+        str.append("	public static void main(String args[]){\n ");
         str.append("        Scanner _scTrx = new Scanner(System.in);\n");
         
         for (Var var : symbolTable.getAll()) {
