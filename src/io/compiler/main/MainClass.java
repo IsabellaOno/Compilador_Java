@@ -39,6 +39,8 @@ public class MainClass {
                 throw new RuntimeException("O método parser.getProgram() retornou null.");
             }
 			
+			System.out.println("Program: " + program);////
+			
 			SymbolTable symbolTable = program.getsymbolTable();
             if (symbolTable == null) {
                 symbolTable = new SymbolTable(); // Inicializa a SymbolTable se estiver nula
@@ -53,7 +55,7 @@ public class MainClass {
 			System.out.println(program.generateTarget());
 			
 			try (FileWriter fw = new FileWriter(new File("meuPrograma.java"));
-	                 PrintWriter pw = new PrintWriter(fw)) {
+	                PrintWriter pw = new PrintWriter(fw)) {
 	                pw.println(program.generateTarget());
 	            } catch (IOException ex) {
 	                ex.printStackTrace();

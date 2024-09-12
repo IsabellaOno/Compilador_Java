@@ -66,16 +66,6 @@ public interface IsiLanguageListener extends ParseTreeListener {
 	 */
 	void exitComando(IsiLanguageParser.ComandoContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link IsiLanguageParser#cmdAttrib}.
-	 * @param ctx the parse tree
-	 */
-	void enterCmdAttrib(IsiLanguageParser.CmdAttribContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link IsiLanguageParser#cmdAttrib}.
-	 * @param ctx the parse tree
-	 */
-	void exitCmdAttrib(IsiLanguageParser.CmdAttribContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link IsiLanguageParser#cmdLeitura}.
 	 * @param ctx the parse tree
 	 */
@@ -95,6 +85,16 @@ public interface IsiLanguageListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitCmdEscrita(IsiLanguageParser.CmdEscritaContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IsiLanguageParser#cmdAttrib}.
+	 * @param ctx the parse tree
+	 */
+	void enterCmdAttrib(IsiLanguageParser.CmdAttribContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IsiLanguageParser#cmdAttrib}.
+	 * @param ctx the parse tree
+	 */
+	void exitCmdAttrib(IsiLanguageParser.CmdAttribContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link IsiLanguageParser#cmdSe}.
 	 * @param ctx the parse tree

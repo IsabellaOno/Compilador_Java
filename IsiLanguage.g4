@@ -63,13 +63,14 @@ grammar IsiLanguage;
 	}
 }
 
-programa	: 'programa'  (declara|bloco)? 'fimprog'
+programa	: 'programa' (declara bloco |bloco)? 'fimprog'
+			  {
+                program.setsymbolTable(symbolTable);
+                program.setCommandList(stack.pop());
+           	  }
         	;
 
-declara 	:	declaravar+ comando+ {
-                  program.setsymbolTable(symbolTable);
-                  program.setCommandList(stack.pop());
-            	}
+declara 	: (declaravar)+
             ; 
 
 bloco 		: (comando.)+
@@ -91,6 +92,26 @@ comando  :	cmdAttrib
 		 | cmdFacaEnquanto
 		 | cmdPara
 		 ;
+
+cmdLeitura: 'leia' AP ID { 
+    			String id = _input.LT(-1).getText();
+    			if (!isDeclared(id)) {
+        			throw new IsiLanguageSemanticException("Undeclared Variable: " + id);
+    			}
+    			symbolTable.setHasValue(id); // Marca a variável como inicializada
+    			symbolTable.markAsUsed(id); // Marca a variável como usada
+    
+    			Command cmdLeitura = new ReadCommand(symbolTable.get(id));
+   	 			stack.peek().add(cmdLeitura);
+				} FP PV
+		  ;
+
+cmdEscrita:	'escreva' AP (
+			termo { Command cmdEscrita = new WriteCommand(_input.LT(-1).getText());
+                    	stack.peek().add(cmdEscrita);
+            }
+			) FP PV { rightType = null;}
+		  ;
 
 cmdAttrib:		ID { 
                    String id = _input.LT(-1).getText();
@@ -115,26 +136,6 @@ cmdAttrib:		ID {
                  rightType = null;
               }
               ;
-
-cmdLeitura: 'leia' AP ID { 
-    			String id = _input.LT(-1).getText();
-    			if (!isDeclared(id)) {
-        			throw new IsiLanguageSemanticException("Undeclared Variable: " + id);
-    			}
-    			symbolTable.setHasValue(id); // Marca a variável como inicializada
-    			symbolTable.markAsUsed(id); // Marca a variável como usada
-    
-    			Command cmdLeitura = new ReadCommand(symbolTable.get(id));
-   	 			stack.peek().add(cmdLeitura);
-				} FP PV
-		  ;
-
-cmdEscrita:	'escreva' AP (
-			termo { Command cmdEscrita = new WriteCommand(_input.LT(-1).getText());
-                    	stack.peek().add(cmdEscrita);
-            }
-			) FP PV { rightType = null;}
-		  ;
 
 cmdSe	:	'se' { stack.push(new ArrayList<Command>());
                      strExpr = "";

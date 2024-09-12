@@ -32,19 +32,30 @@ public class Program {
         str.append("	public static void main(String args[]){\n ");
         str.append("        Scanner _scTrx = new Scanner(System.in);\n");
         
-        for (Var var : symbolTable.getAll()) {
-            if (null == var.getType()) {
-                str.append("        String ");
-            } else switch (var.getType()) {
-                case NUMBER -> str.append("        int ");
-                case REALNUMBER -> str.append("        double ");
-                default -> str.append("        String ");
+        if (symbolTable != null) {
+            for (Var var : symbolTable.getAll()) {
+                String varType;
+                switch (var.getType()) {
+                    case NUMBER:
+                        varType = "int";
+                        break;
+                    case REALNUMBER:
+                        varType = "double";
+                        break;
+                    case TEXT:
+                        varType = "String";
+                        break;
+                    default:
+                        varType = "Object"; // Tipo padrão se necessário
+                }
+                str.append("        ").append(varType).append(" ").append(var.getId()).append(";\n");
             }
-            str.append(var.getId()).append(";\n");
         }
-        
-        for (Command cmd : commandList) {
-            str.append(cmd.generateTarget()).append("\n");
+
+        if (commandList != null) {
+            for (Command cmd : commandList) {
+                str.append(cmd.generateTarget()).append("\n");
+            }
         }
         
         str.append("    }\n");

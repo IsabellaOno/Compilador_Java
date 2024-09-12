@@ -85,18 +85,6 @@ public class IsiLanguageBaseListener implements IsiLanguageListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCmdAttrib(IsiLanguageParser.CmdAttribContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCmdAttrib(IsiLanguageParser.CmdAttribContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterCmdLeitura(IsiLanguageParser.CmdLeituraContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -116,6 +104,18 @@ public class IsiLanguageBaseListener implements IsiLanguageListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitCmdEscrita(IsiLanguageParser.CmdEscritaContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCmdAttrib(IsiLanguageParser.CmdAttribContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCmdAttrib(IsiLanguageParser.CmdAttribContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
