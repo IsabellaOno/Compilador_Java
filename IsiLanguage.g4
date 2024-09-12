@@ -78,13 +78,26 @@ bloco 		: {
 			  (comando)+
 			;
 
-declaravar	:	'declare' { currentDecl.clear(); } ID { currentDecl.add(new Var(_input.LT(-1).getText()));}
-      			( VIRG ID { currentDecl.add(new Var(_input.LT(-1).getText()));} )*
-      			DP (
-        		'numero' {currentType = Types.NUMBER;} //Alterei se der erro dps pode ser isso.
-        		| 'texto' {currentType = Types.TEXT;}
-      			) { updateType(); } PO
-    		;
+declaravar: 'declare' tipo { currentDecl.clear(); }
+      		ID { 
+          		Var var = new Var(_input.LT(-1).getText(), currentType);
+          		currentDecl.add(var);
+      		}
+      		( VIRG ID { 
+          		Var var = new Var(_input.LT(-1).getText(), currentType);
+          		currentDecl.add(var);
+      		} )*
+      		DP { 
+          	updateType(); 
+      		}
+      		PO
+    	  ;
+
+tipo
+    : 'inteiro' { currentType = Types.NUMBER; }
+    | 'real' { currentType = Types.REALNUMBER; }
+    | 'texto' { currentType = Types.TEXT; }
+    ;
 			
 comando  :	cmdAttrib
 		 | cmdLeitura
@@ -264,8 +277,6 @@ NUMERO	: [0-9]+ ('.' [0-9]+)?
 
 VIRG	: ','	
 		;
-
-
 
 PV		: ';'
 		;

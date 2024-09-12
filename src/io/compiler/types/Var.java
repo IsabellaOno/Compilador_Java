@@ -64,22 +64,4 @@ public class Var {
     public String toString() {
         return "Var [id=" + id + ", type=" + type + ", initialized=" + initialized + ", used=" + used + "]";
     }
-    
-    public String generateTarget() {
-        String str;
-        switch (this.type) {
-            case NUMBER:
-                str = "int "; 
-                break;
-            case REALNUMBER:
-                str = "double ";
-                break;
-            case TEXT:
-                str = "String ";
-                break;
-            default:
-                throw new IllegalArgumentException("Tipo desconhecido: " + this.type);
-        }
-        return str + this.id + ";";
-    }
 }

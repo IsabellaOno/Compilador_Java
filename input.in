@@ -1,4 +1,5 @@
 programa
+	declare inteiro a,b,c,d.
     escreva("Programa Teste").
 	escreva("Digite A").
 fimprog.

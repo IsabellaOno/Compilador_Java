@@ -33,18 +33,15 @@ public class AttribCommand extends Command {
 
     @Override
     public String generateTarget() {
-        // Verifica se a variável foi declarada e inicializada
         Var var = symbolTable.get(id);
         if (var == null) {
             throw new RuntimeException("Variable not declared: " + id);
         }
-        
-        // Verifica se a variável foi inicializada
+
         if (!var.isInitialized()) {
             throw new IsiLanguageSemanticException("Variable " + id + " has not been initialized");
         }
 
-        // Gera o código de atribuição considerando o tipo da variável
         return id + " = " + expr + ";\n";
     }
 

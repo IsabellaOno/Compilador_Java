@@ -16,6 +16,16 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface IsiLanguageListener extends ParseTreeListener {
 	/**
+	 * Enter a parse tree produced by {@link IsiLanguageParser#tipo}.
+	 * @param ctx the parse tree
+	 */
+	void enterTipo(@NotNull IsiLanguageParser.TipoContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IsiLanguageParser#tipo}.
+	 * @param ctx the parse tree
+	 */
+	void exitTipo(@NotNull IsiLanguageParser.TipoContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link IsiLanguageParser#bloco}.
 	 * @param ctx the parse tree
 	 */
