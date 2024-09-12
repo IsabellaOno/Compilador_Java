@@ -44,11 +44,11 @@ grammar IsiLanguage;
 }
 
 programa	: 'programa' ID {
-        	  program.setName(_input.LT(-1).getText());
-        	  stack.push(new ArrayList<Command>()); 
-    		  } 
-    		  ((declara bloco)| bloco)? 'fimprog'
-    		;
+          	  program.setName(_input.LT(-1).getText());
+          	  stack.push(new ArrayList<Command>()); 
+        	  } 
+        	  declara? 'inicio' bloco 'fim' 'fimprog'
+        	;
 
 declara 	:	declaravar+ 'inicio' comando+ 'fim'{
                   program.setsymbolTable(symbolTable);
