@@ -37,7 +37,7 @@ public class Program {
     public String generateTarget() {
         StringBuilder str = new StringBuilder();
         str.append("import java.util.Scanner;\n");
-        str.append("public class MainClass").append(name).append("{ \n");
+        str.append("public class MainClass{ \n");
         str.append("    public static void main(String[] args) {\n");
         str.append("        Scanner _scTrx = new Scanner(System.in);\n");
         

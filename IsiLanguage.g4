@@ -41,16 +41,32 @@ grammar IsiLanguage;
     public boolean isDeclared(String id){
     	return symbolTable.get(id) != null;
     }
+    
+    public void checkUnused(String id) {
+		Var var = (Var) symbolTable.get(id);
+		if ((var.isInitialized() && !var.isUsed()) || !(var.isInitialized() && var.isUsed())) {
+	       	System.out.println("Warning - Variable " + var.getId() + " was declared but not used."); 
+		}	
+	}
+	
+	public void checkInitialized(String id) {
+        if(!symbolTable.checkInitialized(id))
+            throw new IsiLanguageSemanticException("Símbolo "+id+" não inicializado.");
+    }
+    
+    public void setHasValue(String id) {
+        symbolTable.setHasValue(id);
+    }
+    
+    public void generateCode(){
+		program.generateTarget();
+	}
 }
 
-programa	: 'programa' ID {
-          	  program.setName(_input.LT(-1).getText());
-          	  stack.push(new ArrayList<Command>()); 
-        	  } 
-        	  declara? 'inicio' bloco 'fim' 'fimprog'
+programa	: 'programa'  (declara|bloco)? 'fimprog'
         	;
 
-declara 	:	declaravar+ 'inicio' comando+ 'fim'{
+declara 	:	declaravar+ comando+ {
                   program.setsymbolTable(symbolTable);
                   program.setCommandList(stack.pop());
             	}

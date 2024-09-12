@@ -77,4 +77,9 @@ public class SymbolTable {
     public List<Var> getAll() {
         return new ArrayList<>(map.values());
     }
+
+    public boolean checkInitialized(String id) {
+        Var var = this.get(id);
+        return var != null && var.isInitialized();
+    }
 }

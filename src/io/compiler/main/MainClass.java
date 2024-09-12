@@ -50,17 +50,13 @@ public class MainClass {
             System.out.println(program.generateTarget());
 			
 			System.out.println(program.generateTarget());
-			try {
-				File f = new File(program.getName()+".java");
-				FileWriter fr = new FileWriter(f);
-				PrintWriter pr = new PrintWriter(fr);
-				pr.println(program.generateTarget());
-				pr.close();
-			}
-			catch (IOException ex) {
-				ex.printStackTrace();
-			}
-
+			
+			try (FileWriter fw = new FileWriter(new File("meuPrograma.java"));
+	                 PrintWriter pw = new PrintWriter(fw)) {
+	                pw.println(program.generateTarget());
+	            } catch (IOException ex) {
+	                ex.printStackTrace();
+	            }
 			//System.out.println(program.generateTarget());
 			
 		}
