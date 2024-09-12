@@ -50,15 +50,13 @@ public class MainClass {
                 return;  // Encerra se a lista de comandos estiver nula
             }
 			
-			System.out.println(program.generateTarget());
-			
 			try (FileWriter fw = new FileWriter(new File("meuPrograma.java"));
 	                PrintWriter pw = new PrintWriter(fw)) {
 	                pw.println(program.generateTarget());
 	            } catch (IOException ex) {
 	                ex.printStackTrace();
 	            }
-			//System.out.println(program.generateTarget());	
+			System.out.println(program.generateTarget());	
 		}
 		
 		catch(Exception ex) {
