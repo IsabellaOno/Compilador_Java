@@ -62,7 +62,7 @@ grammar IsiLanguage;
 	}
 }
 
-programa	: 'programa' ((declara bloco) |bloco)? 'fimprog'
+programa	: 'programa' ((declara bloco) |bloco)? 'fimprog.'
 			  {
                 program.setsymbolTable(symbolTable);
                 program.setCommandList(stack.pop());
@@ -75,7 +75,7 @@ declara 	: (declaravar)+
 bloco 		: {
 			  stack.push(new ArrayList<Command>());
 			  }
-			  (comando PO)+
+			  (comando)+
 			;
 
 declaravar	:	'declare' { currentDecl.clear(); } ID { currentDecl.add(new Var(_input.LT(-1).getText()));}

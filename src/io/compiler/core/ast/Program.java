@@ -30,7 +30,7 @@ public class Program {
         str.append("import java.util.Scanner;\n");
         str.append("public class MainClass{ \n");
         str.append("	public static void main(String args[]){\n ");
-        str.append("        Scanner _scTrx = new Scanner(System.in);\n");
+        str.append("		Scanner _scTrx = new Scanner(System.in);\n");
         
         if (symbolTable != null) {
             for (Var var : symbolTable.getAll()) {
@@ -48,13 +48,13 @@ public class Program {
                     default:
                         varType = "Object"; // Tipo padrão se necessário
                 }
-                str.append("        ").append(varType).append(" ").append(var.getId()).append(";\n");
+                str.append("		").append(varType).append(" ").append(var.getId()).append(";\n");
             }
         }
 
         if (commandList != null) {
             for (Command cmd : commandList) {
-                str.append(cmd.generateTarget()).append("\n");
+                str.append("		").append(cmd.generateTarget()).append("\n");
             }
         }
         

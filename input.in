@@ -1,4 +1,4 @@
 programa
     escreva("Programa Teste").
 	escreva("Digite A").
-fimprog
+fimprog.
