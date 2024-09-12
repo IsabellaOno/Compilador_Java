@@ -50,8 +50,4 @@ public class DoWhileCommand extends Command {
 		return str.toString();
 	}
 	
-	@Override
-    public String toString() {
-        return "DoWhileCommand {expression='" + expression + "', whileCommands=" + whileCommands + "}";
-    }
 }
