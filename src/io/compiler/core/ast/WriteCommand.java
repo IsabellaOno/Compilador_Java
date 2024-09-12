@@ -6,21 +6,15 @@ public class WriteCommand extends Command {
 
     // Construtor para conteúdo literal (texto)
     public WriteCommand(String content, boolean isLiteral) {
-        super();
         this.content = content;
         this.isLiteral = isLiteral;
+        System.out.println("CHEGUEI");
+        
     }
     
     // Construtor para conteúdo que é uma variável
     public WriteCommand(String content) {
         this(content, false); // Por padrão, assume-se que é um identificador
-    }
-
-    // Construtor padrão
-    public WriteCommand() {
-        super();
-        this.content = null;
-        this.isLiteral = false;
     }
 
     public String getContent() {

@@ -114,8 +114,10 @@ cmdEscrita: 'escreva' AP (
         		stack.peek().add(cmdEscrita);
     		}
     		| termo { 
-        		String termoText = _input.LT(-1).getText();
-        		System.out.println("Termo encontrado: " + termoText);
+       			String termoText = _input.LT(-1).getText();
+        		if (!isDeclared(termoText)) {
+            		throw new IsiLanguageSemanticException("Symbol " + termoText + " not declared");
+        		}
         		Command cmdEscrita = new WriteCommand(termoText); // Variável
         		stack.peek().add(cmdEscrita);
     		}
