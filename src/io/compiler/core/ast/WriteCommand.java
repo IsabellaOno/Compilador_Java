@@ -10,7 +10,7 @@ public class WriteCommand extends Command {
         this.content = content;
         this.isLiteral = isLiteral;
     }
-
+    
     // Construtor para conteúdo que é uma variável
     public WriteCommand(String content) {
         this(content, false); // Por padrão, assume-se que é um identificador
@@ -31,13 +31,18 @@ public class WriteCommand extends Command {
         this.content = content;
         this.isLiteral = isLiteral;
     }
-
+    
     // Método que gera o código Java para o comando de escrita
     @Override
     public String generateTarget() {
+    	
+    	System.out.println(content);
+    	System.out.println(isLiteral);
         if (content == null) {
+            System.out.println("Error: Content is null.");
             throw new IllegalStateException("Content cannot be null.");
         }
+        System.out.println("Generating code for content: " + content + " with isLiteral: " + isLiteral);
         if (isLiteral) {
             return "System.out.println(" + content + ");\n"; // Para texto literal
         } else {

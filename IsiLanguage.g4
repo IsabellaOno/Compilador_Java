@@ -63,7 +63,7 @@ grammar IsiLanguage;
 	}
 }
 
-programa	: 'programa' (declara bloco |bloco)? 'fimprog'
+programa	: 'programa' ((declara bloco) |bloco)? 'fimprog'
 			  {
                 program.setsymbolTable(symbolTable);
                 program.setCommandList(stack.pop());
@@ -107,16 +107,24 @@ cmdLeitura: 'leia' AP ID {
 		  ;
 
 cmdEscrita: 'escreva' AP (
-            TEXTO { Command cmdEscrita = new WriteCommand(_input.LT(-1).getText(), true);
-                  stack.peek().add(cmdEscrita);
-            }
-            | termo { Command cmdEscrita = new WriteCommand(_input.LT(-1).getText()); 
-                     stack.peek().add(cmdEscrita);
-            }
-            ) FP PV { rightType = null;}
-		  ;
-
-cmdAttrib :		ID { 
+    		TEXTO { 
+        		String text = _input.LT(-1).getText();
+        		System.out.println("Texto literal encontrado: " + text);
+        		Command cmdEscrita = new WriteCommand(text, true); // Literal
+        		stack.peek().add(cmdEscrita);
+    		}
+    		| termo { 
+        		String termoText = _input.LT(-1).getText();
+        		System.out.println("Termo encontrado: " + termoText);
+        		Command cmdEscrita = new WriteCommand(termoText); // Variável
+        		stack.peek().add(cmdEscrita);
+    		}
+			) FP PV { 
+    		rightType = null;
+			}	
+			;
+				  
+cmdAttrib:		ID { 
                    String id = _input.LT(-1).getText();
                    if (!isDeclared(id)) {
                        throw new IsiLanguageSemanticException("Undeclared Variable: " + id);

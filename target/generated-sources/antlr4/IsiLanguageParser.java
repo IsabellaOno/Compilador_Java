@@ -150,8 +150,10 @@ public class IsiLanguageParser extends Parser {
 			switch (_input.LA(1)) {
 			case T__2:
 				{
+				{
 				setState(31); declara();
 				setState(32); bloco();
+				}
 				}
 				break;
 			case T__17:
@@ -570,23 +572,31 @@ public class IsiLanguageParser extends Parser {
 			case 1:
 				{
 				setState(92); match(TEXTO);
-				 Command cmdEscrita = new WriteCommand(_input.LT(-1).getText(), true);
-				                  stack.peek().add(cmdEscrita);
-				            
+				 
+				        		String text = _input.LT(-1).getText();
+				        		System.out.println("Texto literal encontrado: " + text);
+				        		Command cmdEscrita = new WriteCommand(text, true); // Literal
+				        		stack.peek().add(cmdEscrita);
+				    		
 				}
 				break;
 			case 2:
 				{
 				setState(94); termo();
-				 Command cmdEscrita = new WriteCommand(_input.LT(-1).getText()); 
-				                     stack.peek().add(cmdEscrita);
-				            
+				 
+				        		String termoText = _input.LT(-1).getText();
+				        		System.out.println("Termo encontrado: " + termoText);
+				        		Command cmdEscrita = new WriteCommand(termoText); // Variável
+				        		stack.peek().add(cmdEscrita);
+				    		
 				}
 				break;
 			}
 			setState(99); match(FP);
 			setState(100); match(PV);
-			 rightType = null;
+			 
+			    		rightType = null;
+						
 			}
 		}
 		catch (RecognitionException re) {
