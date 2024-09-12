@@ -1,18 +1,22 @@
 package io.compiler.core.ast;
 
 import io.compiler.types.Var;
-import io.compiler.types.SymbolTable;
-import io.compiler.core.exceptions.IsiLanguageSemanticException;
+import io.compiler.types.Types;
 
 public class AttribCommand extends Command {
     private String id;   
-    private String expr;   
-    private SymbolTable symbolTable; 
+    private String expr;  
 
-    public AttribCommand(String id, String expr, SymbolTable symbolTable) {
+    public AttribCommand(String id, String expr) {
         this.id = id;
         this.expr = expr;
-        this.symbolTable = symbolTable;
+    }
+
+    public AttribCommand(String id) {
+        this.id = id;
+    }
+
+    public AttribCommand() {
     }
 
     public String getId() {
@@ -33,19 +37,7 @@ public class AttribCommand extends Command {
 
     @Override
     public String generateTarget() {
-        // Verifica se a variável foi declarada e inicializada
-        Var var = symbolTable.get(id);
-        if (var == null) {
-            throw new RuntimeException("Variable not declared: " + id);
-        }
-        
-        // Verifica se a variável foi inicializada
-        if (!var.isInitialized()) {
-            throw new IsiLanguageSemanticException("Variable " + id + " has not been initialized");
-        }
-
-        // Gera o código de atribuição considerando o tipo da variável
-        return id + " = " + expr + ";\n";
+        return this.getId() + "=" + this.getContent() + ";\n";
     }
 
     @Override
