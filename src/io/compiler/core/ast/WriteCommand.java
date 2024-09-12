@@ -11,7 +11,6 @@ public class WriteCommand extends Command {
         System.out.println("CHEGUEI");
         System.out.println(content);
     	System.out.println(isLiteral);
-        
     }
     
     // Construtor para conteúdo que é uma variável

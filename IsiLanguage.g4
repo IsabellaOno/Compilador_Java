@@ -111,7 +111,6 @@ cmdEscrita: 'escreva' AP (
         		String text = _input.LT(-1).getText();
         		System.out.println("Texto literal encontrado: " + text);
         		Command cmdEscrita = new WriteCommand(text, true); // Literal
-        		stack.peek().add(cmdEscrita);
     		}
     		| termo { 
        			String termoText = _input.LT(-1).getText();
@@ -119,10 +118,10 @@ cmdEscrita: 'escreva' AP (
             		throw new IsiLanguageSemanticException("Symbol " + termoText + " not declared");
         		}
         		Command cmdEscrita = new WriteCommand(termoText); // Variável
-        		stack.peek().add(cmdEscrita);
     		}
 			) FP PV { 
-    		rightType = null;
+    		rightType = null
+    		stack.peek().add(cmdEscrita);
 			}	
 			;
 				  

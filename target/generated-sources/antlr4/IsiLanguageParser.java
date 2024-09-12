@@ -576,7 +576,6 @@ public class IsiLanguageParser extends Parser {
 				        		String text = _input.LT(-1).getText();
 				        		System.out.println("Texto literal encontrado: " + text);
 				        		Command cmdEscrita = new WriteCommand(text, true); // Literal
-				        		stack.peek().add(cmdEscrita);
 				    		
 				}
 				break;
@@ -589,7 +588,6 @@ public class IsiLanguageParser extends Parser {
 				            		throw new IsiLanguageSemanticException("Symbol " + termoText + " not declared");
 				        		}
 				        		Command cmdEscrita = new WriteCommand(termoText); // Variável
-				        		stack.peek().add(cmdEscrita);
 				    		
 				}
 				break;
@@ -597,7 +595,8 @@ public class IsiLanguageParser extends Parser {
 			setState(99); match(FP);
 			setState(100); match(PV);
 			 
-			    		rightType = null;
+			    		rightType = null
+			    		stack.peek().add(cmdEscrita);
 						
 			}
 		}
