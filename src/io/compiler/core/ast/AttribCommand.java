@@ -1,6 +1,6 @@
 package io.compiler.core.ast;
 
-import io.compiler.types.Var;
+import io.compiler.types.Symbol;
 import io.compiler.types.SymbolTable;
 import io.compiler.core.exceptions.IsiLanguageSemanticException;
 
@@ -33,12 +33,12 @@ public class AttribCommand extends Command {
 
     @Override
     public String generateTarget() {
-        Var var = symbolTable.get(id);
-        if (var == null) {
+        Symbol sym = symbolTable.get(id);
+        if (sym == null) {
             throw new RuntimeException("Variable not declared: " + id);
         }
 
-        if (!var.isInitialized()) {
+        if (!sym.isInitialized()) {
             throw new IsiLanguageSemanticException("Variable " + id + " has not been initialized");
         }
 

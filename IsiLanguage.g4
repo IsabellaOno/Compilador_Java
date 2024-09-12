@@ -20,16 +20,10 @@ grammar IsiLanguage;
     private Stack<ArrayList<Command>> stack = new Stack<>();
     private Stack<String> stackExprDecision = new Stack<String>();
     
-    public void updateType() {
-        for (Var v : currentDecl) {
-            v.setType(currentType);
-            symbolTable.add(v);
-        }
-    }
     
     public void exibirVar() {
-    for (Var var : symbolTable.getAll()) { 
-        System.out.println(var);
+    for (Symbol sym : symbolTable.getAll()) { 
+        System.out.println(sym);
     	}
 	}
     
@@ -42,9 +36,9 @@ grammar IsiLanguage;
     }
     
     public void checkUnused(String id) {
-		Var var = (Var) symbolTable.get(id);
-		if ((var.isInitialized() && !var.isUsed()) || !(var.isInitialized() && var.isUsed())) {
-	       	System.out.println("Warning - Variable " + var.getId() + " was declared but not used."); 
+		Symbol sym = (Symbol) symbolTable.get(id);
+		if ((sym.isInitialized() && !sym.isUsed()) || !(sym.isInitialized() && sym.isUsed())) {
+	       	System.out.println("Warning - Variable " + sym.getId() + " was declared but not used."); 
 		}	
 	}
 	
@@ -81,27 +75,24 @@ bloco 		: {
 declaravar: 'declare' tipo { currentDecl.clear(); }
       		ID {
       			String id_var = _input.LT(-1).getText();
-          		Var var = new Var(id_var, null, currentType);
+          		Symbol sym = new Var(id_var, null, currentType);
           		if (!symbolTable.exists(id_var)){
-	                     symbolTable.add(var);	
+	                     symbolTable.add(sym);	
 	                  }
 	                  else{
 	                  	 throw new IsiLanguageSemanticException("Symbol "+id_var+" already declared");
 	                  } 
       		}
       		( VIRG ID { 
-      			String id_var = _input.LT(-1).getText();
-          		Symbol var = new Var(id_var, null, currentType);
-          		if (!symbolTable.exists(id_var)){
-	                     symbolTable.add(var);	
+      			String id_vari = _input.LT(-1).getText();
+          		Symbol symb = new Var(id_vari, null, currentType);
+          		if (!symbolTable.exists(id_vari)){
+	                     symbolTable.add(symb);	
 	                  }
 	                  else{
 	                  	 throw new IsiLanguageSemanticException("Symbol "+id_var+" already declared");
 	                  }
       		} )*
-      		DP { 
-          	updateType(); 
-      		}
       		PO
     	  ;
 
@@ -119,17 +110,17 @@ comando  :	cmdAttrib
 		 | cmdPara
 		 ;
 
-cmdLeitura: 'leia' AP ID { 
-    			String id = _input.LT(-1).getText();
-    			if (!isDeclared(id)) {
-        			throw new IsiLanguageSemanticException("Undeclared Variable: " + id);
-    			}
-    			symbolTable.setHasValue(id); // Marca a variável como inicializada
-    			symbolTable.markAsUsed(id); // Marca a variável como usada
-    
-    			Command cmdLeitura = new ReadCommand(symbolTable.get(id));
-   	 			stack.peek().add(cmdLeitura);
-				} FP PO
+cmdLeitura: 'leia' AP ID {
+					checkInitialized(_input.LT(-1).getText();
+    				String ident = _input.LT(-1).getText();
+    			} 
+    				FP PO
+    			{
+    				Var var = (Var)symbolTable.get(ident);
+              		Command cmdLeitura = new ReadCommand(ident, var);
+              		stack.peek().add(cmdLeitura);
+					setAtribuicao(ident);
+			 }	
 		  ;
 
 cmdEscrita: 'escreva' AP (
@@ -143,7 +134,7 @@ cmdEscrita: 'escreva' AP (
         		if (!isDeclared(termoText)) {
             		throw new IsiLanguageSemanticException("Symbol " + termoText + " not declared");
         		}
-        		Command cmdEscrita = new WriteCommand(termoText); // Variável
+        		Command cmdEscrita = new WriteCommand(termoText, false); 
         		stack.peek().add(cmdEscrita);
     		}
 			) FP PO { 

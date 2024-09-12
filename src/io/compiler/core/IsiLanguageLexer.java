@@ -108,16 +108,10 @@ public class IsiLanguageLexer extends Lexer {
 	    private Stack<ArrayList<Command>> stack = new Stack<>();
 	    private Stack<String> stackExprDecision = new Stack<String>();
 	    
-	    public void updateType() {
-	        for (Var v : currentDecl) {
-	            v.setType(currentType);
-	            symbolTable.add(v);
-	        }
-	    }
 	    
 	    public void exibirVar() {
-	    for (Var var : symbolTable.getAll()) { 
-	        System.out.println(var);
+	    for (Symbol sym : symbolTable.getAll()) { 
+	        System.out.println(sym);
 	    	}
 		}
 	    
@@ -130,9 +124,9 @@ public class IsiLanguageLexer extends Lexer {
 	    }
 	    
 	    public void checkUnused(String id) {
-			Var var = (Var) symbolTable.get(id);
-			if ((var.isInitialized() && !var.isUsed()) || !(var.isInitialized() && var.isUsed())) {
-		       	System.out.println("Warning - Variable " + var.getId() + " was declared but not used."); 
+			Symbol sym = (Symbol) symbolTable.get(id);
+			if ((sym.isInitialized() && !sym.isUsed()) || !(sym.isInitialized() && sym.isUsed())) {
+		       	System.out.println("Warning - Variable " + sym.getId() + " was declared but not used."); 
 			}	
 		}
 		

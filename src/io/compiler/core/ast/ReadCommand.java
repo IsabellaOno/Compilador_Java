@@ -5,24 +5,13 @@ import io.compiler.types.Var;
 public class ReadCommand extends Command {
 
 	private Var var;
+	private String ident;
 
-	public ReadCommand() {
-		super();
-	}
-
-	public ReadCommand(Var var) {
-		super();
+	public ReadCommand(String ident, Var var) {
+		this.ident = ident;
 		this.var = var;
 	}
-
-	public Var getVar() {
-		return var;
-	}
-
-	public void setVar(Var var) {
-		this.var = var;
-	}
-
+		
 	@Override
 	public String generateTarget() {
 		// TODO Auto-generated method stub
