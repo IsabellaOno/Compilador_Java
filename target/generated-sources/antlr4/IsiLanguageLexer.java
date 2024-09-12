@@ -54,9 +54,8 @@ public class IsiLanguageLexer extends Lexer {
 	    private Program program = new Program();
 	    private String strExpr = "";
 	    private IfCommand currentIfCommand;
-	    
-	    private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
-	    
+	    private Stack<ArrayList<Command>> stack = new Stack<>();
+	    private Stack<String> stackExprDecision = new Stack<String>();
 	    
 	    public void updateType() {
 	        for (Var v : currentDecl) {
