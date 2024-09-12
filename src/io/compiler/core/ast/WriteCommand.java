@@ -9,6 +9,8 @@ public class WriteCommand extends Command {
         this.content = content;
         this.isLiteral = isLiteral;
         System.out.println("CHEGUEI");
+        System.out.println(content);
+    	System.out.println(isLiteral);
         
     }
     
