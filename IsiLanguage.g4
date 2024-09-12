@@ -111,7 +111,7 @@ comando  :	cmdAttrib
 		 ;
 
 cmdLeitura: 'leia' AP ID {
-					checkInitialized(_input.LT(-1).getText();
+					checkInitialized(_input.LT(-1).getText());
     				String ident = _input.LT(-1).getText();
     			} 
     				FP PO

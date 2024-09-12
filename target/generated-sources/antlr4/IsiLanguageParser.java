@@ -565,7 +565,7 @@ public class IsiLanguageParser extends Parser {
 			setState(86); match(AP);
 			setState(87); match(ID);
 
-								checkInitialized(_input.LT(-1).getText();
+								checkInitialized(_input.LT(-1).getText());
 			    				String ident = _input.LT(-1).getText();
 			    			
 			setState(89); match(FP);

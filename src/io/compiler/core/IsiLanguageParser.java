@@ -395,7 +395,6 @@ public class IsiLanguageParser extends Parser {
 
 			      			String id_var = _input.LT(-1).getText();
 			          		Symbol sym = new Var(id_var, null, currentType);
-			          		System.out.println(currentType);
 			          		if (!symbolTable.exists(id_var)){
 				                     symbolTable.add(sym);	
 				                  }
@@ -413,8 +412,7 @@ public class IsiLanguageParser extends Parser {
 				match(VIRG);
 				setState(59);
 				match(ID);
-
-				      			System.out.println(currentType);
+				 
 				      			String id_vari = _input.LT(-1).getText();
 				          		Symbol symb = new Var(id_vari, null, currentType);
 				          		if (!symbolTable.exists(id_vari)){
@@ -648,7 +646,7 @@ public class IsiLanguageParser extends Parser {
 			setState(87);
 			match(ID);
 
-								checkInitialized(_input.LT(-1).getText();
+								checkInitialized(_input.LT(-1).getText());
 			    				String ident = _input.LT(-1).getText();
 			    			
 			setState(89);

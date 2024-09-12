@@ -67,7 +67,6 @@ public class Var extends Symbol {
 	    @Override
 	    public String generateTarget() {
 	        String str;
-	        System.out.println(type);	
 	        if (type == NUMBER) {
 	        	str = "int ";
 	        }
@@ -80,6 +79,6 @@ public class Var extends Symbol {
 	        else {
 	        	str = "Object ";
 	        }
-	        return (str + " "+this.getId()+";");
+	        return (str + " "+super.id+";");
 	 	}
 	}
