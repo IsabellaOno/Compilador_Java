@@ -106,14 +106,17 @@ cmdLeitura: 'leia' AP ID {
 				} FP PV
 		  ;
 
-cmdEscrita:	'escreva' AP (
-			termo { Command cmdEscrita = new WriteCommand(_input.LT(-1).getText());
-                    	stack.peek().add(cmdEscrita);
+cmdEscrita: 'escreva' AP (
+            TEXTO { Command cmdEscrita = new WriteCommand(_input.LT(-1).getText(), true);
+                  stack.peek().add(cmdEscrita);
             }
-			) FP PV { rightType = null;}
+            | termo { Command cmdEscrita = new WriteCommand(_input.LT(-1).getText()); 
+                     stack.peek().add(cmdEscrita);
+            }
+            ) FP PV { rightType = null;}
 		  ;
 
-cmdAttrib:		ID { 
+cmdAttrib :		ID { 
                    String id = _input.LT(-1).getText();
                    if (!isDeclared(id)) {
                        throw new IsiLanguageSemanticException("Undeclared Variable: " + id);
@@ -216,12 +219,12 @@ termo	:	ID { if (!isDeclared(_input.LT(-1).getText())) {
 			            }
 			| TEXTO {  if (rightType == null) {
 			 				   rightType = Types.TEXT;
-			 				   //System.out.println("Encontrei pela 1a vez um texto ="+ rightType);
+			 				   System.out.println("Encontrei pela 1a vez um texto ="+ rightType);
 			               }
 			               else{
 			                   if (rightType.getValue() < Types.TEXT.getValue()){			                    
 			                	   rightType = Types.TEXT;
-			                	   //System.out.println("Mudei o tipo para TEXT = "+rightType);
+			                	   System.out.println("Mudei o tipo para TEXT = "+rightType);
 			                	
 			                   }
 			               }

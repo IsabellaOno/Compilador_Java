@@ -38,9 +38,8 @@ public class WriteCommand extends Command {
         if (content == null) {
             throw new IllegalStateException("Content cannot be null.");
         }
-        // Gera a saída com base no tipo de conteúdo
         if (isLiteral) {
-            return "System.out.println(\"" + content + "\");\n"; // Para texto literal
+            return "System.out.println(" + content + ");\n"; // Para texto literal
         } else {
             return "System.out.println(" + content + ");\n"; // Para identificador (variável)
         }
