@@ -43,10 +43,12 @@ grammar IsiLanguage;
     }
 }
 
-programa	:	'programa' ID { program.setName(_input.LT(-1).getText());
-                               stack.push(new ArrayList<Command>()); 
-                } (declara | cmd)? 'fimprog'
-         	;
+programa	: 'programa' ID {
+        	  program.setName(_input.LT(-1).getText());
+        	  stack.push(new ArrayList<Command>()); 
+    		  } 
+    		  ((declara bloco)| bloco)? 'fimprog'
+    		;
 
 declara 	:	declaravar+ 'inicio' comando+ 'fim'{
                   program.setsymbolTable(symbolTable);
@@ -54,7 +56,7 @@ declara 	:	declaravar+ 'inicio' comando+ 'fim'{
             	}
             ; 
 
-cmd 		: (comando)	
+bloco 		: (comando.)+
 			;
 
 declaravar	:	'declare' { currentDecl.clear(); } ID { currentDecl.add(new Var(_input.LT(-1).getText()));}
@@ -116,7 +118,7 @@ cmdEscrita:	'escreva' AP (
                     	stack.peek().add(cmdEscrita);
             }
 			) FP PV { rightType = null;}
-		   ;
+		  ;
 
 cmdSe	:	'se' { stack.push(new ArrayList<Command>());
                      strExpr = "";

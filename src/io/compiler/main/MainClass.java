@@ -11,6 +11,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import io.compiler.core.IsiLanguageLexer;
 import io.compiler.core.IsiLanguageParser;
 import io.compiler.core.ast.Program;
+import io.compiler.types.SymbolTable;
 
 public class MainClass {
 	public static void main(String[] args) {
@@ -33,6 +34,20 @@ public class MainClass {
 
 			//geração do código do programa
 			Program program = parser.getProgram();
+
+			SymbolTable symbolTable = program.getsymbolTable();
+            if (symbolTable == null) {
+                symbolTable = new SymbolTable(); // Inicializa a SymbolTable se estiver nula
+                program.setsymbolTable(symbolTable);
+            }
+            
+            if (program.getCommandList() == null) {
+                System.err.println("Erro: A lista de comandos não foi inicializada.");
+                return;  // Encerra se a lista de comandos estiver nula
+            }
+
+            System.out.println(program.getName());
+            System.out.println(program.generateTarget());
 			
 			System.out.println(program.generateTarget());
 			try {

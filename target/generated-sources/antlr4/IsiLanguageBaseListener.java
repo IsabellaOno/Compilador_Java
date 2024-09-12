@@ -24,6 +24,18 @@ public class IsiLanguageBaseListener implements IsiLanguageListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterBloco(@NotNull IsiLanguageParser.BlocoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBloco(@NotNull IsiLanguageParser.BlocoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterDeclara(@NotNull IsiLanguageParser.DeclaraContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -163,18 +175,6 @@ public class IsiLanguageBaseListener implements IsiLanguageListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExpr(@NotNull IsiLanguageParser.ExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterCmd(@NotNull IsiLanguageParser.CmdContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCmd(@NotNull IsiLanguageParser.CmdContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

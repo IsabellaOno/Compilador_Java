@@ -49,13 +49,13 @@ public class IsiLanguageBaseListener implements IsiLanguageListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCmd(IsiLanguageParser.CmdContext ctx) { }
+	@Override public void enterBloco(IsiLanguageParser.BlocoContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCmd(IsiLanguageParser.CmdContext ctx) { }
+	@Override public void exitBloco(IsiLanguageParser.BlocoContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
