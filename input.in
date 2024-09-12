@@ -1,3 +1,4 @@
 programa
-    escreva("Ola mundo");	
+    escreva("Programa Teste").
+	escreva("Digite A").
 fimprog

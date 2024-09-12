@@ -83,7 +83,7 @@ declaravar	:	'declare' { currentDecl.clear(); } ID { currentDecl.add(new Var(_in
       			DP (
         		'numero' {currentType = Types.NUMBER;} //Alterei se der erro dps pode ser isso.
         		| 'texto' {currentType = Types.TEXT;}
-      			) { updateType(); } PV
+      			) { updateType(); } PO
     		;
 			
 comando  :	cmdAttrib
@@ -105,7 +105,7 @@ cmdLeitura: 'leia' AP ID {
     
     			Command cmdLeitura = new ReadCommand(symbolTable.get(id));
    	 			stack.peek().add(cmdLeitura);
-				} FP PV
+				} FP PO
 		  ;
 
 cmdEscrita: 'escreva' AP (
@@ -122,7 +122,7 @@ cmdEscrita: 'escreva' AP (
         		Command cmdEscrita = new WriteCommand(termoText); // Variável
         		stack.peek().add(cmdEscrita);
     		}
-			) FP PV { 
+			) FP PO { 
     		rightType = null;
 			}	
 			;
@@ -134,7 +134,7 @@ cmdAttrib:		ID {
                    }
                    symbolTable.get(id).setInitialized(true);
                    leftType = symbolTable.get(id).getType();
-                 } OP_AT expr PV {
+                 } OP_AT expr PO {
                  System.out.println("Left Side Expression Type = " + leftType);
                  System.out.println("Right Side Expression Type = " + rightType);
                  
@@ -179,15 +179,15 @@ cmdEnquanto:	'enquanto' {
 cmdFacaEnquanto:	'faca' { 
                      	stack.push(new ArrayList<Command>());
                   	} comando+ 'enquanto' AP expr OPREL { strExpr += _input.LT(-1).getText(); } expr
-					FP PV { 
+					FP PO { 
                      	DoWhileCommand DoWhileCommand = new DoWhileCommand(strExpr, stack.pop()); 
                      	stack.peek().add(DoWhileCommand); 
                   	}
                 ;
 
 cmdPara:	'para' AP ID OP_AT expr { String initialization = _input.LT(-3).getText() + ":=" + _input.LT(-1).getText(); 
-		      } PV expr OPREL expr { String condition = _input.LT(-3).getText() + _input.LT(-2).getText() + _input.LT(-1).getText(); 
-		      } PV ID ('++' | '--') { String increment = _input.LT(-2).getText() + _input.LT(-1).getText(); 
+		      } PO expr OPREL expr { String condition = _input.LT(-3).getText() + _input.LT(-2).getText() + _input.LT(-1).getText(); 
+		      } PO ID ('++' | '--') { String increment = _input.LT(-2).getText() + _input.LT(-1).getText(); 
 		      } FP 'faca' { 
                stack.push(new ArrayList<Command>());
               } comando+ 'fimpara' {
@@ -265,9 +265,14 @@ NUMERO	: [0-9]+ ('.' [0-9]+)?
 VIRG	: ','	
 		;
 
+
+
 PV		: ';'
 		;
-
+		
+PO		:'.'
+		;
+		
 AP		: '('
 		;
 
