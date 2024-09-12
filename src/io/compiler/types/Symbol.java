@@ -6,7 +6,7 @@ public abstract class Symbol {
     private boolean initialized;
     public abstract String generateTarget();
 
-    public Symbol(String name) {
+    public Symbol(String id) {
         this.id = id;
         this.used = false;
         this.initialized = false;
