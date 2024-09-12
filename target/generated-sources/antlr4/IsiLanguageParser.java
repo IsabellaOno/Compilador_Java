@@ -244,9 +244,13 @@ public class IsiLanguageParser extends Parser {
 	}
 
 	public static class BlocoContext extends ParserRuleContext {
+		public TerminalNode PO(int i) {
+			return getToken(IsiLanguageParser.PO, i);
+		}
 		public ComandoContext comando(int i) {
 			return getRuleContext(ComandoContext.class,i);
 		}
+		public List<TerminalNode> PO() { return getTokens(IsiLanguageParser.PO); }
 		public List<ComandoContext> comando() {
 			return getRuleContexts(ComandoContext.class);
 		}
@@ -281,8 +285,7 @@ public class IsiLanguageParser extends Parser {
 				{
 				{
 				setState(46); comando();
-				setState(47);
-				matchWildcard();
+				setState(47); match(PO);
 				}
 				}
 				setState(51); 
@@ -1285,7 +1288,7 @@ public class IsiLanguageParser extends Parser {
 		"\32\u00cb\3\2\2\2\34\u00d5\3\2\2\2\36\u00de\3\2\2\2 %\7\t\2\2!\"\5\4\3"+
 		"\2\"#\5\6\4\2#&\3\2\2\2$&\5\6\4\2%!\3\2\2\2%$\3\2\2\2%&\3\2\2\2&\'\3\2"+
 		"\2\2\'(\7\4\2\2()\b\2\1\2)\3\3\2\2\2*,\5\b\5\2+*\3\2\2\2,-\3\2\2\2-+\3"+
-		"\2\2\2-.\3\2\2\2.\5\3\2\2\2/\63\b\4\1\2\60\61\5\n\6\2\61\62\13\2\2\2\62"+
+		"\2\2\2-.\3\2\2\2.\5\3\2\2\2/\63\b\4\1\2\60\61\5\n\6\2\61\62\7\34\2\2\62"+
 		"\64\3\2\2\2\63\60\3\2\2\2\64\65\3\2\2\2\65\63\3\2\2\2\65\66\3\2\2\2\66"+
 		"\7\3\2\2\2\678\7\22\2\289\b\5\1\29:\7\30\2\2:@\b\5\1\2;<\7\32\2\2<=\7"+
 		"\30\2\2=?\b\5\1\2>;\3\2\2\2?B\3\2\2\2@>\3\2\2\2@A\3\2\2\2AC\3\2\2\2B@"+

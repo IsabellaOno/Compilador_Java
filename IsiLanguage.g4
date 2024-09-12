@@ -75,7 +75,7 @@ declara 	: (declaravar)+
 bloco 		: {
 			  stack.push(new ArrayList<Command>());
 			  }
-			  (comando.)+
+			  (comando PO)+
 			;
 
 declaravar	:	'declare' { currentDecl.clear(); } ID { currentDecl.add(new Var(_input.LT(-1).getText()));}

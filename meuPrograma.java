@@ -4,6 +4,8 @@ public class MainClass{
          Scanner _scTrx = new Scanner(System.in);
 System.out.println("Programa Teste");
 
+System.out.println("Digite A");
+
     }
 }
 

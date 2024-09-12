@@ -305,6 +305,10 @@ public class IsiLanguageParser extends Parser {
 		public ComandoContext comando(int i) {
 			return getRuleContext(ComandoContext.class,i);
 		}
+		public List<TerminalNode> PO() { return getTokens(IsiLanguageParser.PO); }
+		public TerminalNode PO(int i) {
+			return getToken(IsiLanguageParser.PO, i);
+		}
 		public BlocoContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -338,7 +342,7 @@ public class IsiLanguageParser extends Parser {
 				setState(46);
 				comando();
 				setState(47);
-				matchWildcard();
+				match(PO);
 				}
 				}
 				setState(51); 
@@ -1470,7 +1474,7 @@ public class IsiLanguageParser extends Parser {
 		"\u0000\u0000\u0000(*\u0003\u0006\u0003\u0000)(\u0001\u0000\u0000\u0000"+
 		"*+\u0001\u0000\u0000\u0000+)\u0001\u0000\u0000\u0000+,\u0001\u0000\u0000"+
 		"\u0000,\u0003\u0001\u0000\u0000\u0000-1\u0006\u0002\uffff\uffff\u0000"+
-		"./\u0003\b\u0004\u0000/0\t\u0000\u0000\u000002\u0001\u0000\u0000\u0000"+
+		"./\u0003\b\u0004\u0000/0\u0005\u001a\u0000\u000002\u0001\u0000\u0000\u0000"+
 		"1.\u0001\u0000\u0000\u000023\u0001\u0000\u0000\u000031\u0001\u0000\u0000"+
 		"\u000034\u0001\u0000\u0000\u00004\u0005\u0001\u0000\u0000\u000056\u0005"+
 		"\u0003\u0000\u000067\u0006\u0003\uffff\uffff\u000078\u0005\u0016\u0000"+
