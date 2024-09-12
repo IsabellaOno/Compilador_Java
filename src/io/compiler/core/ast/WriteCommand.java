@@ -8,9 +8,6 @@ public class WriteCommand extends Command {
     public WriteCommand(String content, boolean isLiteral) {
         this.content = content;
         this.isLiteral = isLiteral;
-        System.out.println("CHEGUEI");
-        System.out.println(content);
-    	System.out.println(isLiteral);
     }
     
     // Construtor para conteúdo que é uma variável
@@ -48,7 +45,7 @@ public class WriteCommand extends Command {
     // Método de depuração para ver o estado do comando
     @Override
     public String toString() {
-        return "EscritaCommand [content=" + content + ", isLiteral=" + isLiteral + "]";
+        return "WriteCommand [content=" + content + ", isLiteral=" + isLiteral + "]";
     }
 
     // Método de utilidade para validar o conteúdo

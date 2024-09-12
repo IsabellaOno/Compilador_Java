@@ -662,7 +662,6 @@ public class IsiLanguageParser extends Parser {
 				match(TEXTO);
 				 
 				        		String text = _input.LT(-1).getText();
-				        		System.out.println("Texto literal encontrado: " + text);
 				        		Command cmdEscrita = new WriteCommand(text, true); // Literal
 				        		stack.peek().add(cmdEscrita);
 				    		
@@ -689,7 +688,6 @@ public class IsiLanguageParser extends Parser {
 			match(PV);
 			 
 			    		rightType = null;
-			    		System.out.println("Stack after add: " + stack);
 						
 			}
 		}

@@ -111,7 +111,6 @@ cmdLeitura: 'leia' AP ID {
 cmdEscrita: 'escreva' AP (
     		TEXTO { 
         		String text = _input.LT(-1).getText();
-        		System.out.println("Texto literal encontrado: " + text);
         		Command cmdEscrita = new WriteCommand(text, true); // Literal
         		stack.peek().add(cmdEscrita);
     		}
@@ -125,7 +124,6 @@ cmdEscrita: 'escreva' AP (
     		}
 			) FP PV { 
     		rightType = null;
-    		System.out.println("Stack after add: " + stack);
 			}	
 			;
 				  
