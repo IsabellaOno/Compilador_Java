@@ -1,15 +1,26 @@
 programa
 	declare inteiro a,b,c.
-    escreva("Programa Testando Item 9").
+ 	declare real d.
+
+  	d := 2.5.
+    	escreva("Programa Teste").
      
 	escreva("Digite A").
 	leia(a).
 	escreva ("Digite B").
 	leia (b).
 
+	se (a<b) entao
+	{
+	c := a + b.
+	}senao
+	{
+	c := a - b.
+	}
+	
 	faca
 	{
- 	a := b + c.
+ 	c := a + b.
 	}
 	enquanto (a<b)
 	

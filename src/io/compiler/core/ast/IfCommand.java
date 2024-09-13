@@ -5,7 +5,6 @@ import java.util.List;
 public class IfCommand extends Command{
 
 	private String expression;
-	private String comand;
 	private List<Command> trueList;
 	private List<Command> falseList;
 	
@@ -13,9 +12,8 @@ public class IfCommand extends Command{
 		super();
 	}
 
-	public IfCommand(String comand, String expression, List<Command> trueList, List<Command> falseList) {
+	public IfCommand(String expression, List<Command> trueList, List<Command> falseList) {
 		super();
-		this.comand = comand;
 		this.expression = expression;
 		this.trueList = trueList;
 		this.falseList = falseList;
@@ -59,18 +57,10 @@ public class IfCommand extends Command{
 		str.append("\n");
 		
 		if (!falseList.isEmpty()) {
-			if (this.comand.equals("entao")) {
-				str.append(" 		}\n		else if ("+expression+") {\n");
-				for (Command cmd: trueList) {
-					str.append("		  ").append(cmd.generateTarget());}
-			}
-			else {
 			str.append(" 		}\n		else {\n");
 			for (Command cmd: falseList) {
 				str.append("		  ").append(cmd.generateTarget());
-			}}
-		}
-		
+			}}		
 		str.append("\n		}\n");
 		return str.toString();
 	}
