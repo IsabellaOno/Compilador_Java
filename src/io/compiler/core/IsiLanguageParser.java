@@ -167,7 +167,7 @@ public class IsiLanguageParser extends Parser {
 		public void checkTypeAttrib(String leftType, String id, String expression) { 
 			for (String type : exTypeList) {
 				if (leftType != type) {
-					throw new IsiLanguageSemanticException("Tipos incompatíveis");
+					throw new IsiLanguageSemanticException("Tipos incompatíveis entre " + leftType + " e " + type + "\n\t na sentenca " + id+" := " + expression);
 				}
 			}
 		}

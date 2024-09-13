@@ -29,7 +29,7 @@ public class Program {
         str.append("import java.util.Scanner;\n");
         str.append("public class MainClass{ \n");
         str.append("	public static void main(String args[]){\n ");
-        str.append("		Scanner _scTrx = new Scanner(System.in);\n");
+        str.append("		 Scanner scanner = new Scanner(System.in);\n");
         
         for (Symbol symbol: symbolTable.getAll()) {
 			str.append("		").append(symbol.generateTarget()+"\n");

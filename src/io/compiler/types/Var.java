@@ -51,7 +51,7 @@ public class Var extends Symbol {
 	            case NUMBER:
 	                return "int";
 	            case REALNUMBER:
-	                return "float";
+	                return "double";
 	            case TEXT:
 	                return "String";
 	            default:
@@ -71,7 +71,7 @@ public class Var extends Symbol {
 	        	str = "int ";
 	        }
 	        else if (type == REALNUMBER) {
-		     	str = "float ";
+		     	str = "double ";
 		        }
 	        else if (type == TEXT) {
 	        	str = "String ";
@@ -79,6 +79,6 @@ public class Var extends Symbol {
 	        else {
 	        	str = "Object ";
 	        }
-	        return str + " "+super.id+";";
+	        return (str + " "+super.id+";");
 	 	}
 	}

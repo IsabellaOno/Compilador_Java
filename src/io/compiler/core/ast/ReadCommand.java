@@ -28,7 +28,7 @@ public class ReadCommand extends Command {
 	            methodCall = "nextLine()";
 	            break;
 	    }
-	    return vari + " = _scTrx." + methodCall + ";";
+	    return vari + " = scanner." + methodCall + ";";
 	}
 	
 	@Override
