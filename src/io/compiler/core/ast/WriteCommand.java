@@ -31,9 +31,9 @@ public class WriteCommand extends Command {
             throw new IllegalStateException("Content cannot be null.");
         }
         if (isLiteral) {
-            return "System.out.println(" + content + ");\n"; // Para texto literal
+            return "System.out.println(" + content + ");"; // Para texto literal
         } else {
-            return "System.out.println(" + content + ");\n"; // Para identificador (variável)
+            return "System.out.println(" + content + ");"; // Para identificador (variável)
         }
     }
 

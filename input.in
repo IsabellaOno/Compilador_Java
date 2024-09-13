@@ -1,9 +1,6 @@
 programa
-	declare inteiro a,b,c.
- 	declare real d.
-
-  	d := 2.5.
-    	escreva("Programa Teste").
+	declare inteiro a,b,c,d.
+	escreva("Programa Teste").
      
 	escreva("Digite A").
 	leia(a).
@@ -11,14 +8,17 @@ programa
 	leia (b).
 
 
-	se (a<b)
+	se (a<b) entao
 	{
 	c := a + b.
-	}entao (a>b)
-	{
- 	c := a - b.
 	}senao
 	{
-	c := a *b.
+	c := a - b.
 	}
+	
+	escreva ("C e igual a ").
+	escreva (c).
+	d := c * a + b.
+	escreva ("D e igual a ").
+	escreva (d).
 fimprog.

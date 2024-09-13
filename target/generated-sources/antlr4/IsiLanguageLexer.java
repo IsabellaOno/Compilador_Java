@@ -67,10 +67,8 @@ public class IsiLanguageLexer extends Lexer {
 	    private ArrayList<Command> whileCommands;
 	    private ArrayList<Command> listaVazia;
 	    private ArrayList<Command> listT;
-	    private ArrayList<Command> listQ;
 	    private ArrayList<Command> listF;
 	    private ArrayList<Command> comList;
-	    
 	    
 	    public void exibirVar() {
 	    for (Symbol sym : symbolTable.getAll()) { 

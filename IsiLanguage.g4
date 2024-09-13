@@ -29,10 +29,8 @@ grammar IsiLanguage;
     private ArrayList<Command> whileCommands;
     private ArrayList<Command> listaVazia;
     private ArrayList<Command> listT;
-    private ArrayList<Command> listQ;
     private ArrayList<Command> listF;
     private ArrayList<Command> comList;
-    
     
     public void exibirVar() {
     for (Symbol sym : symbolTable.getAll()) { 
@@ -205,7 +203,7 @@ cmdAttrib:		ID {
                  	}} 
                  OP_AT((
                  		expr PO {
-                 			AttribCommand cmdAttrib = new AttribCommand(id_dois, contExpr);
+                 			Command cmdAttrib = new AttribCommand(id_dois, contExpr);
 							typeAttrib(leftType, id_dois, contExpr);
 							setHasValue(id_dois);
 							stack.peek().add(cmdAttrib);
@@ -213,7 +211,7 @@ cmdAttrib:		ID {
 				| (STRING {	
 						String str = _input.LT(-1).getText();
 						stringType(id_dois);
-						AttribCommand cmdAttrib = new AttribCommand(id_dois, str);
+						Command cmdAttrib = new AttribCommand(id_dois, str);
 						stack.peek().add(cmdAttrib);
 				} PO))
 			;
@@ -240,50 +238,15 @@ cmdSe	:	'se' AP {
 						if (rightType != leftType) { 
 							throw new IsiLanguageSemanticException("Não é possível compará-los");
 						}
-					} AC{
+					} 'entao' AC{
 						comList = new ArrayList<Command>(); 
             			stack.push(comList); 
             		}(comando)+ 
             		FC{
 						listT = stack.pop();
 						String Dec = exprDecision.pop();
-            			IfCommand cmdSe = new IfCommand("se", Dec, listT, listaVazia);
+            			Command cmdSe = new IfCommand(Dec, listT, listaVazia);
                    	   	stack.peek().add(cmdSe);}
-                     		
-			  	('entao' AP { 			  			
-            			exprReset();
-						} expr {
-							exprDecision.push(contExpr);
-							leftType = getTypeIfValid(exTypeList, "esquerdo", contExpr);
-						} 
-						OPREL { 
-							operacao = _input.LT(-1).getText();
-							op_atual = exprDecision.pop();
-							op_nova = op_atual + operacao;
-							exprDecision.push(op_nova);
-							exprReset();
-						} expr {
-							op_atual = exprDecision.pop();
-							op_nova = op_atual + contExpr;
-							exprDecision.push(op_nova);
-							rightType = getTypeIfValid(exTypeList, "direito", op_nova);
-						} 
-						FP {
-							if (rightType != leftType) { 
-								throw new IsiLanguageSemanticException("Não é possível compará-los");
-							}
-						} 
-						AC{
-							comList = new ArrayList<Command>(); 
-            				stack.push(comList);}
-            			(comando)+ 
-            			FC{
-            				listQ = stack.pop();
-							String Deca = exprDecision.pop();
-							stack.peek().remove(stack.peek().size() - 1);
-            				IfCommand cmdEntao = new IfCommand("entao", Deca, listT, listQ);
-                   	   		stack.peek().add(cmdEntao);}            				
-            			)? 
             		(
 					'senao' AC {
                    	 	comList = new ArrayList<Command>();
@@ -291,7 +254,7 @@ cmdSe	:	'se' AP {
                    	 } (comando+) FC {
                    		listF = stack.pop();
 						stack.peek().remove(stack.peek().size() - 1); 
-                   		IfCommand cmdSeNao = new IfCommand("senao", Dec, listQ, listF);
+                   		Command cmdSeNao = new IfCommand(Dec, listT, listF);
                    		stack.peek().add(cmdSeNao);
                      })?
            ;
@@ -322,7 +285,7 @@ cmdEnquanto:	'enquanto' AP {
             			stack.push(comList); 
                     } (comando)+ FC {
                        whileCommands = stack.pop();	
-					   WhileCommand cmdEnquanto = new WhileCommand(exprDecision.pop(), whileCommands);
+					   Command cmdEnquanto = new WhileCommand(exprDecision.pop(), whileCommands);
                    	   stack.peek().add(cmdEnquanto);
                     }
                 ;
@@ -361,7 +324,7 @@ cmdFacaEnquanto:   'faca'
             			}
         			} 
         			{ doWhileCommands = stack.pop(); 
-            		  DoWhileCommand cmdFacaEnquanto = new DoWhileCommand(exprDecision.pop(), doWhileCommands);
+            		  Command cmdFacaEnquanto = new DoWhileCommand(exprDecision.pop(), doWhileCommands);
             		  stack.peek().add(cmdFacaEnquanto);
 	        		}
     			;
