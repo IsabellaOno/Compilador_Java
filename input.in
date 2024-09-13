@@ -1,10 +1,11 @@
 programa
-	declare real a,b,c,d.
+	declare inteiro a,b,c,d.
+	declare inteiro f.
     escreva("Programa Calculando Soma").
     
-    a:= 3.5.
-	b:= 7.3.
-	c:= 2.0.
-	d:=(a+b+c).
+    a:= 3.
+	b:= 7.
+	c:= 2.
+	f:=a+b+c.
 	
 fimprog.
