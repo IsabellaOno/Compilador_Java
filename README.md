@@ -133,6 +133,26 @@ fimprog.
 ```
 Error: A variável d foi usada antes de ser atribuída.
 
+## Gramática
+
+Prog -> **programa** Declara Bloco **fimprog.**
+Declara -> **declare** Id (, Id)* .
+Bloco -> (Cmd. )+
+Comando -> CmdAttrib | CmdLeitura | CmdEscrita | CmdSe | CmdEnquanto | cmdFacaEnquanto
+CmdLeitura -> **leia**( Id )
+CmdEscrita -> **escreva**( Texto | Id )
+CmdIf -> “**se**” ‘(‘ Expr Op_rel Expr ‘)’ **entao** ‘{‘ Cmd+ ‘}’ (“**senao**” ‘{‘ Cmd+ ‘}’ )?
+expr -> Id := Expr
+OpRel -> ‘<’ | ‘>’ | “<=” | “>=” | “!=” | “==”
+expr -> Expr + Termo | Expr – Termo | Termo
+Termo -> Termo * Fator | Termo / Fator | Fator
+Fator -> Id | Numero | NumeroReal | ( Expr ) | Texto
+Texto -> “(0..9 | a..z | A..Z | ‘ ‘ | )+ ”
+Numero -> (0..9)+
+NumeroReal -> (0-9)+ ('.' (0-9)+)
+Id -> (a..z | A..Z) (a..z | A..Z | 0..9)* 
+Texto -> '"' ( [a-z] | [A-Z] | [0-9] | ',' | '.' | ' ' | '-')* '"'
+
 
 ## 🛠️ Execução
    
@@ -143,10 +163,5 @@ Error: A variável d foi usada antes de ser atribuída.
 3. Execute a MainClass do compilador.
 
 4. Seu código será exibido no console e um arquivo **meuPrograma.java** com seu código em java será gerado.
-
-2. Para gerar os arquivos Java a partir do arquivo G4, use o seguinte comando:
-   ```bash
-   java -cp antlr-4.13.2-complete.jar org.antlr.v4.Tool IsiLanguage.g4 -o src/io/compiler/core -package io.compiler.core
-   ```
 
 ###Link Youtube: [INSERIR](https://youtu.be/3afily28Dkg)
