@@ -1055,6 +1055,7 @@ public class IsiLanguageParser extends Parser {
 				expr();
 
 											exprDecision.push(contExpr);
+											System.out.println("CHEGUEI");
 											leftType = getTypeIfValid(exTypeList, "esquerdo", contExpr);
 										
 				setState(147);

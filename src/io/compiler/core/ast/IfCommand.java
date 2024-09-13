@@ -51,12 +51,11 @@ public class IfCommand extends Command{
 
 	@Override
 	public String generateTarget() {
-		if (this.comand == "se") {
-			StringBuilder str = new StringBuilder();
-			str.append("\n		if ("+expression+"){\n");
-			for (Command cmd: trueList) {
-				str.append("		  ").append(cmd.generateTarget());
-			}
+		StringBuilder str = new StringBuilder();
+		str.append("\n		if ("+expression+"){\n");
+		for (Command cmd: trueList) {
+			str.append("		  ").append(cmd.generateTarget());
+		}
 		str.append("\n");
 		
 		System.out.println(this.comand);
@@ -74,10 +73,7 @@ public class IfCommand extends Command{
 		}
 		
 		str.append("\n		}\n");
-		return str.toString();}
-		else {
-			return null;
-		}
+		return str.toString();
 	}
 	
 	@Override
