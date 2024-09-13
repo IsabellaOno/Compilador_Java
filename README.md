@@ -163,4 +163,4 @@ Texto -> '"' ( [a-z] | [A-Z] | [0-9] | ',' | '.' | ' ' | '-')* '"'
 
 4. Seu código será exibido no console e um arquivo **meuPrograma.java** com seu código em java será gerado.
 
-### Link do vídeo no Youtube: [Link](https://youtu.be/3afily28Dkg)
+### ▶️ Link do vídeo no Youtube: [Link](https://youtu.be/3afily28Dkg)
