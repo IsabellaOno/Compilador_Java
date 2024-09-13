@@ -9,6 +9,10 @@ grammar IsiLanguage;
 	import io.compiler.core.ast.*;
 }
 
+// Definição de variáveis e estruturas usadas no processo de análise e geração de código.
+// Inclui o symbolTable para rastreamento de variáveis, lista e pilhas de comandos, 
+// e variáveis temporárias para controle de tipos e expressões.
+
 @members {
 	private SymbolTable symbolTable = new SymbolTable();
     private ArrayList<Var> currentDecl = new ArrayList<Var>();
@@ -32,24 +36,29 @@ grammar IsiLanguage;
     private ArrayList<Command> listF;
     private ArrayList<Command> comList;
     
+    // Exibe as variáveis armazenadas na tabela de símbolos
     public void exibirVar() {
-    for (Symbol sym : symbolTable.getAll()) { 
-        System.out.println(sym);
+        for (Symbol sym : symbolTable.getAll()) { 
+            System.out.println(sym);
     	}
 	}
 	
+    // Retorna o tipo de uma variável baseado no seu identificador
 	public String getTypeById(String id) {
 		return symbolTable.getTypeById(id);
 	}
-	
+
+    // Retorna o programa atual
     public Program getProgram(){
     	return this.program;
-    	}
+    }
     
+    // Verifica se a variável foi declarada
     public boolean isDeclared(String id){
     	return symbolTable.get(id) != null;
     }
     
+    // Verifica que a variável foi declarada e não utilizada, gerando um alerta
     public void checkUnused(String id) {
 		Symbol sym = (Symbol) symbolTable.get(id);
 		if ((sym.isInitialized() && !sym.isUsed()) || !(sym.isInitialized() && sym.isUsed())) {
@@ -57,15 +66,18 @@ grammar IsiLanguage;
 		}	
 	}
 	
+    // Verifica que a variável foi inicializada antes de seu uso
 	public void checkInitialized(String id) {
         if(!symbolTable.exists(id))
             throw new IsiLanguageSemanticException("Símbolo "+id+" não inicializado.");
     }
     
+    // Marca a variável como tendo um valor atribuído
     public void setHasValue(String id) {
         symbolTable.setHasValue(id);
     }
     
+    // Verifica se a variável foi atribuída corretamente
     public void verificaAtribuicao(String id) {
 		symbolTable.verificaAtribuicao(id);
 	}
@@ -75,6 +87,7 @@ grammar IsiLanguage;
 		exTypeList = new ArrayList<String>();
 	}
 	
+    // Verificação de compatibilidade de tipos em atribuições
 	public void typeAttrib(String leftType, String id, String expression) { 
 		for (String type : exTypeList) {
 			if (leftType != type) {
@@ -101,11 +114,13 @@ grammar IsiLanguage;
 		symbolTable.stringType(id);
 	}
     
+    // Geração de código final do programa
     public void generateCode(){
 		program.generateTarget();
 	}
 }
 
+// Definição das estruturas necessárias
 programa	: 'programa' ((declara bloco) |bloco)? 'fimprog.'
 			  {
                 program.setsymbolTable(symbolTable);
@@ -122,6 +137,7 @@ bloco 		: {
 			  (comando)+
 			;
 
+// Declaração de variáveis, com verificação para caso a variável já tenha sido declarada            
 declaravar: 'declare' tipo
       		ID {
       			String id_var = _input.LT(-1).getText();
@@ -146,11 +162,13 @@ declaravar: 'declare' tipo
       		PO
     	  ;
 
+// Definição de tipos suportados: inteiro, real e texto          
 tipo	 : 'inteiro' { currentType = Var.NUMBER;}
     	 | 'real' { currentType = Var.REALNUMBER;}
     	 | 'texto' { currentType = Var.TEXT;}
     	 ;
-			
+
+// Conjunto de comandos suportados, como leitura, escrita, atribuições, condicionais e laços de repetições
 comando  :	cmdAttrib
 		 | cmdLeitura
 	 	 | cmdEscrita
@@ -159,6 +177,7 @@ comando  :	cmdAttrib
 		 | cmdFacaEnquanto
 		 ;
 
+// Comando de leitura, verificando se a variável foi inicializada antes
 cmdLeitura: 'leia' AP ID {
 					checkInitialized(_input.LT(-1).getText());
     				String ident = _input.LT(-1).getText();
@@ -171,6 +190,7 @@ cmdLeitura: 'leia' AP ID {
 			 }	
 		  ;
 
+// Comando de escrita          
 cmdEscrita: 'escreva' AP (
     		TEXTO { 
         		String text = _input.LT(-1).getText();
@@ -188,7 +208,8 @@ cmdEscrita: 'escreva' AP (
 			) FP PO { 
 			}	
 			;
-				  
+
+// Comando de atribuição, com inclusão de operadores aritméticos             
 cmdAttrib:		ID { 
                    		String id = _input.LT(-1).getText();
                    		checkInitialized(id);
@@ -216,6 +237,7 @@ cmdAttrib:		ID {
 				} PO))
 			;
 
+// Estrutura condicional IF...ELSE              
 cmdSe	:	'se' AP {
 						exprReset();
 					} expr {
@@ -259,6 +281,7 @@ cmdSe	:	'se' AP {
                      })?
            ;
 
+// Estrutura de repetição WHILE            
 cmdEnquanto:	'enquanto' AP {
 							exprReset();
 					} expr {
@@ -290,7 +313,7 @@ cmdEnquanto:	'enquanto' AP {
                     }
                 ;
 
-
+// Estrutura de repetição DO...WHILE
 cmdFacaEnquanto:   'faca' 
         			AC { 
             			comList = new ArrayList<Command>(); 
@@ -329,7 +352,7 @@ cmdFacaEnquanto:   'faca'
 	        		}
     			;
 
-        
+// Definição da estrutura das expressões, termos e fatores        
 expr	: termo expr_ad
 		;
 		
@@ -375,6 +398,7 @@ fator	:	ID { String id = _input.LT(-1).getText();
 			}         
 		;
 
+// Definição dos tokens utilizados na linguagem        
 SOMA	: '+'
 		;
 
