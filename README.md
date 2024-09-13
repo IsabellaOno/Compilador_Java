@@ -44,16 +44,12 @@ programa
 	escreva ("Digite B").
 	leia (b).
 
-
-	se (a<b)
+	se (a<b) entao
 	{
 	c := a + b.
-	}entao (a>b)
-	{
- 	c := a - b.
 	}senao
 	{
-	c := a *b.
+	c := a - b.
 	}
 	
 	faca
