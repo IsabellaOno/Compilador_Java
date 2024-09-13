@@ -14,7 +14,11 @@ public class MainClass{
 		System.out.println("Digite B");
 
 		b = scanner.nextInt();
-		c = a-b;
+		
+		do {
+		  c = a+b;
+ 		} while (a<b);
+
     }
 }
 

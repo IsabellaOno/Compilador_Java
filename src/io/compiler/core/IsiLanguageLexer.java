@@ -114,7 +114,7 @@ public class IsiLanguageLexer extends Lexer {
 	    private IfCommand currentIfCommand;
 	    private Stack<ArrayList<Command>> stack = new Stack<>();
 	    private Stack<String> exprDecision = new Stack<String>();
-	    private Stack<String> expreDecision = new Stack<String>();
+	    private ArrayList<Command> doWhileCommands;
 	    private ArrayList<Command> whileCommands;
 	    private ArrayList<Command> listaVazia;
 	    private ArrayList<Command> listT;
@@ -161,6 +161,7 @@ public class IsiLanguageLexer extends Lexer {
 		}
 		
 	    public void exprReset() {
+	    	contExpr = "";
 			exTypeList = new ArrayList<String>();
 		}
 		

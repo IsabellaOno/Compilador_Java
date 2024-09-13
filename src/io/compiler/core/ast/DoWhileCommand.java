@@ -42,11 +42,11 @@ public class DoWhileCommand extends Command {
 	@Override
 	public String generateTarget() {
 		StringBuilder str = new StringBuilder();
-		str.append("do {\n");
+		str.append("\n		do {\n");
 		for (Command cmd: doWhileCommands) {
-			str.append(cmd.generateTarget());
+			str.append("		  ").append(cmd.generateTarget());
 		}
-		str.append("} while (").append(expression).append(");\n");
+		str.append("\n 		} while (").append(expression).append(");\n");
 		return str.toString();
 	}
 	

@@ -5,8 +5,9 @@ programa
 	leia(a).
 	escreva ("Digite B").
 	leia (b).
-	enquanto (a<b)
+	faca
 	{
  	c := a + b.
 	}
+	enquanto (a<b)
 fimprog.
