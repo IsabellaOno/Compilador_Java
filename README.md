@@ -78,7 +78,7 @@ programa
 	
 fimprog.
 ```
-ERRO: Error: Símbolo f não inicializado.
+Error: Símbolo f não inicializado.
 
 Item 9 - Confere se variável foi declarada e não foi usada.
 ```bash
@@ -99,7 +99,7 @@ programa
 	
 fimprog.
 ```
-ERRO: Error: A variável c foi usada antes de ser atribuída.
+Error: A variável c foi usada antes de ser atribuída.
 
 Item 10 - Confere se variável está sendo usada sem valor inicial.
 ```bash
@@ -116,7 +116,7 @@ programa
 fimprog.
 
 ```
-ERROR: Error: A variável d foi usada antes de ser atribuída.
+Error: A variável d foi usada antes de ser atribuída.
 
 
 ## 🛠️ Execução
