@@ -138,11 +138,11 @@ Error: A variável d foi usada antes de ser atribuída.
    
 1. Referencie o JAR do ANTLR presente no projeto como biblioteca do seu projeto.
 
-2. Para transformar um código de IsiLanguage para java digite-o no arquivo ##input.in## e salve-o.
+2. Para transformar um código de IsiLanguage para java digite-o no arquivo **input.in** e salve-o.
 
 3. Execute a MainClass do compilador.
 
-4. Seu código será exibido no console e um arquivo ##meuPrograma.java## com seu código em java será gerado.
+4. Seu código será exibido no console e um arquivo **meuPrograma.java** com seu código em java será gerado.
 
 2. Para gerar os arquivos Java a partir do arquivo G4, use o seguinte comando:
    ```bash
