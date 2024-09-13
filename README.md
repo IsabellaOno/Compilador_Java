@@ -52,6 +52,11 @@ programa
 	{
 	c := a - b.
 	}
+
+	enquanto (b>a)
+	{
+	c := a * b.
+	}
 	
 	faca
 	{
