@@ -25,6 +25,7 @@ grammar IsiLanguage;
     private IfCommand currentIfCommand;
     private Stack<ArrayList<Command>> stack = new Stack<>();
     private Stack<String> exprDecision = new Stack<String>();
+    private ArrayList<Command> whileCommands;
     private ArrayList<Command> listaVazia;
     private ArrayList<Command> listT;
     private ArrayList<Command> listF;
@@ -278,29 +279,28 @@ cmdEnquanto:	'enquanto' AP {
 							exprDecision.push(contExpr);
 							leftType = getTypeIfValid(exTypeList, "esquerdo", contExpr);
 					} OPREL { 
-							String op = _input.LT(-1).getText();
-							String atual = stackExprDecision.pop();
-							String novo = atual + op;
-							stackExprDecision.push(novo);
-							resetExpr();
+							operacao = _input.LT(-1).getText();
+							op_atual = exprDecision.pop();
+							op_nova = op_atual + operacao;
+							exprDecision.push(op_nova);
+							exprReset();
 					} expr {
-							atual = stackExprDecision.pop();
-							novo = atual + _exprContent;
-							stackExprDecision.push(novo);
-							_rightType = verifyTypesAndGetTypeIfValid(expressionTypeList, "direito", novo);
+							op_atual = exprDecision.pop();
+							op_nova = op_atual + contExpr;
+							exprDecision.push(op_nova);
+							rightType = getTypeIfValid(exTypeList, "direito", op_nova);
 					} FP {
-						if (_rightType != _leftType) { 
-							throw new IsiSemanticException("Tipos não comparáveis");
+						if (rightType != leftType) { 
+							throw new IsiLanguageSemanticException("Não é possível compará-los");
 						}
-						_rightType = "";
-						_leftType ="";
-					} AC { 
-							curThread = new ArrayList<AbstractCommand>(); 
-							stack.push(curThread);
+					
+					} AC {
+						comList = new ArrayList<Command>(); 
+            			stack.push(comList); 
                     } (comando)+ FC {
-                       innerCommands = stack.pop();	
-					   CommandRepita cmdRepita = new CommandRepita(stackExprDecision.pop(), innerCommands);
-                   	   stack.peek().add(cmdRepita);
+                       whileCommands = stack.pop();	
+					   WhileCommand cmdEnquanto = new WhileCommand(expreDecision.pop(), whileCommands);
+                   	   stack.peek().add(cmdEnquanto);
                     };
 
 

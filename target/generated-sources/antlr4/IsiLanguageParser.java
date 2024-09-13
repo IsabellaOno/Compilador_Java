@@ -79,6 +79,7 @@ public class IsiLanguageParser extends Parser {
 	    private IfCommand currentIfCommand;
 	    private Stack<ArrayList<Command>> stack = new Stack<>();
 	    private Stack<String> exprDecision = new Stack<String>();
+	    private ArrayList<Command> whileCommands;
 	    private ArrayList<Command> listaVazia;
 	    private ArrayList<Command> listT;
 	    private ArrayList<Command> listF;
@@ -1049,31 +1050,30 @@ public class IsiLanguageParser extends Parser {
 								
 			setState(175); match(OPREL);
 			 
-										String op = _input.LT(-1).getText();
-										String atual = stackExprDecision.pop();
-										String novo = atual + op;
-										stackExprDecision.push(novo);
-										resetExpr();
+										operacao = _input.LT(-1).getText();
+										op_atual = exprDecision.pop();
+										op_nova = op_atual + operacao;
+										exprDecision.push(op_nova);
+										exprReset();
 								
 			setState(177); expr();
 
-										atual = stackExprDecision.pop();
-										novo = atual + _exprContent;
-										stackExprDecision.push(novo);
-										_rightType = verifyTypesAndGetTypeIfValid(expressionTypeList, "direito", novo);
+										op_atual = exprDecision.pop();
+										op_nova = op_atual + contExpr;
+										exprDecision.push(op_nova);
+										rightType = getTypeIfValid(exTypeList, "direito", op_nova);
 								
 			setState(179); match(FP);
 
-									if (_rightType != _leftType) { 
-										throw new IsiSemanticException("Tipos não comparáveis");
+									if (rightType != leftType) { 
+										throw new IsiLanguageSemanticException("Não é possível compará-los");
 									}
-									_rightType = "";
-									_leftType ="";
+								
 								
 			setState(181); match(AC);
-			 
-										curThread = new ArrayList<AbstractCommand>(); 
-										stack.push(curThread);
+
+									comList = new ArrayList<Command>(); 
+			            			stack.push(comList); 
 			                    
 			setState(184); 
 			_errHandler.sync(this);
@@ -1090,9 +1090,9 @@ public class IsiLanguageParser extends Parser {
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__16) | (1L << T__10) | (1L << T__8) | (1L << T__7) | (1L << T__2) | (1L << ID))) != 0) );
 			setState(188); match(FC);
 
-			                       innerCommands = stack.pop();	
-								   CommandRepita cmdRepita = new CommandRepita(stackExprDecision.pop(), innerCommands);
-			                   	   stack.peek().add(cmdRepita);
+			                       whileCommands = stack.pop();	
+								   WhileCommand cmdEnquanto = new WhileCommand(expreDecision.pop(), whileCommands);
+			                   	   stack.peek().add(cmdEnquanto);
 			                    
 			}
 		}

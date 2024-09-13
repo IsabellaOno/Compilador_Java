@@ -64,6 +64,7 @@ public class IsiLanguageLexer extends Lexer {
 	    private IfCommand currentIfCommand;
 	    private Stack<ArrayList<Command>> stack = new Stack<>();
 	    private Stack<String> exprDecision = new Stack<String>();
+	    private ArrayList<Command> whileCommands;
 	    private ArrayList<Command> listaVazia;
 	    private ArrayList<Command> listT;
 	    private ArrayList<Command> listF;
