@@ -12,10 +12,12 @@ grammar IsiLanguage;
 @members {
 	private SymbolTable symbolTable = new SymbolTable();
     private ArrayList<Var> currentDecl = new ArrayList<Var>();
+    private ArrayList<String> exTypeList = new ArrayList<String>();
     private int currentType;
-    private int leftType = -1, rightType = -1;
     private Program program = new Program();
+    private String leftType;
     private String strExpr = "";
+    private String contExpr = "";
     private IfCommand currentIfCommand;
     private Stack<ArrayList<Command>> stack = new Stack<>();
     private Stack<String> stackExprDecision = new Stack<String>();
@@ -26,7 +28,11 @@ grammar IsiLanguage;
         System.out.println(sym);
     	}
 	}
-    
+	
+	public String getTypeById(String id) {
+		return symbolTable.getTypeById(id);
+	}
+	
     public Program getProgram(){
     	return this.program;
     	}
@@ -43,13 +49,33 @@ grammar IsiLanguage;
 	}
 	
 	public void checkInitialized(String id) {
-        if(!symbolTable.checkInitialized(id))
+        if(!symbolTable.exists(id))
             throw new IsiLanguageSemanticException("Símbolo "+id+" não inicializado.");
     }
     
     public void setHasValue(String id) {
         symbolTable.setHasValue(id);
     }
+    
+    public void verificaAtribuicao(String id) {
+		symbolTable.verificaAtribuicao(id);
+	}
+	
+    public void exprReset() {
+		exTypeList = new ArrayList<String>();
+	}
+	
+	public void checkTypeAttrib(String leftType, String id, String expression) { 
+		for (String type : exTypeList) {
+			if (leftType != type) {
+				throw new IsiLanguageSemanticException("Tipos incompatíveis");
+			}
+		}
+	}
+	
+	public void stringType(String id) {
+		symbolTable.stringType(id);
+	}
     
     public void generateCode(){
 		program.generateTarget();
@@ -77,21 +103,21 @@ declaravar: 'declare' tipo
       			String id_var = _input.LT(-1).getText();
           		Symbol sym = new Var(id_var, null, currentType);
           		if (!symbolTable.exists(id_var)){
-	                     symbolTable.add(sym);	
-	                  }
-	                  else{
-	                  	 throw new IsiLanguageSemanticException("Symbol "+id_var+" already declared");
-	                  } 
+	            	symbolTable.add(sym);	
+	            }
+	            else{
+	                throw new IsiLanguageSemanticException("Variável"+id_var+" já declarada.");
+	            } 
       		}
       		( VIRG ID { 
       			String id_vari = _input.LT(-1).getText();
           		Symbol symb = new Var(id_vari, null, currentType);
           		if (!symbolTable.exists(id_vari)){
-	                     symbolTable.add(symb);	
-	                  }
-	                  else{
-	                  	 throw new IsiLanguageSemanticException("Symbol "+id_var+" already declared");
-	                  }
+	            	symbolTable.add(symb);	
+	            }
+	            else{
+	               throw new IsiLanguageSemanticException("Variável"+id_var+" já declarada.");
+	            }
       		} )*
       		PO
     	  ;
@@ -118,7 +144,7 @@ cmdLeitura: 'leia' AP ID {
     				Var var = (Var)symbolTable.get(ident);
               		Command cmdLeitura = new ReadCommand(ident, var);
               		stack.peek().add(cmdLeitura);
-					setAtribuicao(ident);
+					setHasValue(ident);
 			 }	
 		  ;
 
@@ -137,33 +163,35 @@ cmdEscrita: 'escreva' AP (
         		stack.peek().add(cmdEscrita);
     		}
 			) FP PO { 
-    		rightType = -1;
 			}	
 			;
 				  
 cmdAttrib:		ID { 
-                   String id = _input.LT(-1).getText();
-                   if (!isDeclared(id)) {
-                       throw new IsiLanguageSemanticException("Undeclared Variable: " + id);
-                   }
-                   symbolTable.get(id).setInitialized(true);
-                   leftType = symbolTable.get(id).getType();
-                 } OP_AT expr PO {
-                 System.out.println("Left Side Expression Type = " + leftType);
-                 System.out.println("Right Side Expression Type = " + rightType);
-                 
-                 if (leftType != -1 && rightType != -1 && leftType < rightType) {
-                    throw new IsiLanguageSemanticException("Type Mismatching on Assignment");
-                 }
-
-                 AttribCommand attribCommand = new AttribCommand(_input.LT(-5).getText(), strExpr, symbolTable);
-                 
-                 stack.peek().add(attribCommand);
-
-                 strExpr = "";
-                 rightType = -1;
-              }
-              ;
+                   		String id = _input.LT(-1).getText();
+                   		checkInitialized(id);
+                   		leftType = getTypeById(id);
+                   		String id_dois = id;
+                   		exprReset();
+                 	} 
+                (SOMA|SUB|MULT|DIV)? {
+                 		String op = _input.LT(-1).getText();
+                 		if (op.equals("+") || op.equals("-") || op.equals("*") || op.equals("/")) {
+                 			contExpr = id_dois + op;
+                 	}} 
+                 OP_AT((
+                 		expr PO {
+                 			AttribCommand cmdAttrib = new AttribCommand(id_dois, contExpr);
+							checkTypeAttrib(leftType, id_dois, contExpr);
+							setHasValue(id_dois);
+							stack.peek().add(cmdAttrib);
+					})
+				| (STRING {	
+						String str = _input.LT(-1).getText();
+						stringType(id_dois);
+						AttribCommand cmdAttrib = new AttribCommand(id_dois, str);
+						stack.peek().add(cmdAttrib);
+				} PO))
+			;
 
 cmdSe	:	'se' { stack.push(new ArrayList<Command>());
                      strExpr = "";
@@ -210,60 +238,40 @@ cmdPara:	'para' AP ID OP_AT expr { String initialization = _input.LT(-3).getText
               }
         ;
 
-expr	: termo { strExpr += _input.LT(-1).getText(); } exprl
+expr	:	 termo (SOMA termo { contExpr += '+'; } 
+           	| SUB termo { contExpr += '-'; exTypeList.add("NUMBER"); })*
+        ;
+
+termo	: 	fator (MULT fator { contExpr += '*'; exTypeList.add("NUMBER"); }
+            | DIV fator { contExpr += '/'; exTypeList.add("NUMBER"); })*
+        ;
+
+fator	:	ID { String id = _input.LT(-1).getText();
+				 checkInitialized(id);
+				 verificaAtribuicao(id);
+				 String type = getTypeById(id);
+				 contExpr += id; 
+				 exTypeList.add(type);}
+			| NUMERO {  contExpr += _input.LT(-1).getText();
+					exTypeList.add("NUMBER");}
+			| NUMERO_REAL {contExpr += _input.LT(-1).getText();
+					exTypeList.add("REALNUMBER");}
+			| TEXTO {  contExpr += _input.LT(-1).getText();
+					exTypeList.add("TEXT");} 
+			| AP { contExpr += _input.LT(-1).getText();} 
+			expr FP { contExpr += _input.LT(-1).getText();}         
 		;
 
-termo	:	ID { if (!isDeclared(_input.LT(-1).getText())) {
-                       throw new IsiLanguageSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
-                    }
-                    if (!symbolTable.get(_input.LT(-1).getText()).isInitialized()){
-                       throw new IsiLanguageSemanticException("Variable "+_input.LT(-1).getText()+" has no value assigned");
-                    }
-                    if (rightType == -1){
-                       rightType = 2;
-                       rightType = symbolTable.get(_input.LT(-1).getText()).getType();
-                       //System.out.println("Encontrei pela 1a vez uma variavel = "+rightType);
-                    }   
-                    else{
-                       if (rightType < 2) {
-                       	  rightType = 2;
-                       	  System.out.println("Mudei o tipo para TEXT = " + rightType);
-                          //System.out.println("Ja havia tipo declarado e mudou para = "+rightType);
-                          
-                       }
-                    }
-                  }
-			| NUMERO {  if (rightType == -1) {
-			 				rightType = Var.NUMBER;
-			 				//System.out.println("Encontrei um numero pela 1a vez "+rightType);
-			            }
-			               else{
-			                   if (rightType.getValue() < Var.NUMBER.getValue()){			                    			                   
-			                	   rightType = Var.NUMBER;
-			                	   //System.out.println("Mudei o tipo para Number = "+rightType);
-			                   }
-			               }
-			            }
-			| TEXTO {  if (rightType == -1) {
-			 				   rightType = Var.TEXT;
-			 				   System.out.println("Encontrei pela 1a vez um texto ="+ rightType);
-			               }
-			               else{
-			                   if (rightType.getValue() < Var.TEXT.getValue()){			                    
-			                	   rightType = Var.TEXT;
-			                	   System.out.println("Mudei o tipo para TEXT = "+rightType);
-			                	
-			                   }
-			               }
-			            }
+SOMA	: '+'
 		;
 
-exprl	: (
-			OP { strExpr += _input.LT(-1).getText(); } termo { strExpr += _input.LT(-1).getText(); }
-		  )*
+SUB		: '-'
 		;
 
-OP		: '+' | '-' | '*' | '/'
+DIV		: '/'
+		;
+
+MULT	: '*'
 		;
 
 OP_AT	: ':='
@@ -275,8 +283,11 @@ OPREL	: '>' | '<' | '>=' | '<=' | '<>' | '=='
 ID		: [a-z] ( [a-z] | [A-Z] | [0-9])*
 		;
 
-NUMERO	: [0-9]+ ('.' [0-9]+)?
+NUMERO	: [0-9]+
 		;
+
+NUMERO_REAL : [0-9]+ ('.' [0-9]+)?
+			;
 
 VIRG	: ','	
 		;
@@ -298,5 +309,7 @@ DP		: ':'
 
 TEXTO	: '"' ( [a-z] | [A-Z] | [0-9] | ',' | '.' | ' ' | '-')* '"'
 		;
+
+STRING: '"' ( '\\"' | .)*? '"';
 
 WS		: (' ' | '\n' | '\r' | '\t') -> skip;

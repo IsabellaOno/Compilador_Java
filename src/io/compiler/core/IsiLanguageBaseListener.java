@@ -205,13 +205,13 @@ public class IsiLanguageBaseListener implements IsiLanguageListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExprl(IsiLanguageParser.ExprlContext ctx) { }
+	@Override public void enterFator(IsiLanguageParser.FatorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExprl(IsiLanguageParser.ExprlContext ctx) { }
+	@Override public void exitFator(IsiLanguageParser.FatorContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

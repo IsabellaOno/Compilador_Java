@@ -14,13 +14,13 @@ public class ReadCommand extends Command {
 		
 	@Override
 	public String generateTarget() {
-		// TODO Auto-generated method stub
-		return var.getId() + " = " + ((var.getType()==Var.NUMBER)?"_scTrx.nextInt();":"_scTrx.nextLine();")+"\n";
+		String vari = this.ident;
+		return vari + "= _key." + (this.var.getType() == 0 ? "nextDouble();" : "nextLine();");
 	}
 	
 	@Override
 	public String toString() {
-		return "CommandLeitura [id=" + ident + "]";
+		return "CommandLeitura [id=" + this.ident + "]";
 	}
 
 }

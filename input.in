@@ -2,4 +2,5 @@ programa
 	declare real a,b,c,d.
     escreva("Programa Teste").
 	escreva("Digite A").
+	leia(a).
 fimprog.

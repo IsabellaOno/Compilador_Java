@@ -132,18 +132,6 @@ public class IsiLanguageBaseListener implements IsiLanguageListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExprl(@NotNull IsiLanguageParser.ExprlContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitExprl(@NotNull IsiLanguageParser.ExprlContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterTermo(@NotNull IsiLanguageParser.TermoContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -163,6 +151,18 @@ public class IsiLanguageBaseListener implements IsiLanguageListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitCmdLeitura(@NotNull IsiLanguageParser.CmdLeituraContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFator(@NotNull IsiLanguageParser.FatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFator(@NotNull IsiLanguageParser.FatorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

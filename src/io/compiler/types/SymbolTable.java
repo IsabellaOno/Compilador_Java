@@ -20,7 +20,7 @@ public class SymbolTable {
     }
     
     public boolean exists(String id) {
-        return map.containsKey(id);
+    	return map.get(id) != null;
     }
     
     public Symbol get(String id) {
@@ -44,14 +44,6 @@ public class SymbolTable {
                 .collect(Collectors.toList());
     }    
 
-    public void assertStringType(String id) throws IsiLanguageSemanticException {
-        Var variable = (Var) this.get(id);
-        if (variable != null && variable.getType() == Var.TEXT) {
-            return;
-        }
-        throw new IsiLanguageSemanticException("Variável " + (variable != null ? variable.getId() : id) + " não é do tipo texto");
-    }
-
     public void setHasValue(String id) {
         Var variable = (Var) this.get(id);
         if (variable != null) {
@@ -60,27 +52,23 @@ public class SymbolTable {
     }
 
     public String getTypeById(String id) {
-        Var variable = (Var) this.get(id);
-        if (variable != null) {
-            int type = variable.getType();
-            switch (type) {
-                case Var.NUMBER:
-                    return "NUMBER";
-                case Var.REALNUMBER:
-                    return "REALNUMBER";
-                case Var.TEXT:
-                    return "TEXT";
-                default:
-                    return "Desconhecido";
-            }
-        }
-        return "Desconhecido";
-    }
+		Var var = (Var) this.get(id);
+		if (var.getType() == Var.NUMBER) {
+			return "NUMBER";}
+		else if (var.getType() == Var.REALNUMBER) {
+			return "REALNUMBER";}
+		else {
+			return "TEXT";
+		}
+	}
 
     public void verificaAtribuicao(String id) throws IsiLanguageSemanticException {
         Symbol sym = this.get(id);
-        if (sym == null || !sym.isInitialized()) {
-            throw new IsiLanguageSemanticException("A variável " + sym.getId() + " foi usada antes de ser atribuida");
+        if (sym == null) {
+            throw new IsiLanguageSemanticException("A variável com ID " + id + " não foi declarada.");
+        }
+        if (!sym.isInitialized()) {
+            throw new IsiLanguageSemanticException("A variável " + sym.getId() + " foi usada antes de ser atribuída");
         }
     }
   
@@ -96,4 +84,12 @@ public class SymbolTable {
         Symbol symb = this.get(id);
         return symb != null && symb.isInitialized();
     }
+        
+    public void stringType(String id) throws IsiLanguageSemanticException {
+    	Var var = (Var) this.get(id);
+    	if (var.getType() == Var.TEXT) {
+    		return;
+    	}
+    	throw new IsiLanguageSemanticException("Variável " + var.getId() + " é do tipo " + var.getTypeText() + " não pode ser receber texto.");
+    	}   
 }
