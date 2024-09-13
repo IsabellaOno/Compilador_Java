@@ -1,10 +1,16 @@
 programa
 	declare inteiro a,b,c.
-    escreva("Programa Teste").
+ 	declare real d.
+
+  	d := 2.5.
+    	escreva("Programa Teste").
+     
 	escreva("Digite A").
 	leia(a).
 	escreva ("Digite B").
 	leia (b).
+
+
 	se (a<b)
 	{
 	c := a + b.
