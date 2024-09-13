@@ -133,42 +133,25 @@ fimprog.
 ```
 Error: A variável d foi usada antes de ser atribuída.
 
-## Gramática
+## :memo: Gramática
 
-Prog -> **programa** Declara Bloco **fimprog.**
-
-Declara -> **declare** Id (, Id)* .
-
-Bloco -> (Cmd. )+
-
-Comando -> CmdAttrib | CmdLeitura | CmdEscrita | CmdSe | CmdEnquanto | cmdFacaEnquanto
-
-CmdLeitura -> **leia**( Id )
-
-CmdEscrita -> **escreva**( Texto | Id )
-
-CmdIf -> “**se**” ‘(‘ Expr Op_rel Expr ‘)’ **entao** ‘{‘ Cmd+ ‘}’ (“**senao**” ‘{‘ Cmd+ ‘}’ )?
-
-expr -> Id := Expr
-
-OpRel -> ‘<’ | ‘>’ | “<=” | “>=” | “!=” | “==”
-
-expr -> Expr + Termo | Expr – Termo | Termo
-
-Termo -> Termo * Fator | Termo / Fator | Fator
-
-Fator -> Id | Numero | NumeroReal | ( Expr ) | Texto
-
-Texto -> “(0..9 | a..z | A..Z | ‘ ‘ | )+ ”
-
-Numero -> (0..9)+
-
-NumeroReal -> (0-9)+ ('.' (0-9)+)
-
-Id -> (a..z | A..Z) (a..z | A..Z | 0..9)* 
-
-Texto -> '"' ( [a-z] | [A-Z] | [0-9] | ',' | '.' | ' ' | '-')* '"'
-
+Prog -> **programa** Declara Bloco **fimprog.**  
+Declara -> **declare** Id (, Id)* .  
+Bloco -> (Cmd. )+  
+Comando -> CmdAttrib | CmdLeitura | CmdEscrita | CmdSe | CmdEnquanto | cmdFacaEnquanto  
+CmdLeitura -> **leia**( Id )  
+CmdEscrita -> **escreva**( Texto | Id )  
+CmdIf -> “**se**” ‘(‘ Expr Op_rel Expr ‘)’ **entao** ‘{‘ Cmd+ ‘}’ (“**senao**” ‘{‘ Cmd+ ‘}’ )?  
+expr -> Id := Expr  
+OpRel -> ‘<’ | ‘>’ | “<=” | “>=” | “!=” | “==”  
+expr -> Expr + Termo | Expr – Termo | Termo  
+Termo -> Termo * Fator | Termo / Fator | Fator  
+Fator -> Id | Numero | NumeroReal | ( Expr ) | Texto  
+Texto -> “(0..9 | a..z | A..Z | ‘ ‘ | )+ ”  
+Numero -> (0..9)+  
+NumeroReal -> (0-9)+ ('.' (0-9)+)  
+Id -> (a..z | A..Z) (a..z | A..Z | 0..9)*  
+Texto -> '"' ( [a-z] | [A-Z] | [0-9] | ',' | '.' | ' ' | '-')* '"'  
 
 ## 🛠️ Execução
    
