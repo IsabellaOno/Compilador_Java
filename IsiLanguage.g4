@@ -157,7 +157,6 @@ comando  :	cmdAttrib
 		 | cmdSe
 		 | cmdEnquanto
 		 | cmdFacaEnquanto
-		 | cmdPara
 		 ;
 
 cmdLeitura: 'leia' AP ID {
@@ -273,15 +272,37 @@ cmdSe	:	'se' AP {
                      })?
            ;
 
-cmdEnquanto:	'enquanto' { 
-                  stack.push(new ArrayList<Command>());
-                  strExpr = ""; 
-               	} AP expr OPREL { strExpr += _input.LT(-1).getText(); } expr FP 'faca' comando+
-				'fimenquanto' { 
-                  WhileCommand WhileCommand = new WhileCommand(strExpr, stack.pop()); 
-                  stack.peek().add(WhileCommand);
-               	}
-           ;
+cmdEnquanto:	'enquanto' AP {
+							exprReset();
+					} expr {
+							exprDecision.push(contExpr);
+							leftType = getTypeIfValid(exTypeList, "esquerdo", contExpr);
+					} OPREL { 
+							String op = _input.LT(-1).getText();
+							String atual = stackExprDecision.pop();
+							String novo = atual + op;
+							stackExprDecision.push(novo);
+							resetExpr();
+					} expr {
+							atual = stackExprDecision.pop();
+							novo = atual + _exprContent;
+							stackExprDecision.push(novo);
+							_rightType = verifyTypesAndGetTypeIfValid(expressionTypeList, "direito", novo);
+					} FP {
+						if (_rightType != _leftType) { 
+							throw new IsiSemanticException("Tipos não comparáveis");
+						}
+						_rightType = "";
+						_leftType ="";
+					} AC { 
+							curThread = new ArrayList<AbstractCommand>(); 
+							stack.push(curThread);
+                    } (comando)+ FC {
+                       innerCommands = stack.pop();	
+					   CommandRepita cmdRepita = new CommandRepita(stackExprDecision.pop(), innerCommands);
+                   	   stack.peek().add(cmdRepita);
+                    };
+
 
 cmdFacaEnquanto:	'faca' { 
                      	stack.push(new ArrayList<Command>());
