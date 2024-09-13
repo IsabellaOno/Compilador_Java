@@ -96,18 +96,6 @@ public class IsiLanguageBaseListener implements IsiLanguageListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCmdPara(@NotNull IsiLanguageParser.CmdParaContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCmdPara(@NotNull IsiLanguageParser.CmdParaContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterCmdEscrita(@NotNull IsiLanguageParser.CmdEscritaContext ctx) { }
 	/**
 	 * {@inheritDoc}

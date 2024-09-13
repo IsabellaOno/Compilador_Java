@@ -25,6 +25,7 @@ grammar IsiLanguage;
     private IfCommand currentIfCommand;
     private Stack<ArrayList<Command>> stack = new Stack<>();
     private Stack<String> exprDecision = new Stack<String>();
+    private Stack<String> expreDecision = new Stack<String>();
     private ArrayList<Command> whileCommands;
     private ArrayList<Command> listaVazia;
     private ArrayList<Command> listT;
@@ -304,25 +305,44 @@ cmdEnquanto:	'enquanto' AP {
                     };
 
 
-cmdFacaEnquanto:	'faca' { 
-                     	stack.push(new ArrayList<Command>());
-                  	} comando+ 'enquanto' AP expr OPREL { strExpr += _input.LT(-1).getText(); } expr
-					FP PO { 
-                     	DoWhileCommand DoWhileCommand = new DoWhileCommand(strExpr, stack.pop()); 
-                     	stack.peek().add(DoWhileCommand); 
-                  	}
-                ;
+cmdFacaEnquanto:   'do' 
+        			AC { 
+            			comList = new ArrayList<Command>(); 
+            			stack.push(comList); 
+        			} 
+        			(comando)+ 
+        			FC 
+        			'while' AP { 
+            			exprReset(); 
+       			 	} 
+        			expr { 
+            			exprDecision.push(contExpr); 
+            			leftType = getTypeIfValid(exTypeList, "esquerdo", contExpr); 
+        			} 
+        			OPREL { 
+            			operacao = _input.LT(-1).getText(); 
+            			op_atual = exprDecision.pop(); 
+            			op_nova = op_atual + operacao; 
+            			exprDecision.push(op_nova); 
+            			exprReset(); 
+        			} 
+        			expr { 
+            			op_atual = exprDecision.pop(); 
+            			op_nova = op_atual + contExpr; 
+            			exprDecision.push(op_nova); 
+            			rightType = getTypeIfValid(exTypeList, "direito", op_nova); 
+        			} 
+        			FP { 
+            			if (rightType != leftType) { 
+                			throw new IsiLanguageSemanticException("Não é possível compará-los"); 
+            			}
+        			} 
+        			{ doWhileCommands = stack.pop(); 
+            		  DoWhileCommand cmdFacaEnquanto = new DoWhileCommand(exprDecision.pop(), doWhileCommands);
+            		  stack.peek().add(cmdFacaEnquanto);
+	        		}
+    			;
 
-cmdPara:	'para' AP ID OP_AT expr { String initialization = _input.LT(-3).getText() + ":=" + _input.LT(-1).getText(); 
-		      } PO expr OPREL expr { String condition = _input.LT(-3).getText() + _input.LT(-2).getText() + _input.LT(-1).getText(); 
-		      } PO ID ('++' | '--') { String increment = _input.LT(-2).getText() + _input.LT(-1).getText(); 
-		      } FP 'faca' { 
-               stack.push(new ArrayList<Command>());
-              } comando+ 'fimpara' {
-               ForCommand ForCommand = new ForCommand(initialization, condition, increment, stack.pop()); 
-               stack.peek().add(ForCommand);
-              }
-        ;
         
 expr	: termo expr_ad
 		;

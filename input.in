@@ -5,11 +5,8 @@ programa
 	leia(a).
 	escreva ("Digite B").
 	leia (b).
-	se (a<b)
+	enquanto (a<b)
 	{
  	c := a + b.
-	}senao
-	{
- 	c := a - b.
 	}
 fimprog.
