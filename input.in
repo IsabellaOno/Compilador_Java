@@ -1,8 +1,15 @@
 programa
-	declare real a,b,c,d.
+	declare inteiro a,b,c,d.
     escreva("Programa Teste").
 	escreva("Digite A").
 	leia(a).
 	escreva ("Digite B").
 	leia (b).
+	se (a<b)
+	{
+ 	c := a + b.
+	}senao
+	{
+ 	c := a - b.
+	}
 fimprog.

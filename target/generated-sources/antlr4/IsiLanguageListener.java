@@ -26,6 +26,16 @@ public interface IsiLanguageListener extends ParseTreeListener {
 	 */
 	void exitTipo(@NotNull IsiLanguageParser.TipoContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link IsiLanguageParser#termo_ad}.
+	 * @param ctx the parse tree
+	 */
+	void enterTermo_ad(@NotNull IsiLanguageParser.Termo_adContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IsiLanguageParser#termo_ad}.
+	 * @param ctx the parse tree
+	 */
+	void exitTermo_ad(@NotNull IsiLanguageParser.Termo_adContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link IsiLanguageParser#bloco}.
 	 * @param ctx the parse tree
 	 */
@@ -125,6 +135,16 @@ public interface IsiLanguageListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitCmdLeitura(@NotNull IsiLanguageParser.CmdLeituraContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IsiLanguageParser#expr_ad}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpr_ad(@NotNull IsiLanguageParser.Expr_adContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IsiLanguageParser#expr_ad}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpr_ad(@NotNull IsiLanguageParser.Expr_adContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link IsiLanguageParser#fator}.
 	 * @param ctx the parse tree

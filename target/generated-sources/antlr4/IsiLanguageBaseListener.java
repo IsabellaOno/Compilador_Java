@@ -36,6 +36,18 @@ public class IsiLanguageBaseListener implements IsiLanguageListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterTermo_ad(@NotNull IsiLanguageParser.Termo_adContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTermo_ad(@NotNull IsiLanguageParser.Termo_adContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterBloco(@NotNull IsiLanguageParser.BlocoContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -151,6 +163,18 @@ public class IsiLanguageBaseListener implements IsiLanguageListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitCmdLeitura(@NotNull IsiLanguageParser.CmdLeituraContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExpr_ad(@NotNull IsiLanguageParser.Expr_adContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExpr_ad(@NotNull IsiLanguageParser.Expr_adContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

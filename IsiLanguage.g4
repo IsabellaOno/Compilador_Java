@@ -15,12 +15,20 @@ grammar IsiLanguage;
     private ArrayList<String> exTypeList = new ArrayList<String>();
     private int currentType;
     private Program program = new Program();
-    private String leftType;
+    private String leftType = "";
+    private String rightType = "";
     private String strExpr = "";
     private String contExpr = "";
+    private String operacao;
+    private	String op_atual;
+	private	String op_nova;
     private IfCommand currentIfCommand;
     private Stack<ArrayList<Command>> stack = new Stack<>();
-    private Stack<String> stackExprDecision = new Stack<String>();
+    private Stack<String> exprDecision = new Stack<String>();
+    private ArrayList<Command> listaVazia;
+    private ArrayList<Command> listT;
+    private ArrayList<Command> listF;
+    private ArrayList<Command> comList;
     
     
     public void exibirVar() {
@@ -65,12 +73,28 @@ grammar IsiLanguage;
 		exTypeList = new ArrayList<String>();
 	}
 	
-	public void checkTypeAttrib(String leftType, String id, String expression) { 
+	public void typeAttrib(String leftType, String id, String expression) { 
 		for (String type : exTypeList) {
 			if (leftType != type) {
 				throw new IsiLanguageSemanticException("Tipos incompatíveis entre " + leftType + " e " + type + "\n\t na sentenca " + id+" := " + expression);
 			}
 		}
+	}
+	
+	public String getTypeIfValid(ArrayList<String> listTypes, String lado, String expressao) {
+    	if (listTypes.isEmpty()) {
+        	throw new IsiLanguageSemanticException("A lista de tipos está vazia para a expressão " + expressao);
+    	}
+    	String tipoBase = listTypes.get(0);
+
+    	// Verifica se todos os tipos são iguais ao tipo base
+    	for (String tipo : listTypes) {
+        	if (!tipo.equals(tipoBase)) {
+            	throw new IsiLanguageSemanticException("Elementos do lado " + lado + " possuem tipos incompatíveis.");
+        	}
+    	}
+    	// Se todos os tipos são iguais, retorna o tipo base
+   		return tipoBase;
 	}
 	
 	public void stringType(String id) {
@@ -181,7 +205,7 @@ cmdAttrib:		ID {
                  OP_AT((
                  		expr PO {
                  			AttribCommand cmdAttrib = new AttribCommand(id_dois, contExpr);
-							checkTypeAttrib(leftType, id_dois, contExpr);
+							typeAttrib(leftType, id_dois, contExpr);
 							setHasValue(id_dois);
 							stack.peek().add(cmdAttrib);
 					})
@@ -193,20 +217,61 @@ cmdAttrib:		ID {
 				} PO))
 			;
 
-cmdSe	:	'se' { stack.push(new ArrayList<Command>());
-                     strExpr = "";
-                      currentIfCommand = new IfCommand();
-                  } AP expr OPREL { strExpr += _input.LT(-1).getText(); } expr FP { currentIfCommand.setExpression(strExpr); 
-		      	} 'entao' comando+ { 
-                  currentIfCommand.setTrueList(stack.pop());                            
-            	} (
-			'senao' { stack.push(new ArrayList<Command>()); } comando+ {
-                     currentIfCommand.setFalseList(stack.pop());
-                 }
-			)? 'fimse' {
-               	stack.peek().add(currentIfCommand);
-               }
-        ;
+cmdSe	:	'se' AP {
+						exprReset();
+					} expr {
+						exprDecision.push(contExpr);
+						leftType = getTypeIfValid(exTypeList, "esquerdo", contExpr);
+					} 
+					OPREL { 
+						operacao = _input.LT(-1).getText();
+						op_atual = exprDecision.pop();
+						op_nova = op_atual + operacao;
+						exprDecision.push(op_nova);
+						exprReset();
+					} expr {
+						op_atual = exprDecision.pop();
+						op_nova = op_atual + contExpr;
+						exprDecision.push(op_nova);
+						rightType = getTypeIfValid(exTypeList, "direito", op_nova);
+					} 
+					FP {
+						if (rightType != leftType) { 
+							throw new IsiLanguageSemanticException("Não é possível compará-los");
+						}
+					}( 
+			  'entao' AC { 
+            			comList = new ArrayList<Command>(); 
+            			stack.push(comList);
+        			}
+      				(comando)+ FC {
+            				listT = stack.pop();
+            				String expreDecision = exprDecision.pop();
+            				listaVazia = new ArrayList<Command>();
+            				IfCommand ifCommand = new IfCommand(expreDecision, listT, listaVazia);
+            				stack.peek().add(ifCommand);
+        			}
+					AC { 
+						comList = new ArrayList<Command>(); 
+                      	stack.push(comList);
+                    } (comando)+ FC {
+                       listT = stack.pop();	
+					   String expDeci = exprDecision.pop();
+					   listaVazia = new ArrayList<Command>();
+					   IfCommand cmdEntao = new IfCommand(expreDecision, listT, listaVazia);
+                   	   stack.peek().add(cmdEntao);
+                    })? (
+			'senao' AC {
+                   	 	comList = new ArrayList<Command>();
+                   	 	stack.push(comList);
+                   	 } (comando+) FC {
+                   		listF = stack.pop();
+						int index = stack.peek().size() - 1; 
+						stack.peek().remove(index); 
+                   		IfCommand cmdSeNao = new IfCommand(expreDecision, listT, listF);
+                   		stack.peek().add(cmdSeNao);
+                     })?
+           ;
 
 cmdEnquanto:	'enquanto' { 
                   stack.push(new ArrayList<Command>());
@@ -237,29 +302,73 @@ cmdPara:	'para' AP ID OP_AT expr { String initialization = _input.LT(-3).getText
                stack.peek().add(ForCommand);
               }
         ;
+        
+expr	: termo expr_ad
+		;
+		
+termo	: fator termo_ad
+		;
 
-expr	:	 termo (SOMA termo { contExpr += '+'; } 
-           	| SUB termo { contExpr += '-'; exTypeList.add("NUMBER"); })*
+expr_ad	:	(SUB { 
+				contExpr += '-';
+				String tipo = getTypeById(_input.LT(-1).getText());
+        		if (!tipo.equals("NUMBER") && !tipo.equals("REALNUMBER")) { 
+            		throw new IsiLanguageSemanticException("Tipos incompatíveis: " + tipo + " não é válido para subtração.");
+        		}
+        		exTypeList.add(tipo);
+        	}
+			termo expr_ad 
+           	| SOMA { 
+           		contExpr += '+'; String tipo = getTypeById(_input.LT(-1).getText());
+        		if (!tipo.equals("NUMBER") && !tipo.equals("REALNUMBER")) { 
+            		throw new IsiLanguageSemanticException("Tipos incompatíveis: " + tipo + " não é válido para subtração.");
+        		}
+        		exTypeList.add(tipo);
+        	}
+           	termo expr_ad
+           	)?
         ;
 
-termo	: 	fator (MULT fator { contExpr += '*'; exTypeList.add("NUMBER"); }
-            | DIV fator { contExpr += '/'; exTypeList.add("NUMBER"); })*
-        ;
-
+termo_ad:  (DIV { 
+        		contExpr += '/'; 
+        		String tipo = getTypeById(_input.LT(-1).getText());
+        		if (!tipo.equals("NUMBER") && !tipo.equals("REALNUMBER")) { 
+            		throw new IsiLanguageSemanticException("Tipos incompatíveis: " + tipo + " não é válido para divisão.");
+        		}
+        		exTypeList.add(tipo);
+    		}
+    		fator termo_ad  
+    		| MULT { 
+        		contExpr += '*'; 
+        		String tipo = getTypeById(_input.LT(-1).getText()); 
+        		if (!tipo.equals("NUMBER") && !tipo.equals("REALNUMBER")) {  
+            		throw new IsiLanguageSemanticException("Tipos incompatíveis: " + tipo + " não é válido para multiplicação.");
+        		}
+        		exTypeList.add(tipo); 
+    		}
+    		fator termo_ad
+    		)?
+	    ;
 fator	:	ID { String id = _input.LT(-1).getText();
 				 checkInitialized(id);
 				 verificaAtribuicao(id);
 				 String type = getTypeById(id);
 				 contExpr += id; 
-				 exTypeList.add(type);}
+				 exTypeList.add(type);
+			}
 			| NUMERO {  contExpr += _input.LT(-1).getText();
-					exTypeList.add("NUMBER");}
+					exTypeList.add("NUMBER");
+			}
 			| NUMERO_REAL {contExpr += _input.LT(-1).getText();
-					exTypeList.add("REALNUMBER");}
+					exTypeList.add("REALNUMBER");
+			}
 			| TEXTO {  contExpr += _input.LT(-1).getText();
-					exTypeList.add("TEXT");} 
-			| AP { contExpr += _input.LT(-1).getText();} 
-			expr FP { contExpr += _input.LT(-1).getText();}         
+					exTypeList.add("TEXT");
+			} 
+			| AP { contExpr += _input.LT(-1).getText();
+			} 
+			expr FP { contExpr += _input.LT(-1).getText();
+			}         
 		;
 
 SOMA	: '+'
@@ -304,6 +413,12 @@ AP		: '('
 FP		: ')'
 		;
 
+AC		: '{'
+		;
+
+FC		: '}'
+		;
+		
 DP		: ':'
 		;
 
