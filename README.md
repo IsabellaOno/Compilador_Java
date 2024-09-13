@@ -22,7 +22,7 @@ Este projeto tem como objetivo desenvolver um compilador que converta uma lingua
 
 ### Linguagem escolhida: Java 
 
-## Exemplos do input:
+## Exemplos de códigos do input.in utilizados para conferir itens obrigatórios:
 Item 1 - Declaração de Variáveis:
 ```bash
 programa
