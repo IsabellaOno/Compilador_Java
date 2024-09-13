@@ -29,6 +29,7 @@ grammar IsiLanguage;
     private ArrayList<Command> whileCommands;
     private ArrayList<Command> listaVazia;
     private ArrayList<Command> listT;
+    private ArrayList<Command> listQ;
     private ArrayList<Command> listF;
     private ArrayList<Command> comList;
     
@@ -241,36 +242,57 @@ cmdSe	:	'se' AP {
 						if (rightType != leftType) { 
 							throw new IsiLanguageSemanticException("Não é possível compará-los");
 						}
-					}( 
-			  'entao' AC { 
-            			comList = new ArrayList<Command>(); 
-            			stack.push(comList);
-        			}
-      				(comando)+ FC {
-            				listT = stack.pop();
-            				String expreDecision = exprDecision.pop();
-            				listaVazia = new ArrayList<Command>();
-            				IfCommand ifCommand = new IfCommand(exprDecision, listT, listaVazia);
-            				stack.peek().add(ifCommand);
-        			}
-					AC { 
+					} AC{
 						comList = new ArrayList<Command>(); 
-                      	stack.push(comList);
-                    } (comando)+ FC {
-                       listT = stack.pop();	
-					   String expDeci = exprDecision.pop();
-					   listaVazia = new ArrayList<Command>();
-					   IfCommand cmdEntao = new IfCommand(exprDecision, listT, listaVazia);
-                   	   stack.peek().add(cmdEntao);
-                    })? (
-			'senao' AC {
+            			stack.push(comList); 
+            		}(comando)+ 
+            		FC{
+						listT = stack.pop();
+						String Dec = exprDecision.pop();
+            			IfCommand cmdSe = new IfCommand("se", Dec, listT, listaVazia);
+                   	   	stack.peek().add(cmdSe);}
+                   	 (
+            		
+			  		'entao' AP { 			  			
+            			exprReset();
+						} expr {
+							exprDecision.push(contExpr);
+							leftType = getTypeIfValid(exTypeList, "esquerdo", contExpr);
+						} 
+						OPREL { 
+							operacao = _input.LT(-1).getText();
+							op_atual = exprDecision.pop();
+							op_nova = op_atual + operacao;
+							exprDecision.push(op_nova);
+							exprReset();
+						} expr {
+							op_atual = exprDecision.pop();
+							op_nova = op_atual + contExpr;
+							exprDecision.push(op_nova);
+							rightType = getTypeIfValid(exTypeList, "direito", op_nova);
+						} 
+						FP {
+							if (rightType != leftType) { 
+								throw new IsiLanguageSemanticException("Não é possível compará-los");
+							}
+						} 
+						AC{
+							comList = new ArrayList<Command>(); 
+            				stack.push(comList); }
+            			(comando)+ 
+            			FC{
+            				listQ = stack.pop();
+							String Deca = exprDecision.pop();
+            				IfCommand cmdEntao = new IfCommand("entao", Deca, listT, listQ);
+                   	   		stack.peek().add(cmdEntao);}            				
+            			)? (
+					'senao' AC {
                    	 	comList = new ArrayList<Command>();
                    	 	stack.push(comList);
                    	 } (comando+) FC {
                    		listF = stack.pop();
-						int index = stack.peek().size() - 1; 
-						stack.peek().remove(index); 
-                   		IfCommand cmdSeNao = new IfCommand(exprDecision, listT, listF);
+						stack.peek().remove(stack.peek().size() - 1); 
+                   		IfCommand cmdSeNao = new IfCommand("senao", Dec, listT, listF);
                    		stack.peek().add(cmdSeNao);
                      })?
            ;
@@ -306,7 +328,8 @@ cmdEnquanto:	'enquanto' AP {
                        whileCommands = stack.pop();	
 					   WhileCommand cmdEnquanto = new WhileCommand(exprDecision.pop(), whileCommands);
                    	   stack.peek().add(cmdEnquanto);
-                    };
+                    }
+                ;
 
 
 cmdFacaEnquanto:   'faca' 
