@@ -61,7 +61,7 @@ public class IfCommand extends Command{
 		if (!falseList.isEmpty()) {
 			if (this.comand.equals("entao")) {
 				str.append(" 		}\n		else if ("+expression+") {\n");
-				for (Command cmd: falseList) {
+				for (Command cmd: trueList) {
 					str.append("		  ").append(cmd.generateTarget());}
 			}
 			else {

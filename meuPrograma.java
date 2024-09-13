@@ -5,6 +5,8 @@ public class MainClass{
 		int  a;
 		int  b;
 		int  c;
+		double  d;
+		d = 2.5;
 		System.out.println("Programa Teste");
 
 		System.out.println("Digite A");
@@ -15,7 +17,7 @@ public class MainClass{
 		b = scanner.nextInt();
 		
 		if (a<b){
-		  c = a+b;
+		  c = a-b;
  		}
 		else {
 		  c = a*b;

@@ -1014,7 +1014,7 @@ public class IsiLanguageParser extends Parser {
 
 				                   		listF = stack.pop();
 										stack.peek().remove(stack.peek().size() - 1); 
-				                   		IfCommand cmdSeNao = new IfCommand("senao", Dec, listT, listF);
+				                   		IfCommand cmdSeNao = new IfCommand("senao", Dec, listQ, listF);
 				                   		stack.peek().add(cmdSeNao);
 				                     
 				}
