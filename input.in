@@ -1,31 +1,10 @@
 programa
-	declare inteiro a,b,c.
- 	declare real d.
-
-  	d := 2.5.
-    	escreva("Programa Teste").
-     
-	escreva("Digite A").
-	leia(a).
-	escreva ("Digite B").
-	leia (b).
-
-
-	se (a<b)
-	{
-	c := a + b.
-	}entao (a>b)
-	{
- 	c := a - b.
-	}senao
-	{
-	c := a *b.
-	}
-	
-	faca
-	{
- 	c := a + b.
-	}
-	enquanto (a<b)
+	declare real a,b,c,d.
+    escreva("Programa Calculando Soma").
+    
+    a:= 3.5.
+	b:= 7.3.
+	c:= 2.0.
+	d:=(a+b+c).
 	
 fimprog.
