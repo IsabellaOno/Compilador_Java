@@ -10,7 +10,10 @@ public class MainClass{
 
 		System.out.println("Digite A");
 
-		a= _key.nextLine();
+		a = _scTrx.nextDouble();
+		System.out.println("Digite B");
+
+		b = _scTrx.nextDouble();
     }
 }
 

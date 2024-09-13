@@ -3,4 +3,6 @@ programa
     escreva("Programa Teste").
 	escreva("Digite A").
 	leia(a).
+	escreva ("Digite B").
+	leia (b).
 fimprog.

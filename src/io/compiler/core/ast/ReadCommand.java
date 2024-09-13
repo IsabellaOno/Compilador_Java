@@ -6,6 +6,7 @@ public class ReadCommand extends Command {
 
 	private Var var;
 	private String ident;
+	String methodCall;
 
 	public ReadCommand(String ident, Var var) {
 		this.ident = ident;
@@ -14,8 +15,20 @@ public class ReadCommand extends Command {
 		
 	@Override
 	public String generateTarget() {
-		String vari = this.ident;
-		return vari + "= _key." + (this.var.getType() == 0 ? "nextDouble();" : "nextLine();");
+	    String vari = this.ident;
+
+	    switch (this.var.getType()) {
+	        case Var.NUMBER:
+	            methodCall = "nextInt()";
+	            break;
+	        case Var.REALNUMBER:
+	            methodCall = "nextDouble()";
+	            break;
+	        case Var.TEXT:
+	            methodCall = "nextLine()";
+	            break;
+	    }
+	    return vari + " = _scTrx." + methodCall + ";";
 	}
 	
 	@Override
