@@ -58,9 +58,8 @@ public class IfCommand extends Command{
 		}
 		str.append("\n");
 		
-		System.out.println(this.comand);
 		if (!falseList.isEmpty()) {
-			if (this.comand == "entao") {
+			if (this.comand.equals("entao")) {
 				str.append(" 		}\n		else if ("+expression+") {\n");
 				for (Command cmd: falseList) {
 					str.append("		  ").append(cmd.generateTarget());}

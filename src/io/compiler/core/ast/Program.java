@@ -40,8 +40,8 @@ public class Program {
 		}
         
         str.append("    }\n");
-        str.append("}\n");
-        
+        str.append("}");
+     
         return str.toString();
     }
     

@@ -93,7 +93,7 @@ public class IsiLanguageLexer extends Lexer {
 	    public void checkUnused(String id) {
 			Symbol sym = (Symbol) symbolTable.get(id);
 			if ((sym.isInitialized() && !sym.isUsed()) || !(sym.isInitialized() && sym.isUsed())) {
-		       	System.out.println("Warning - Variable " + sym.getId() + " was declared but not used."); 
+		       	System.out.println("Warning - Variável " + sym.getId() + " foi declarada, mas não foi utilizada."); 
 			}	
 		}
 		
@@ -129,13 +129,11 @@ public class IsiLanguageLexer extends Lexer {
 	    	}
 	    	String tipoBase = listTypes.get(0);
 
-	    	// Verifica se todos os tipos são iguais ao tipo base
 	    	for (String tipo : listTypes) {
 	        	if (!tipo.equals(tipoBase)) {
 	            	throw new IsiLanguageSemanticException("Elementos do lado " + lado + " possuem tipos incompatíveis.");
 	        	}
 	    	}
-	    	// Se todos os tipos são iguais, retorna o tipo base
 	   		return tipoBase;
 		}
 		

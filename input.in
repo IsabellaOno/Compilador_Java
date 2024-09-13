@@ -8,8 +8,11 @@ programa
 	se (a<b)
 	{
 	c := a + b.
-	}senao
+	}entao (a>b)
 	{
  	c := a - b.
+	}senao
+	{
+	c := a *b.
 	}
 fimprog.

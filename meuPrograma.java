@@ -18,9 +18,8 @@ public class MainClass{
 		  c = a+b;
  		}
 		else {
-		  c = a-b;
+		  c = a*b;
 		}
 
     }
 }
-
