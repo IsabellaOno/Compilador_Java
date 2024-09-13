@@ -1,11 +1,16 @@
 programa
-	declare inteiro a,b,c,d.
-	declare inteiro f.
-    escreva("Programa Calculando Soma").
-    
-    a:= 3.
-	b:= 7.
-	c:= 2.
-	f:=a+b+c.
+	declare inteiro a,b,c.
+    escreva("Programa Testando Item 9").
+     
+	escreva("Digite A").
+	leia(a).
+	escreva ("Digite B").
+	leia (b).
+
+	faca
+	{
+ 	a := b + c.
+	}
+	enquanto (a<b)
 	
 fimprog.

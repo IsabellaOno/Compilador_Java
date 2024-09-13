@@ -5,13 +5,18 @@ public class MainClass{
 		int  a;
 		int  b;
 		int  c;
-		int  d;
-		int  f;
-		System.out.println("Programa Calculando Soma");
+		System.out.println("Programa Testando Item 9");
 
-		a = 3;
-		b = 7;
-		c = 2;
-		f = a+b+c;
+		System.out.println("Digite A");
+
+		a = scanner.nextInt();
+		System.out.println("Digite B");
+
+		b = scanner.nextInt();
+		
+		do {
+		  c = a+b;
+ 		} while (a<b);
+
     }
 }
