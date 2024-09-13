@@ -23,5 +23,10 @@ public class MainClass{
 		  c = a*b;
 		}
 
+		
+		do {
+		  c = a+b;
+ 		} while (a<b);
+
     }
 }

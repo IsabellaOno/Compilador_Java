@@ -21,4 +21,11 @@ programa
 	{
 	c := a *b.
 	}
+	
+	faca
+	{
+ 	c := a + b.
+	}
+	enquanto (a<b)
+	
 fimprog.
