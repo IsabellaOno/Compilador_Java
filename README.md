@@ -26,8 +26,9 @@ Este projeto tem como objetivo desenvolver um compilador que converta uma lingua
 Item 1 - Declaração de Variáveis:
 ```bash
 programa
-   declare inteiro a, b, c.
-   declare real d.
+	declare inteiro a,b,c,d.
+	declare texto l.
+	declare real t.
 fimprog.
 ```
 Itens 2, 3, 4, 5, 6 e 7 - Operações Diversas e Estruturas de Controle:
@@ -60,6 +61,19 @@ programa
 	
 fimprog.
 ```
+Item 5 - Atribuições realizadas corretamente.
+```bash
+programa
+	declare inteiro a,b.
+	declare texto l.
+	
+	a:=2.
+	b:=6.3.
+	
+	t:=a+b.
+	
+fimprog.
+````
 
 Item 8 - Confere se variável já foi previamente declarada.
 ```bash
