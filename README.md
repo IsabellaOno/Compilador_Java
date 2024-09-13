@@ -135,12 +135,16 @@ Error: A variável d foi usada antes de ser atribuída.
 
 
 ## 🛠️ Execução
-
-1. Você precisa baixar o **ANTLR** no [site oficial](https://www.antlr.org/download/antlr-4.13.2-complete.jar).
    
-2. Referencie este JAR como biblioteca do seu projeto.
+1. Referencie o JAR do ANTLR presente no projeto como biblioteca do seu projeto.
 
-3. Para gerar os arquivos Java a partir do arquivo G4, use o seguinte comando:
+2. Para transformar um código de IsiLanguage para java digite-o no arquivo ##input.in## e salve-o.
+
+3. Execute a MainClass do compilador.
+
+4. Seu código será exibido no console e um arquivo ##meuPrograma.java## com seu código em java será gerado.
+
+2. Para gerar os arquivos Java a partir do arquivo G4, use o seguinte comando:
    ```bash
    java -cp antlr-4.13.2-complete.jar org.antlr.v4.Tool IsiLanguage.g4 -o src/io/compiler/core -package io.compiler.core
    ```
