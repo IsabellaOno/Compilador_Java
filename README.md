@@ -22,6 +22,103 @@ Este projeto tem como objetivo desenvolver um compilador que converta uma lingua
 
 ### Linguagem escolhida: Java 
 
+## Exemplos de códigos do input.in utilizados para conferir itens obrigatórios:
+Item 1 - Declaração de Variáveis:
+```bash
+programa
+   declare inteiro a, b, c.
+   declare real d.
+fimprog.
+```
+Itens 2, 3, 4, 5, 6 e 7 - Operações Diversas e Estruturas de Controle:
+```bash
+programa
+	declare inteiro a,b,c.
+ 	declare real d.
+
+  	d := 2.5.
+    	escreva("Programa Teste").
+     
+	escreva("Digite A").
+	leia(a).
+	escreva ("Digite B").
+	leia (b).
+
+
+	se (a<b)
+	{
+	c := a + b.
+	}entao (a>b)
+	{
+ 	c := a - b.
+	}senao
+	{
+	c := a *b.
+	}
+	
+	faca
+	{
+ 	c := a + b.
+	}
+	enquanto (a<b)
+	
+fimprog.
+```
+
+Item 8 - Confere se variável já foi previamente declarada.
+```bash
+programa
+	declare inteiro a,b,c,d.
+   escreva("Programa Calculando Soma").
+    
+   a:= 3.
+	b:= 7.
+	c:= 2.
+	f:=a+b+c.
+	
+fimprog.
+```
+ERRO: Error: Símbolo f não inicializado.
+
+Item 9 - Confere se variável foi declarada e não foi usada.
+```bash
+programa
+	declare inteiro a,b,c.
+    escreva("Programa Testando Item 9").
+     
+	escreva("Digite A").
+	leia(a).
+	escreva ("Digite B").
+	leia (b).
+
+	faca
+	{
+ 	a := b + c.
+	}
+	enquanto (a<b)
+	
+fimprog.
+```
+ERRO: Error: A variável c foi usada antes de ser atribuída.
+
+Item 10 - Confere se variável está sendo usada sem valor inicial.
+```bash
+programa
+	declare inteiro a,b,c,d.
+	declare inteiro f.
+    escreva("Programa Calculando Soma").
+    
+    a:= 3.
+	b:= 7.
+	c:= 2.
+	f:=a+b+c+d.
+	
+fimprog.
+
+```
+ERROR: Error: A variável d foi usada antes de ser atribuída.
+
+
 ## 🛠️ Execução
 
 1. Você precisa baixar o **ANTLR** no [site oficial](https://www.antlr.org/download/antlr-4.13.2-complete.jar).
@@ -31,3 +128,6 @@ Este projeto tem como objetivo desenvolver um compilador que converta uma lingua
 3. Para gerar os arquivos Java a partir do arquivo G4, use o seguinte comando:
    ```bash
    java -cp antlr-4.13.2-complete.jar org.antlr.v4.Tool IsiLanguage.g4 -o src/io/compiler/core -package io.compiler.core
+   ```
+
+## Link Youtube: INSERIR
