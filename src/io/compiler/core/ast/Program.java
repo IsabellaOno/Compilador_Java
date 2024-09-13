@@ -1,22 +1,12 @@
 package io.compiler.core.ast;
 
 import io.compiler.types.SymbolTable;
-import io.compiler.types.Var;
-import java.util.HashMap;
+import io.compiler.types.Symbol;
 import java.util.List;
 
 public class Program {
-    private String name;
     private SymbolTable symbolTable;
     private List<Command> commandList;
-    
-    public String getName() {
-        return name;
-    }
-    
-    public void setName(String name) {
-        this.name = name;
-    }
     
     public SymbolTable getsymbolTable() {
         return symbolTable;
@@ -37,28 +27,21 @@ public class Program {
     public String generateTarget() {
         StringBuilder str = new StringBuilder();
         str.append("import java.util.Scanner;\n");
-        str.append("public class MainClass").append(name).append("{ \n");
-        str.append("    public static void main(String[] args) {\n");
-        str.append("        Scanner _scTrx = new Scanner(System.in);\n");
+        str.append("public class MainClass{ \n");
+        str.append("	public static void main(String args[]){\n ");
+        str.append("		Scanner scanner = new Scanner(System.in);\n");
         
-        for (Var var : symbolTable.getAll()) {
-            if (null == var.getType()) {
-                str.append("        String ");
-            } else switch (var.getType()) {
-                case NUMBER -> str.append("        int ");
-                case REALNUMBER -> str.append("        double ");
-                default -> str.append("        String ");
-            }
-            str.append(var.getId()).append(";\n");
-        }
+        for (Symbol symbol: symbolTable.getAll()) {
+			str.append("		").append(symbol.generateTarget()+"\n");
+		}
         
-        for (Command cmd : commandList) {
-            str.append(cmd.generateTarget()).append("\n");
-        }
+        for (Command command: commandList) {
+			str.append("		").append(command.generateTarget()+"\n");
+		}
         
         str.append("    }\n");
-        str.append("}\n");
-        
+        str.append("}");
+     
         return str.toString();
     }
     

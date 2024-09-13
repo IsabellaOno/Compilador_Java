@@ -1,33 +1,39 @@
 package io.compiler.core.ast;
 
-import io.compiler.types.Types;
 import io.compiler.types.Var;
 
 public class ReadCommand extends Command {
 
 	private Var var;
+	private String ident;
+	String methodCall;
 
-	public ReadCommand() {
-		super();
-	}
-
-	public ReadCommand(Var var) {
-		super();
+	public ReadCommand(String ident, Var var) {
+		this.ident = ident;
 		this.var = var;
 	}
-
-	public Var getVar() {
-		return var;
-	}
-
-	public void setVar(Var var) {
-		this.var = var;
-	}
-
+		
 	@Override
 	public String generateTarget() {
-		// TODO Auto-generated method stub
-		return var.getId() + " = " + ((var.getType()==Types.NUMBER)?"_scTrx.nextInt();":"_scTrx.nextLine();")+"\n";
+	    String vari = this.ident;
+
+	    switch (this.var.getType()) {
+	        case Var.NUMBER:
+	            methodCall = "nextInt()";
+	            break;
+	        case Var.REALNUMBER:
+	            methodCall = "nextDouble()";
+	            break;
+	        case Var.TEXT:
+	            methodCall = "nextLine()";
+	            break;
+	    }
+	    return vari + " = scanner." + methodCall + ";";
+	}
+	
+	@Override
+	public String toString() {
+		return "CommandLeitura [id=" + this.ident + "]";
 	}
 
 }

@@ -49,13 +49,13 @@ public class IsiLanguageBaseListener implements IsiLanguageListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCmd(IsiLanguageParser.CmdContext ctx) { }
+	@Override public void enterBloco(IsiLanguageParser.BlocoContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCmd(IsiLanguageParser.CmdContext ctx) { }
+	@Override public void exitBloco(IsiLanguageParser.BlocoContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -73,6 +73,18 @@ public class IsiLanguageBaseListener implements IsiLanguageListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterTipo(IsiLanguageParser.TipoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTipo(IsiLanguageParser.TipoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterComando(IsiLanguageParser.ComandoContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -80,18 +92,6 @@ public class IsiLanguageBaseListener implements IsiLanguageListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitComando(IsiLanguageParser.ComandoContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterCmdAttrib(IsiLanguageParser.CmdAttribContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCmdAttrib(IsiLanguageParser.CmdAttribContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -116,6 +116,18 @@ public class IsiLanguageBaseListener implements IsiLanguageListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitCmdEscrita(IsiLanguageParser.CmdEscritaContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCmdAttrib(IsiLanguageParser.CmdAttribContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCmdAttrib(IsiLanguageParser.CmdAttribContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -157,18 +169,6 @@ public class IsiLanguageBaseListener implements IsiLanguageListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCmdPara(IsiLanguageParser.CmdParaContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCmdPara(IsiLanguageParser.CmdParaContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterExpr(IsiLanguageParser.ExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -193,13 +193,37 @@ public class IsiLanguageBaseListener implements IsiLanguageListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExprl(IsiLanguageParser.ExprlContext ctx) { }
+	@Override public void enterExpr_ad(IsiLanguageParser.Expr_adContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExprl(IsiLanguageParser.ExprlContext ctx) { }
+	@Override public void exitExpr_ad(IsiLanguageParser.Expr_adContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTermo_ad(IsiLanguageParser.Termo_adContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTermo_ad(IsiLanguageParser.Termo_adContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFator(IsiLanguageParser.FatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFator(IsiLanguageParser.FatorContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

@@ -50,18 +50,23 @@ public class IfCommand extends Command{
 	@Override
 	public String generateTarget() {
 		StringBuilder str = new StringBuilder();
-		str.append("if("+expression+"){");
+		str.append("\n		if ("+expression+"){\n");
 		for (Command cmd: trueList) {
-			str.append(cmd.generateTarget());
+			str.append("		  ").append(cmd.generateTarget());
 		}
-
+		str.append("\n");
+		
 		if (!falseList.isEmpty()) {
-			str.append("} else {");
+			str.append(" 		}\n		else {\n");
 			for (Command cmd: falseList) {
-				str.append(cmd.generateTarget());
-			}
-		}
-		str.append("}");
+				str.append("		  ").append(cmd.generateTarget());
+			}}		
+		str.append("\n		}\n");
 		return str.toString();
+	}
+	
+	@Override
+	public String toString() {
+		return "CommandDecisao [expression=" + expression + ", trueList=" + trueList + ", falseList=" + falseList+ "]";
 	}
 }

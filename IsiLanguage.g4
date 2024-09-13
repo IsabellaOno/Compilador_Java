@@ -12,28 +12,36 @@ grammar IsiLanguage;
 @members {
 	private SymbolTable symbolTable = new SymbolTable();
     private ArrayList<Var> currentDecl = new ArrayList<Var>();
-    private Types currentType;
-    private Types leftType=null, rightType=null;
+    private ArrayList<String> exTypeList = new ArrayList<String>();
+    private int currentType;
     private Program program = new Program();
+    private String leftType = "";
+    private String rightType = "";
     private String strExpr = "";
+    private String contExpr = "";
+    private String operacao;
+    private	String op_atual;
+	private	String op_nova;
     private IfCommand currentIfCommand;
-    
-    private Stack<ArrayList<Command>> stack = new Stack<ArrayList<Command>>();
-    
-    
-    public void updateType() {
-        for (Var v : currentDecl) {
-            v.setType(currentType);
-            symbolTable.add(v);
-        }
-    }
+    private Stack<ArrayList<Command>> stack = new Stack<>();
+    private Stack<String> exprDecision = new Stack<String>();
+    private ArrayList<Command> doWhileCommands;
+    private ArrayList<Command> whileCommands;
+    private ArrayList<Command> listaVazia;
+    private ArrayList<Command> listT;
+    private ArrayList<Command> listF;
+    private ArrayList<Command> comList;
     
     public void exibirVar() {
-    for (Var var : symbolTable.getAll()) { 
-        System.out.println(var);
+    for (Symbol sym : symbolTable.getAll()) { 
+        System.out.println(sym);
     	}
 	}
-    
+	
+	public String getTypeById(String id) {
+		return symbolTable.getTypeById(id);
+	}
+	
     public Program getProgram(){
     	return this.program;
     	}
@@ -41,29 +49,107 @@ grammar IsiLanguage;
     public boolean isDeclared(String id){
     	return symbolTable.get(id) != null;
     }
+    
+    public void checkUnused(String id) {
+		Symbol sym = (Symbol) symbolTable.get(id);
+		if ((sym.isInitialized() && !sym.isUsed()) || !(sym.isInitialized() && sym.isUsed())) {
+	       	System.out.println("Warning - Variável " + sym.getId() + " foi declarada, mas não foi utilizada."); 
+		}	
+	}
+	
+	public void checkInitialized(String id) {
+        if(!symbolTable.exists(id))
+            throw new IsiLanguageSemanticException("Símbolo "+id+" não inicializado.");
+    }
+    
+    public void setHasValue(String id) {
+        symbolTable.setHasValue(id);
+    }
+    
+    public void verificaAtribuicao(String id) {
+		symbolTable.verificaAtribuicao(id);
+	}
+	
+    public void exprReset() {
+    	contExpr = "";
+		exTypeList = new ArrayList<String>();
+	}
+	
+	public void typeAttrib(String leftType, String id, String expression) { 
+		for (String type : exTypeList) {
+			if (leftType != type) {
+				throw new IsiLanguageSemanticException("Tipos incompatíveis entre " + leftType + " e " + type + "\n\t na sentenca " + id+" := " + expression);
+			}
+		}
+	}
+	
+	public String getTypeIfValid(ArrayList<String> listTypes, String lado, String expressao) {
+    	if (listTypes.isEmpty()) {
+        	throw new IsiLanguageSemanticException("A lista de tipos está vazia para a expressão " + expressao);
+    	}
+    	String tipoBase = listTypes.get(0);
+
+    	for (String tipo : listTypes) {
+        	if (!tipo.equals(tipoBase)) {
+            	throw new IsiLanguageSemanticException("Elementos do lado " + lado + " possuem tipos incompatíveis.");
+        	}
+    	}
+   		return tipoBase;
+	}
+	
+	public void stringType(String id) {
+		symbolTable.stringType(id);
+	}
+    
+    public void generateCode(){
+		program.generateTarget();
+	}
 }
 
-programa	:	'programa' ID { program.setName(_input.LT(-1).getText());
-                               stack.push(new ArrayList<Command>()); 
-                } (declara | cmd)? 'fimprog'
-         	;
+programa	: 'programa' ((declara bloco) |bloco)? 'fimprog.'
+			  {
+                program.setsymbolTable(symbolTable);
+                program.setCommandList(stack.pop());
+           	  }
+        	;
 
-declara 	:	declaravar+ 'inicio' comando+ 'fim'{
-                  program.setsymbolTable(symbolTable);
-                  program.setCommandList(stack.pop());
-            	}
+declara 	: (declaravar)+
             ; 
 
-cmd 		: (comando)	
+bloco 		: {
+			  stack.push(new ArrayList<Command>());
+			  }
+			  (comando)+
 			;
 
-declaravar	:	'declare' { currentDecl.clear(); } ID { currentDecl.add(new Var(_input.LT(-1).getText()));}
-      			( VIRG ID { currentDecl.add(new Var(_input.LT(-1).getText()));} )*
-      			DP (
-        		'numero' {currentType = Types.NUMBER;} //Alterei se der erro dps pode ser isso.
-        		| 'texto' {currentType = Types.TEXT;}
-      			) { updateType(); } PV
-    		;
+declaravar: 'declare' tipo
+      		ID {
+      			String id_var = _input.LT(-1).getText();
+          		Symbol sym = new Var(id_var, null, currentType);
+          		if (!symbolTable.exists(id_var)){
+	            	symbolTable.add(sym);	
+	            }
+	            else{
+	                throw new IsiLanguageSemanticException("Variável"+id_var+" já declarada.");
+	            } 
+      		}
+      		( VIRG ID { 
+      			String id_vari = _input.LT(-1).getText();
+          		Symbol symb = new Var(id_vari, null, currentType);
+          		if (!symbolTable.exists(id_vari)){
+	            	symbolTable.add(symb);	
+	            }
+	            else{
+	               throw new IsiLanguageSemanticException("Variável"+id_var+" já declarada.");
+	            }
+      		} )*
+      		PO
+    	  ;
+
+tipo	 : 'inteiro' { currentType = Var.NUMBER;}
+    	 | 'real' { currentType = Var.REALNUMBER;}
+    	 | 'texto' { currentType = Var.TEXT;}
+    	 ;
 			
 comando  :	cmdAttrib
 		 | cmdLeitura
@@ -71,150 +157,234 @@ comando  :	cmdAttrib
 		 | cmdSe
 		 | cmdEnquanto
 		 | cmdFacaEnquanto
-		 | cmdPara
 		 ;
 
-cmdAttrib:		ID { 
-                   String id = _input.LT(-1).getText();
-                   if (!isDeclared(id)) {
-                       throw new IsiLanguageSemanticException("Undeclared Variable: " + id);
-                   }
-                   symbolTable.get(id).setInitialized(true);
-                   leftType = symbolTable.get(id).getType();
-                 } OP_AT expr PV {
-                 System.out.println("Left Side Expression Type = " + leftType);
-                 System.out.println("Right Side Expression Type = " + rightType);
-                 
-                 if (leftType != null && rightType != null && leftType.getValue() < rightType.getValue()) {
-                    throw new IsiLanguageSemanticException("Type Mismatching on Assignment");
-                 }
-
-                 AttribCommand attribCommand = new AttribCommand(_input.LT(-5).getText(), strExpr, symbolTable);
-                 
-                 stack.peek().add(attribCommand);
-
-                 strExpr = "";
-                 rightType = null;
-              }
-              ;
-
-cmdLeitura: 'leia' AP ID { 
-    			String id = _input.LT(-1).getText();
-    			if (!isDeclared(id)) {
-        			throw new IsiLanguageSemanticException("Undeclared Variable: " + id);
-    			}
-    			symbolTable.setHasValue(id); // Marca a variável como inicializada
-    			symbolTable.markAsUsed(id); // Marca a variável como usada
-    
-    			Command cmdLeitura = new ReadCommand(symbolTable.get(id));
-   	 			stack.peek().add(cmdLeitura);
-				} FP PV
+cmdLeitura: 'leia' AP ID {
+					checkInitialized(_input.LT(-1).getText());
+    				String ident = _input.LT(-1).getText();
+    			} FP PO
+    			{
+    				Var var = (Var)symbolTable.get(ident);
+              		Command cmdLeitura = new ReadCommand(ident, var);
+              		stack.peek().add(cmdLeitura);
+					setHasValue(ident);
+			 }	
 		  ;
 
-cmdEscrita:	'escreva' AP (
-			termo { Command cmdEscrita = new WriteCommand(_input.LT(-1).getText());
-                    	stack.peek().add(cmdEscrita);
-            }
-			) FP PV { rightType = null;}
-		   ;
+cmdEscrita: 'escreva' AP (
+    		TEXTO { 
+        		String text = _input.LT(-1).getText();
+        		Command cmdEscrita = new WriteCommand(text, true); // Literal
+        		stack.peek().add(cmdEscrita);
+    		}
+    		| termo { 
+       			String termoText = _input.LT(-1).getText();
+        		if (!isDeclared(termoText)) {
+            		throw new IsiLanguageSemanticException("Symbol " + termoText + " not declared");
+        		}
+        		Command cmdEscrita = new WriteCommand(termoText, false); 
+        		stack.peek().add(cmdEscrita);
+    		}
+			) FP PO { 
+			}	
+			;
+				  
+cmdAttrib:		ID { 
+                   		String id = _input.LT(-1).getText();
+                   		checkInitialized(id);
+                   		leftType = getTypeById(id);
+                   		String id_dois = id;
+                   		exprReset();
+                 	} 
+                (SOMA|SUB|MULT|DIV)? {
+                 		String op = _input.LT(-1).getText();
+                 		if (op.equals("+") || op.equals("-") || op.equals("*") || op.equals("/")) {
+                 			contExpr = id_dois + op;
+                 	}} 
+                 OP_AT((
+                 		expr PO {
+                 			Command cmdAttrib = new AttribCommand(id_dois, contExpr);
+							typeAttrib(leftType, id_dois, contExpr);
+							setHasValue(id_dois);
+							stack.peek().add(cmdAttrib);
+					})
+				| (STRING {	
+						String str = _input.LT(-1).getText();
+						stringType(id_dois);
+						Command cmdAttrib = new AttribCommand(id_dois, str);
+						stack.peek().add(cmdAttrib);
+				} PO))
+			;
 
-cmdSe	:	'se' { stack.push(new ArrayList<Command>());
-                     strExpr = "";
-                      currentIfCommand = new IfCommand();
-                  } AP expr OPREL { strExpr += _input.LT(-1).getText(); } expr FP { currentIfCommand.setExpression(strExpr); 
-		      	} 'entao' comando+ { 
-                  currentIfCommand.setTrueList(stack.pop());                            
-            	} (
-			'senao' { stack.push(new ArrayList<Command>()); } comando+ {
-                     currentIfCommand.setFalseList(stack.pop());
-                 }
-			)? 'fimse' {
-               	stack.peek().add(currentIfCommand);
-               }
-        ;
-
-cmdEnquanto:	'enquanto' { 
-                  stack.push(new ArrayList<Command>());
-                  strExpr = ""; 
-               	} AP expr OPREL { strExpr += _input.LT(-1).getText(); } expr FP 'faca' comando+
-				'fimenquanto' { 
-                  WhileCommand WhileCommand = new WhileCommand(strExpr, stack.pop()); 
-                  stack.peek().add(WhileCommand);
-               	}
+cmdSe	:	'se' AP {
+						exprReset();
+					} expr {
+						exprDecision.push(contExpr);
+						leftType = getTypeIfValid(exTypeList, "esquerdo", contExpr);
+					} 
+					OPREL { 
+						operacao = _input.LT(-1).getText();
+						op_atual = exprDecision.pop();
+						op_nova = op_atual + operacao;
+						exprDecision.push(op_nova);
+						exprReset();
+					} expr {
+						op_atual = exprDecision.pop();
+						op_nova = op_atual + contExpr;
+						exprDecision.push(op_nova);
+						rightType = getTypeIfValid(exTypeList, "direito", op_nova);
+					} 
+					FP {
+						if (rightType != leftType) { 
+							throw new IsiLanguageSemanticException("Não é possível compará-los");
+						}
+					} 'entao' AC{
+						comList = new ArrayList<Command>(); 
+            			stack.push(comList); 
+            		}(comando)+ 
+            		FC{
+						listT = stack.pop();
+						String Dec = exprDecision.pop();
+            			Command cmdSe = new IfCommand(Dec, listT, listaVazia);
+                   	   	stack.peek().add(cmdSe);}
+            		(
+					'senao' AC {
+                   	 	comList = new ArrayList<Command>();
+                   	 	stack.push(comList);
+                   	 } (comando+) FC {
+                   		listF = stack.pop();
+						stack.peek().remove(stack.peek().size() - 1); 
+                   		Command cmdSeNao = new IfCommand(Dec, listT, listF);
+                   		stack.peek().add(cmdSeNao);
+                     })?
            ;
 
-cmdFacaEnquanto:	'faca' { 
-                     	stack.push(new ArrayList<Command>());
-                  	} comando+ 'enquanto' AP expr OPREL { strExpr += _input.LT(-1).getText(); } expr
-					FP PV { 
-                     	DoWhileCommand DoWhileCommand = new DoWhileCommand(strExpr, stack.pop()); 
-                     	stack.peek().add(DoWhileCommand); 
-                  	}
+cmdEnquanto:	'enquanto' AP {
+							exprReset();
+					} expr {
+							exprDecision.push(contExpr);
+							leftType = getTypeIfValid(exTypeList, "esquerdo", contExpr);
+					} OPREL { 
+							operacao = _input.LT(-1).getText();
+							op_atual = exprDecision.pop();
+							op_nova = op_atual + operacao;
+							exprDecision.push(op_nova);
+							exprReset();
+					} expr {
+							op_atual = exprDecision.pop();
+							op_nova = op_atual + contExpr;
+							exprDecision.push(op_nova);
+							rightType = getTypeIfValid(exTypeList, "direito", op_nova);
+					} FP {
+						if (rightType != leftType) { 
+							throw new IsiLanguageSemanticException("Não é possível compará-los");
+						}
+					
+					} AC {
+						comList = new ArrayList<Command>(); 
+            			stack.push(comList); 
+                    } (comando)+ FC {
+                       whileCommands = stack.pop();	
+					   Command cmdEnquanto = new WhileCommand(exprDecision.pop(), whileCommands);
+                   	   stack.peek().add(cmdEnquanto);
+                    }
                 ;
 
-cmdPara:	'para' AP ID OP_AT expr { String initialization = _input.LT(-3).getText() + ":=" + _input.LT(-1).getText(); 
-		      } PV expr OPREL expr { String condition = _input.LT(-3).getText() + _input.LT(-2).getText() + _input.LT(-1).getText(); 
-		      } PV ID ('++' | '--') { String increment = _input.LT(-2).getText() + _input.LT(-1).getText(); 
-		      } FP 'faca' { 
-               stack.push(new ArrayList<Command>());
-              } comando+ 'fimpara' {
-               ForCommand ForCommand = new ForCommand(initialization, condition, increment, stack.pop()); 
-               stack.peek().add(ForCommand);
-              }
+
+cmdFacaEnquanto:   'faca' 
+        			AC { 
+            			comList = new ArrayList<Command>(); 
+            			stack.push(comList); 
+        			} 
+        			(comando)+ 
+        			FC 
+        			'enquanto' AP { 
+            			exprReset(); 
+       			 	} 
+        			expr { 
+            			exprDecision.push(contExpr); 
+            			leftType = getTypeIfValid(exTypeList, "esquerdo", contExpr); 
+        			} 
+        			OPREL { 
+            			operacao = _input.LT(-1).getText(); 
+            			op_atual = exprDecision.pop(); 
+            			op_nova = op_atual + operacao; 
+            			exprDecision.push(op_nova); 
+            			exprReset(); 
+        			} 
+        			expr { 
+            			op_atual = exprDecision.pop(); 
+            			op_nova = op_atual + contExpr; 
+            			exprDecision.push(op_nova); 
+            			rightType = getTypeIfValid(exTypeList, "direito", op_nova); 
+        			} 
+        			FP { 
+            			if (rightType != leftType) { 
+                			throw new IsiLanguageSemanticException("Não é possível compará-los"); 
+            			}
+        			} 
+        			{ doWhileCommands = stack.pop(); 
+            		  Command cmdFacaEnquanto = new DoWhileCommand(exprDecision.pop(), doWhileCommands);
+            		  stack.peek().add(cmdFacaEnquanto);
+	        		}
+    			;
+
+        
+expr	: termo expr_ad
+		;
+		
+termo	: fator termo_ad
+		;
+
+expr_ad	:	(SUB { 
+				contExpr += '-'; exTypeList.add("NUMBER");}
+			termo expr_ad 
+           	| SOMA { 
+           		contExpr += '+'; exTypeList.add("NUMBER");}
+           	termo expr_ad
+           	)?
         ;
 
-expr	: termo { strExpr += _input.LT(-1).getText(); } exprl
+termo_ad: 	(DIV { contExpr += '/'; exTypeList.add("NUMBER");
+			}
+			fator termo_ad	
+            | MULT { contExpr += '*'; exTypeList.add("NUMBER"); }
+            fator termo_ad
+            )?
+        ;
+        
+fator	:	ID { String id = _input.LT(-1).getText();
+				 checkInitialized(id);
+				 verificaAtribuicao(id);
+				 String type = getTypeById(id);
+				 contExpr += id; 
+				 exTypeList.add(type);
+			}
+			| NUMERO {  contExpr += _input.LT(-1).getText();
+					exTypeList.add("NUMBER");
+			}
+			| NUMERO_REAL {contExpr += _input.LT(-1).getText();
+					exTypeList.add("REALNUMBER");
+			}
+			| TEXTO {  contExpr += _input.LT(-1).getText();
+					exTypeList.add("TEXT");
+			} 
+			| AP { contExpr += _input.LT(-1).getText();
+			} 
+			expr FP { contExpr += _input.LT(-1).getText();
+			}         
 		;
 
-termo	:	ID { if (!isDeclared(_input.LT(-1).getText())) {
-                       throw new IsiLanguageSemanticException("Undeclared Variable: "+_input.LT(-1).getText());
-                    }
-                    if (!symbolTable.get(_input.LT(-1).getText()).isInitialized()){
-                       throw new IsiLanguageSemanticException("Variable "+_input.LT(-1).getText()+" has no value assigned");
-                    }
-                    if (rightType == null){
-                       rightType = symbolTable.get(_input.LT(-1).getText()).getType();
-                       //System.out.println("Encontrei pela 1a vez uma variavel = "+rightType);
-                    }   
-                    else{
-                       if (symbolTable.get(_input.LT(-1).getText()).getType().getValue() > rightType.getValue()){
-                          rightType = symbolTable.get(_input.LT(-1).getText()).getType();
-                          //System.out.println("Ja havia tipo declarado e mudou para = "+rightType);
-                          
-                       }
-                    }
-                  }
-			| NUMERO {  if (rightType == null) {
-			 				rightType = Types.NUMBER;
-			 				//System.out.println("Encontrei um numero pela 1a vez "+rightType);
-			            }
-			               else{
-			                   if (rightType.getValue() < Types.NUMBER.getValue()){			                    			                   
-			                	   rightType = Types.NUMBER;
-			                	   //System.out.println("Mudei o tipo para Number = "+rightType);
-			                   }
-			               }
-			            }
-			| TEXTO {  if (rightType == null) {
-			 				   rightType = Types.TEXT;
-			 				   //System.out.println("Encontrei pela 1a vez um texto ="+ rightType);
-			               }
-			               else{
-			                   if (rightType.getValue() < Types.TEXT.getValue()){			                    
-			                	   rightType = Types.TEXT;
-			                	   //System.out.println("Mudei o tipo para TEXT = "+rightType);
-			                	
-			                   }
-			               }
-			            }
+SOMA	: '+'
 		;
 
-exprl	: (
-			OP { strExpr += _input.LT(-1).getText(); } termo { strExpr += _input.LT(-1).getText(); }
-		  )*
+SUB		: '-'
 		;
 
-OP		: '+' | '-' | '*' | '/'
+DIV		: '/'
+		;
+
+MULT	: '*'
 		;
 
 OP_AT	: ':='
@@ -226,25 +396,39 @@ OPREL	: '>' | '<' | '>=' | '<=' | '<>' | '=='
 ID		: [a-z] ( [a-z] | [A-Z] | [0-9])*
 		;
 
-NUMERO	: [0-9]+ ('.' [0-9]+)?
+NUMERO	: [0-9]+
 		;
+
+NUMERO_REAL : [0-9]+ ('.' [0-9]+)?
+			;
 
 VIRG	: ','	
 		;
 
 PV		: ';'
 		;
-
+		
+PO		:'.'
+		;
+		
 AP		: '('
 		;
 
 FP		: ')'
 		;
 
+AC		: '{'
+		;
+
+FC		: '}'
+		;
+		
 DP		: ':'
 		;
 
 TEXTO	: '"' ( [a-z] | [A-Z] | [0-9] | ',' | '.' | ' ' | '-')* '"'
 		;
+
+STRING: '"' ( '\\"' | .)*? '"';
 
 WS		: (' ' | '\n' | '\r' | '\t') -> skip;

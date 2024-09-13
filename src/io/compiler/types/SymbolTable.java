@@ -9,72 +9,87 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class SymbolTable {
-    private Map<String, Var> map;
+    private Map<String, Symbol> map;
     
     public SymbolTable() {
-        map = new HashMap<>();
+        map = new HashMap<String, Symbol>();
     }
     
-    public void add(Var var) {
-        map.put(var.getId(), var);
+    public void add(Symbol sym) {
+        map.put(sym.getId(), sym);
     }
     
     public boolean exists(String id) {
-        return map.containsKey(id);
+    	return map.get(id) != null;
     }
     
-    public Var get(String id) {
-        Var var = map.get(id);
-        if (var != null) {
-            var.setUsed(true);
+    public Symbol get(String id) {
+        Symbol symb = map.get(id);
+        if (symb != null) {
+        	symb.setUsed(true);
         }
-        return var;
+        return symb;
     }
     
     public void markAsUsed(String id) {
-        Var var = this.get(id);
-        if (var != null) {
-            var.setUsed(true); 
+    	Symbol symb = this.get(id);
+        if (symb != null) {
+        	symb.setUsed(true); 
         }
     }
 
-    public List<Var> getNotUsedSymbols() {
+    public List<Symbol> getNotUsedSymbols() {
         return map.values().stream()
                 .filter(var -> !var.isUsed())
                 .collect(Collectors.toList());
     }    
 
-    public void assertStringType(String id) throws IsiLanguageSemanticException {
-        Var variable = (Var) this.get(id);
-        if (variable.getType() == Types.TEXT) {
-            return;
-        }
-        throw new IsiLanguageSemanticException("Variável " + variable.getId() + " é do tipo " + variable.getType().name() + " não pode receber um texto");
-    }
-
     public void setHasValue(String id) {
-        Var variable = this.get(id);
+        Var variable = (Var) this.get(id);
         if (variable != null) {
             variable.setInitialized(true);
         }
     }
 
     public String getTypeById(String id) {
-        Var variable = (Var) this.get(id);
-        if (variable != null) {
-            return variable.getType().name();
-        }
-        return "Desconhecido";
-    }
+		Var var = (Var) this.get(id);
+		if (var.getType() == Var.NUMBER) {
+			return "NUMBER";}
+		else if (var.getType() == Var.REALNUMBER) {
+			return "REALNUMBER";}
+		else {
+			return "TEXT";
+		}
+	}
 
-    public void verificaAtribuida(String id) throws IsiLanguageSemanticException {
-        Var var = this.get(id);
-        if (var == null || !var.isInitialized()) {
-            throw new IsiLanguageSemanticException("A variável " + (var != null ? var.getId() : id) + " é utilizada antes de ser atribuída");
+    public void verificaAtribuicao(String id) throws IsiLanguageSemanticException {
+        Symbol sym = this.get(id);
+        if (sym == null) {
+            throw new IsiLanguageSemanticException("A variável com ID " + id + " não foi declarada.");
+        }
+        if (!sym.isInitialized()) {
+            throw new IsiLanguageSemanticException("A variável " + sym.getId() + " foi usada antes de ser atribuída");
         }
     }
+  
+    public ArrayList<Symbol> getAll(){
+		ArrayList<Symbol> lista = new ArrayList<Symbol>();
+		for (Symbol symbol : map.values()) {
+			lista.add(symbol);
+		}
+		return lista;
+	}
     
-    public List<Var> getAll() {
-        return new ArrayList<>(map.values());
+    public boolean checkInitialized(String id) {
+        Symbol symb = this.get(id);
+        return symb != null && symb.isInitialized();
     }
+        
+    public void stringType(String id) throws IsiLanguageSemanticException {
+    	Var var = (Var) this.get(id);
+    	if (var.getType() == Var.TEXT) {
+    		return;
+    	}
+    	throw new IsiLanguageSemanticException("Variável " + var.getId() + " é do tipo " + var.getTypeText() + " não pode ser receber texto.");
+    	}   
 }

@@ -6,21 +6,13 @@ public class WriteCommand extends Command {
 
     // Construtor para conteúdo literal (texto)
     public WriteCommand(String content, boolean isLiteral) {
-        super();
         this.content = content;
         this.isLiteral = isLiteral;
     }
-
+    
     // Construtor para conteúdo que é uma variável
     public WriteCommand(String content) {
         this(content, false); // Por padrão, assume-se que é um identificador
-    }
-
-    // Construtor padrão
-    public WriteCommand() {
-        super();
-        this.content = null;
-        this.isLiteral = false;
     }
 
     public String getContent() {
@@ -31,25 +23,23 @@ public class WriteCommand extends Command {
         this.content = content;
         this.isLiteral = isLiteral;
     }
-
+    
     // Método que gera o código Java para o comando de escrita
     @Override
     public String generateTarget() {
         if (content == null) {
             throw new IllegalStateException("Content cannot be null.");
         }
-        // Gera a saída com base no tipo de conteúdo
         if (isLiteral) {
-            return "System.out.println(\"" + content + "\");\n"; // Para texto literal
+            return "System.out.println(" + content + ");"; // Para texto literal
         } else {
-            return "System.out.println(" + content + ");\n"; // Para identificador (variável)
+            return "System.out.println(" + content + ");"; // Para identificador (variável)
         }
     }
 
-    // Método de depuração para ver o estado do comando
     @Override
     public String toString() {
-        return "EscritaCommand [content=" + content + ", isLiteral=" + isLiteral + "]";
+        return "WriteCommand [content=" + content + ", isLiteral=" + isLiteral + "]";
     }
 
     // Método de utilidade para validar o conteúdo

@@ -8,7 +8,7 @@ public class DoWhileCommand extends Command {
 	private String expression;
 
   //Lista de comandos a serem executados
-	private List<Command> whileCommands;
+	private List<Command> doWhileCommands;
 
   //Obter a expressão condicional
 	public String getExpression() {
@@ -22,18 +22,18 @@ public class DoWhileCommand extends Command {
 
   //Obter a lista de comandos
 	public List<Command> getList() {
-		return whileCommands;
+		return doWhileCommands;
 	}
 
   //Definir a lista de comandos
 	public void setList(List<Command> whileCommands) {
-		this.whileCommands = whileCommands;
+		this.doWhileCommands = whileCommands;
 	}
 
   //Recebe a expressão condicional e a lista de comandos
 	public DoWhileCommand(String expression, List<Command> whileCommands) {
 		this.expression = expression;
-		this.whileCommands = whileCommands;
+		this.doWhileCommands = whileCommands;
 	}
 
 	public DoWhileCommand() {
@@ -42,16 +42,16 @@ public class DoWhileCommand extends Command {
 	@Override
 	public String generateTarget() {
 		StringBuilder str = new StringBuilder();
-		str.append("do {");
-		for (Command cmd: whileCommands) {
-			str.append(cmd.generateTarget());
+		str.append("\n		do {\n");
+		for (Command cmd: doWhileCommands) {
+			str.append("		  ").append(cmd.generateTarget());
 		}
-		str.append("} while (").append(expression).append(");\n");
+		str.append("\n 		} while (").append(expression).append(");\n");
 		return str.toString();
 	}
 	
 	@Override
     public String toString() {
-        return "DoWhileCommand {expression='" + expression + "', whileCommands=" + whileCommands + "}";
+        return "DoWhileCommand {expression='" + expression + "', whileCommands=" + doWhileCommands + "}";
     }
 }

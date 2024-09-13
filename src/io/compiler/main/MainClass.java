@@ -11,6 +11,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import io.compiler.core.IsiLanguageLexer;
 import io.compiler.core.IsiLanguageParser;
 import io.compiler.core.ast.Program;
+import io.compiler.types.SymbolTable;
 
 public class MainClass {
 	public static void main(String[] args) {
@@ -33,25 +34,33 @@ public class MainClass {
 
 			//geração do código do programa
 			Program program = parser.getProgram();
-			
-			System.out.println(program.generateTarget());
-			try {
-				File f = new File(program.getName()+".java");
-				FileWriter fr = new FileWriter(f);
-				PrintWriter pr = new PrintWriter(fr);
-				pr.println(program.generateTarget());
-				pr.close();
-			}
-			catch (IOException ex) {
-				ex.printStackTrace();
-			}
 
-			//System.out.println(program.generateTarget());
+			if (program == null) {
+                throw new RuntimeException("O método parser.getProgram() retornou null.");
+            }
 			
+			SymbolTable symbolTable = program.getsymbolTable();
+            if (symbolTable == null) {
+                symbolTable = new SymbolTable(); // Inicializa a SymbolTable se estiver nula
+                program.setsymbolTable(symbolTable);
+            }
+     
+            if (program.getCommandList() == null) {
+                System.err.println("Erro: A lista de comandos não foi inicializada.");
+                return;  // Encerra se a lista de comandos estiver nula
+            }
+			
+			try (FileWriter fw = new FileWriter(new File("meuPrograma.java"));
+	                PrintWriter pw = new PrintWriter(fw)) {
+	                pw.println(program.generateTarget());
+	            } catch (IOException ex) {
+	                ex.printStackTrace();
+	            }
+			System.out.println(program.generateTarget());	
 		}
+		
 		catch(Exception ex) {
 			System.err.println("Error: "+ex.getMessage());
-			//ex.printStackTrace();
 		}
 	}
 }
