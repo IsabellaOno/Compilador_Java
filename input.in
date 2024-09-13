@@ -3,7 +3,7 @@ programa
  	declare real d.
 
   	d := 2.5.
-    	escreva("Programa Teste").
+    escreva("Programa Teste").
      
 	escreva("Digite A").
 	leia(a).
